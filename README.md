@@ -1,42 +1,32 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# name of non-profit
 
-## Getting Started
+{One sentence description of the project}
 
-First, run the development server:
+## Table of Contents
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- [Overview](#overview)
+  - [Purpose](#purpose)
+  - [Team](#team)
+- [Getting Started And Contributing](#getting-started-and-contributing)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Overview
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Purpose
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+{Short paragraph description of the non-profit mission and the purpose of this project. Who will this project help, why is it necessary. Impact of the project.}
 
-## Learn More
+### Team
 
-To learn more about Next.js, take a look at the following resources:
+The {non-profit name} team consists of {#} Cal Poly students. Over the course of about 9 months, we worked as a team to deploy this web application. The team members are listed below:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- [First Last](https://www.linkedin.com/) - Project Manager
+- [First Last](https://www.linkedin.com/) - Designer
+- [First Last](https://www.linkedin.com/) - Tech Lead
+- [First Last](https://www.linkedin.com/) - Tech Lead
+- [First Last](https://www.linkedin.com/) - Software Developer
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## Getting Started And Contributing
 
-## Deploy on Vercel
+Visit [getting-started.md](docs/getting-started.md) on info for how to set up this repo.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
-
-## Things to do
-
-- connect to database
-- auth
-- custom 404 page
+Visit [contributing.md](docs/contributing.md) on info for how to contribute to this repo.
