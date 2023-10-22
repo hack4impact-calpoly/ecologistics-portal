@@ -22,14 +22,13 @@ Welcome to the getting started page! Here is all you need to know to get this re
       <img src="./images/vs-code-settings.png" alt="VSCode Settings 1" width="500"/>
    2. Search "formatter" and set your default formatter to Prettier
    3. Search "format on save" and click the checkbox
-6. Familiarize yourself with [Helpful Commands](#helpful-commands), the [Project Structure](#project-structure), the [steps for contributing](./contributing.md), and the [repository features](./repo-features.md).
+6. Familiarize yourself with [Helpful Commands](#helpful-commands), the [Project Structure](#project-structure), and the [steps for contributing](./contributing.md).
 
 ## Setup for Tech Leads
 
-1. Review the [repo-features](./repo-features.md) document to understand what is included in this repository off the bat
-2. Set up the backend for your team
-3. Edit the "One time setup" section above as needed, then execute those steps
-4. Turn on branch protections
+1. Set up a MongoDB cluster and create a .env with the URI
+2. Edit the "One time setup" section above as needed, then execute those steps
+3. Turn on branch protections for main and dev branches
    1. Visit your repo on [github.com](https://github.com)
    2. Click the Settings button on the top bar
    3. Click the branches tab on the left sidebar
@@ -37,6 +36,12 @@ Welcome to the getting started page! Here is all you need to know to get this re
    5. Click "Require a pull request before merging"
    6. Create  
       <img src="./images/require-code-review.png" alt="Require Code Review" width="500"/>
+
+### Todo during development
+
+1. Delete example code throughout
+2. Setup CI with GitHub Actions
+3. Update README and other documentation
 
 ## Helpful commands
 
@@ -68,5 +73,6 @@ To learn more about Next.js, take a look at the following resources:
 
 - [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
 - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- [NextAuth Documentation](https://next-auth.js.org/) - learn about authentication and authorization with NextAuth
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
