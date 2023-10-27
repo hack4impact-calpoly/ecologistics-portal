@@ -36,12 +36,7 @@ Welcome to the getting started page! Here is all you need to know to get this re
    5. Click "Require a pull request before merging"
    6. Create  
       <img src="./images/require-code-review.png" alt="Require Code Review" width="500"/>
-
-### Todo during development
-
-1. Delete example code throughout
-2. Setup CI with GitHub Actions
-3. Update README and other documentation
+4. See [template-features.md](./template-features.md) for features included in this template repository.
 
 ## Helpful commands
 
