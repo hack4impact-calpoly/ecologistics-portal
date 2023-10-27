@@ -28,7 +28,7 @@ Welcome to the getting started page! Here is all you need to know to get this re
 
 1. Set up a MongoDB cluster and create a .env with the URI
 2. Edit the "One time setup" section above as needed, then execute those steps
-3. Turn on branch protections for main and dev branches
+3. Turn on branch protections for main and develop branches
    1. Visit your repo on [github.com](https://github.com)
    2. Click the Settings button on the top bar
    3. Click the branches tab on the left sidebar
