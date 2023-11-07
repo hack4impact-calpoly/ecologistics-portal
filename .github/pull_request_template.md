@@ -6,7 +6,7 @@ Closes #{ISSUE NUMBER HERE}
 
 {Describe the purpose of your pull request}
 
-### Modifications=
+### Modifications
 
 {list out the files created/modified and a brief description of what was changed}
 
@@ -21,7 +21,7 @@ Closes #{ISSUE NUMBER HERE}
 - [ ] The commit messages follows our [guidelines](https://h4i.notion.site/Conventional-Commits-593452ad1179489399ad3bd696ef772a)
 - [ ] The developer name is specified
 - [ ] The summary is completed
-- [ ] Ask for a review in communication channels
+- [ ] Assign reviewers
 
 ### Screenshots/Screencast
 
