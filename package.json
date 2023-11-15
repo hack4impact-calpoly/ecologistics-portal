@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "lint:fix": "next lint --fix"
+    "lint:fix": "next lint --fix",
+    "prepare": "husky install"
   },
   "dependencies": {
     "mongoose": "^7.6.3",
@@ -23,6 +24,8 @@
     "eslint-config-next": "14.0.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.1",
-    "typescript": "^5"
+    "lint-staged": "^15.1.0",
+    "typescript": "^5",
+    "husky": "^8.0.0"
   }
 }
