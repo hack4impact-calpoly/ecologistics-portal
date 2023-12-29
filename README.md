@@ -1,6 +1,6 @@
 # Ecologistics SLO
 
-[![ci](https://github.com/hack4impact-calpoly/ecologistics-portal/actions/workflows/ci.yml/badge.svg?branch=main&event=push)](https://github.com/hack4impact-calpoly/ecologistics-portal/actions/workflows/ci.yml)
+[![ci](https://github.com/hack4impact-calpoly/ecologistics-portal/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/hack4impact-calpoly/ecologistics-portal/actions/workflows/ci.yml)
 
 A web portal for Ecologistics SLO
 
