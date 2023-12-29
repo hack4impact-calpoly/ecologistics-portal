@@ -1,13 +1,17 @@
 # Ecologistics SLO
 
+[![ci](https://github.com/hack4impact-calpoly/ecologistics-portal/actions/workflows/ci.yml/badge.svg?branch=main&event=push)](https://github.com/hack4impact-calpoly/ecologistics-portal/actions/workflows/ci.yml)
+
 A web portal for Ecologistics SLO
 
 ## Table of Contents
 
-- [Overview](#overview)
-  - [Purpose](#purpose)
-  - [Team](#team)
-- [Getting Started And Contributing](#getting-started-and-contributing)
+- [Ecologistics SLO](#ecologistics-slo)
+  - [Table of Contents](#table-of-contents)
+  - [Overview](#overview)
+    - [Purpose](#purpose)
+    - [Team](#team)
+  - [Getting Started And Contributing](#getting-started-and-contributing)
 
 ## Overview
 
