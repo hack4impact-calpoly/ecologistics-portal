@@ -44,7 +44,6 @@
     "clsx": "^2.1.0",
     "cmdk": "^0.2.0",
     "date-fns": "^3.0.6",
-    "embla-carousel-react": "^8.0.0-rc18",
     "lucide-react": "^0.303.0",
     "mongoose": "^7.6.3",
     "next": "14.0.0",
