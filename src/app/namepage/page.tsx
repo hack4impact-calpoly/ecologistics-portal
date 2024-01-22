@@ -1,15 +1,15 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
-export default function Home() {
+export default function Page() {
   return (
-    <main>
-      <h1>Home</h1>
+    <div>
+      Luke Waltz
       <div>
         <Button asChild>
-          <Link href="/namepage">Link to Luke</Link>
+          <Link href="/">Link to Home</Link>
         </Button>
       </div>
-    </main>
+    </div>
   );
 }
