@@ -6,7 +6,9 @@ export default function Home() {
     <main>
       <h1>Home</h1>
       <Link href="/johnieng">
-        <Button className="my-2 bg-sky-300 text-black-200">John Ieng</Button>
+        <Button className="my-2 bg-sky-300 text-black-200 hover:text-white">
+          John Ieng
+        </Button>
       </Link>
     </main>
   );
