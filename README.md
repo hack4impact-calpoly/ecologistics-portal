@@ -28,6 +28,7 @@ The {non-profit name} team consists of {#} Cal Poly students. Over the course of
 - [Ryan Hu](https://www.linkedin.com/) - Tech Lead
 - [Ian Loo](https://www.linkedin.com/) - Tech Lead
 - [First Last](https://www.linkedin.com/) - Software Developer
+- [Vi-Linh Vu](https://www.linkedin.com/) - Software Developer
 
 ## Getting Started And Contributing
 
