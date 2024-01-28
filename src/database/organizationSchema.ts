@@ -22,7 +22,7 @@ const OrganizationSchema = new Schema({
         required: [true, 'Logo is required'],
     },
     reimbursement:{
-        type: [{ type: Schema.Types.ObjectId, ref: 'Reimbursement' }],
+        type: [{ type: Schema.Types.ObjectId}],
         required: [true, 'Reimbursement is required'],
     },
 });
