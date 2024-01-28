@@ -1,12 +1,13 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import "@/global.css";
 
 export default function Me() {
   return (
     <main>
       <div className="text-center">
-        <h1 className="text-black-50 font-bold">Welcome to my page!</h1>
+        <h1 className="text-black-50 font-bold text-base">
+          Welcome to my page!
+        </h1>
       </div>
       <div className="text-center">
         <p>
