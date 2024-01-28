@@ -21,7 +21,7 @@ A web portal for Ecologistics SLO
 
 ### Team
 
-The Ecologistics Portal team consists of {16} Cal Poly students. Over the course of about 9 months, we worked as a team to deploy this web application. The team members are listed below:
+The Ecologistics Portal team consists of 16 Cal Poly students. Over the course of about 9 months, we worked as a team to deploy this web application. The team members are listed below:
 
 - [Annes Huynh](https://www.linkedin.com/in/annes-huynh/) - Project Manager
 - [Ryan Hu](https://www.linkedin.com/in/ryan-hu/) - Tech Lead
@@ -36,7 +36,7 @@ The Ecologistics Portal team consists of {16} Cal Poly students. Over the course
 - [Kyle Taschek](https://www.linkedin.com/in/kyle-taschek-555923223/) - Software Developer
 - [Peter Chinh](https://www.linkedin.com/in/peterchinh/) - Software Developer
 - [Dhanvi Ganti](https://www.linkedin.com/in/dhanviganti/) - Software Developer
-- [Taran Singh](https://www.linkedin.com/tarannssingh) - Software Developer
+- [Taran Singh](https://www.linkedin.com/in/tarannssingh/) - Software Developer
 - [Brandon Wong](https://www.linkedin.com/in/wbrandon25/) - Software Developer
 - [Luke Waltz](https://www.linkedin.com/in/luke-waltz-41902a253/) - Software Developer
 
