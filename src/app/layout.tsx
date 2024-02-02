@@ -23,8 +23,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ClerkProvider>
-      <html lang="en">
+    <html lang="en">
+      <ClerkProvider>
         <body
           className={cn(
             "min-h-screen bg-background font-sans antialiased",
@@ -35,7 +35,7 @@ export default function RootLayout({
           {children}
           <Footer />
         </body>
-      </html>
-    </ClerkProvider>
+      </ClerkProvider>
+    </html>
   );
 }
