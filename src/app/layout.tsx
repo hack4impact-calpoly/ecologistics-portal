@@ -24,8 +24,6 @@ export default function RootLayout({
 }) {
   return (
     <ClerkProvider>
-      {" "}
-      {/* This mounts clerk to every page */}
       <html lang="en">
         <body
           className={cn(
