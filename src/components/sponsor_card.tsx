@@ -1,19 +1,19 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
 
-type sponsor_card_props = {
+export interface SponsorCardProps {
   image: string;
   organization: string;
   user: string;
   email: string;
-};
+}
 
 export default function SponsorCard({
   image,
   organization,
   user,
   email,
-}: sponsor_card_props) {
+}: SponsorCardProps) {
   return (
     <Card className="w-72 h-72">
       <CardHeader className="pt-8 pl-4 pr-4 flex flex-row">
@@ -32,7 +32,7 @@ export default function SponsorCard({
         <div className="grid grid-cols-6 h-7 content-center">
           <Image
             className="col-span-1 self-center"
-            src={"/sponsor_card_icon _user_.png"}
+            src={"/images/sponsor_card_icon _user_.png"}
             width={18}
             height={18}
             alt="mail"
@@ -42,7 +42,7 @@ export default function SponsorCard({
         <div className="grid grid-cols-6 h-7 ">
           <Image
             className="col-span-1 self-center"
-            src={"/sponsor_card_icon _mail_.png"}
+            src={"/images/sponsor_card_icon _mail_.png"}
             width={18}
             height={18}
             alt="mail"
