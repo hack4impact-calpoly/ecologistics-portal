@@ -7,9 +7,6 @@ export default function Home() {
     <main>
       <UserButton afterSignOutUrl="/"></UserButton>
       <h1>Home</h1>
-      <Button variant="destructive" asChild>
-        <Link href="/Taran">Taran</Link>
-      </Button>
     </main>
   );
 }
