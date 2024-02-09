@@ -9,11 +9,11 @@ const ReimbursementSchema = new Schema({
     type: String,
     required: [true, "Report Name is required"],
   },
-  receiptName: {
+  recipientName: {
     type: String,
     required: [true, "Recipient Name is required"],
   },
-  receiptEmail: {
+  recipientEmail: {
     type: String,
     required: [true, "Recipient Email is required"],
   },
@@ -35,7 +35,7 @@ const ReimbursementSchema = new Schema({
   },
   receiptLink: {
     type: String,
-    reqired: [true, "Recipient Link is required"],
+    reqired: [true, "Receipt Link is required"],
   },
   status: {
     type: String,
