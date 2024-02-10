@@ -7,6 +7,7 @@ type UpdateOrganizationBody = {
   name?: string;
   description?: string;
   website?: string;
+  clerkUser?: string;
   logo?: string;
   reimbursements?: mongoose.Types.ObjectId[];
   status?: string;
@@ -22,6 +23,9 @@ export async function PUT(req: NextRequest, { params }: IParams) {
   await connectDB();
   const { id } = params;
   const body: UpdateOrganizationBody = await req.json();
+  if (body.hasOwnProperty("clerkUser")) {
+    delete body["clerkUser"];
+  }
   const { ...updateFields } = body;
 
   try {
