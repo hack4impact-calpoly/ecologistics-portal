@@ -1,24 +1,37 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
+import { DownloadIcon } from "@radix-ui/react-icons";
+import { Button } from "@/components/ui/button";
 
-export type Payment = {
-  request: string;
-  requestFor: string;
+export type Reimbursement = {
+  organization: string;
+  title: string;
+  description: string;
+  recipientName: string;
+  recipientEmail: string;
+  transactionDate: Date;
   amount: number;
-  status: "paid" | "on hold" | "declined" | "pending";
-  requestDate: Date;
-  receipt: string;
+  paymentMethod: string;
+  receiptLink: string;
+  status: string;
+  comment: string;
 };
 
-export const columns: ColumnDef<Payment>[] = [
+export const columns: ColumnDef<Reimbursement>[] = [
   {
-    accessorKey: "request",
+    accessorKey: "title",
     header: "Request",
+    cell: ({ row }) => (
+      <div className="capitalize">{row.getValue("title")}</div>
+    ),
   },
   {
-    accessorKey: "requestFor",
+    accessorKey: "recipientName",
     header: "Request For",
+    cell: ({ row }) => (
+      <div className="capitalize">{row.getValue("recipientName")}</div>
+    ),
   },
   {
     accessorKey: "amount",
@@ -29,19 +42,21 @@ export const columns: ColumnDef<Payment>[] = [
         style: "currency",
         currency: "USD",
       }).format(amount);
-
       return formatted;
     },
   },
   {
     accessorKey: "status",
     header: "Status",
+    cell: ({ row }) => (
+      <div className="capitalize">{row.getValue("status")}</div>
+    ),
   },
   {
-    accessorKey: "requestDate",
+    accessorKey: "transactionDate",
     header: "Request Date",
     cell: ({ row }) => {
-      const date: Date = row.getValue("requestDate");
+      const date: Date = row.getValue("transactionDate");
       const formatted = date.toLocaleDateString("en-US", {
         month: "2-digit",
         day: "2-digit",
@@ -51,7 +66,14 @@ export const columns: ColumnDef<Payment>[] = [
     },
   },
   {
-    accessorKey: "receipt",
+    accessorKey: "receiptLink",
     header: "Receipt",
+    cell: ({ row }) => (
+      <div>
+        <Button className="p-0 px-4" variant={"ghost"}>
+          <DownloadIcon />
+        </Button>
+      </div>
+    ),
   },
 ];
