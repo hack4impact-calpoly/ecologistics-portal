@@ -1,8 +1,9 @@
-import "@/styles/admin.css";
 export default function Admin() {
   return (
     <div>
-      <h2 className="request-header">Reimbursment Requests</h2>
+      <h2 className="text-[26px] font-[600] leading-none text-black">
+        Reimbursment Requests
+      </h2>
     </div>
   );
 }
