@@ -34,6 +34,6 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.log(error);
     // res.status(400).json({ message: "Reimbursement Post Failed" });
-    return NextResponse.json({ error: error }, { status: 400 });
+    return NextResponse.json("Post Failed", { status: 400 });
   }
 }
