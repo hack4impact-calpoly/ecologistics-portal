@@ -8,7 +8,6 @@ export default function Home() {
     <main>
       <UserButton afterSignOutUrl="/"></UserButton>
       <h1>Home</h1>
-      <ReimbursementRequestsTable />
     </main>
   );
 }
