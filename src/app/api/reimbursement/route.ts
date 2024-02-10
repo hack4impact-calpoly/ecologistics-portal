@@ -1,6 +1,6 @@
 import connectDB from "@database/db";
-import { NextResponse } from "next/server";
-import { NextApiRequest } from "next";
+import { NextRequest, NextResponse } from "next/server";
+// import { NextApiRequest, NextApiResponse } from "next";
 import Reimbursement from "@database/reimbursementSchema";
 
 //Get all Reimbursements
@@ -16,17 +16,25 @@ export async function GET() {
 }
 
 //Post Reimbursement
-export async function POST({ request }: { request: NextApiRequest }) {
+export async function POST(req: NextRequest, res: NextResponse) {
   await connectDB();
 
+  const reimburse = await req.json();
+
+  //validate input
+  if (!reimburse) {
+    return NextResponse.json("No Body in Post Req", { status: 400 });
+  }
+
   try {
-    // const data = await request.json(); // Assuming request body contains the reimbursement data
-    const data = JSON.parse(request.body);
+    const data = await req.json();
+    console.log(data);
     const reimbursement = new Reimbursement(data);
     await reimbursement.save();
     return NextResponse.json(reimbursement);
+    // res.status(201).json(reimbursement);
   } catch (error) {
-    return NextResponse.error();
-    // return NextResponse.error({ message: error.message }, 400);
+    // res.status(400).json({ message: "Reimbursement Post Failed" });
+    return NextResponse.json({ error: error }, { status: 400 });
   }
 }
