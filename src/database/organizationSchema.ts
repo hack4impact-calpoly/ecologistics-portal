@@ -15,7 +15,7 @@ const OrganizationSchema = new Schema({
   reimbursements: {
     type: [{ type: Schema.Types.ObjectId, ref: "Reimbursement" }],
     required: [
-      true,
+      false,
       "Reimbursements array allotted to this organization are required.",
     ],
   },
