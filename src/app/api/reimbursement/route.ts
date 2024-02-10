@@ -16,24 +16,23 @@ export async function GET() {
 }
 
 //Post Reimbursement
-export async function POST(req: NextRequest, res: NextResponse) {
+export async function POST(req: NextRequest) {
   await connectDB();
 
-  const reimburse = await req.json();
-
-  //validate input
-  if (!reimburse) {
-    return NextResponse.json("No Body in Post Req", { status: 400 });
-  }
-
   try {
-    const data = await req.json();
-    console.log(data);
-    const reimbursement = new Reimbursement(data);
+    const reimburse = await req.json();
+    console.log(reimburse);
+
+    //validate input
+    if (!reimburse) {
+      return NextResponse.json("No Body in Post Req", { status: 400 });
+    }
+    const reimbursement = new Reimbursement(reimburse);
     await reimbursement.save();
     return NextResponse.json(reimbursement);
     // res.status(201).json(reimbursement);
   } catch (error) {
+    console.log(error);
     // res.status(400).json({ message: "Reimbursement Post Failed" });
     return NextResponse.json({ error: error }, { status: 400 });
   }

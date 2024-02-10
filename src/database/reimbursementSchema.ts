@@ -1,8 +1,11 @@
 import { Schema, model, models } from "mongoose";
 
 const ReimbursementSchema = new Schema({
+  //NOTE: I had to pass the organization as a string instead of an objectID because JSON cant handle that type.
+  //we can pass the string part of the objectID when we post, and anytime we need to parse with the ID,
+  //we can do something along the lines of col.find({_id: new ObjectId(organization)}).toArray(function(err,results){});
   organization: {
-    type: [{ type: Schema.Types.ObjectId, ref: "Organization" }],
+    type: String,
     required: [true, "Organization is required"],
   },
   reportName: {
