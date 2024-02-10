@@ -3,10 +3,12 @@ import * as React from "react";
 import { Button } from "@/components/ui/button";
 import {
   ColumnFiltersState,
+  ExpandedState,
   SortingState,
   VisibilityState,
   flexRender,
   getCoreRowModel,
+  getExpandedRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
@@ -20,13 +22,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { DatePickerWithRange } from "../ui/date-range-picker";
-import { DebouncedInput } from "../ui/debounced-input";
+import { DatePickerWithRange } from "../ui/custom/date-range-picker";
+import { DebouncedInput } from "../ui/custom/debounced-input";
 import { Label } from "@radix-ui/react-dropdown-menu";
 import TableColumnFilterDropdown from "../ui/table-column-filter-dropdown";
 import { columns } from "./column-def";
 import { data } from "./fake-data";
-import CollapsibleRowWrapper from "./collapsible-row";
+import Link from "next/link";
 
 export default function ReimbursementRequestsTable() {
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -35,11 +37,14 @@ export default function ReimbursementRequestsTable() {
   );
   const [globalFilter, setGlobalFilter] = React.useState("");
   const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
+    React.useState<VisibilityState>({ recipientEmail: false });
+  const [expanded, setExpanded] = React.useState<ExpandedState>({});
 
   const table = useReactTable({
     data,
     columns,
+    enableExpanding: true,
+    onExpandedChange: setExpanded,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     onGlobalFilterChange: setGlobalFilter,
@@ -47,12 +52,14 @@ export default function ReimbursementRequestsTable() {
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    getExpandedRowModel: getExpandedRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     state: {
       sorting,
       columnFilters,
       columnVisibility,
       globalFilter,
+      expanded,
     },
   });
 
@@ -121,19 +128,51 @@ export default function ReimbursementRequestsTable() {
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row, i) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell className="text-center" key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
+                <>
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && "selected"}
+                    onClick={() => {
+                      console.log("clicked");
+                      row.toggleExpanded();
+                    }}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell className="text-center" key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+
+                  {/* EXPANDED section -- hard-coded for now */}
+                  {row.getIsExpanded() ? (
+                    <TableRow key={row.id}>
+                      <TableCell>
+                        <div>Payment Type Info: </div>
+                        <div>
+                          Email Address: {row.getValue("recipientEmail")}
+                        </div>
+                        <div>Billing Type: </div>
+                      </TableCell>
+                      <TableCell></TableCell>
+                      <TableCell></TableCell>
+                      <TableCell></TableCell>
+                      <TableCell></TableCell>
+                      <TableCell>Venmo user was not provided</TableCell>
+                      <TableCell>
+                        <div>
+                          <Link href="">receipt.pdf </Link>
+                        </div>
+                        <div>
+                          <Link href="">receipt.pdf </Link>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ) : null}
+                </>
               ))
             ) : (
               <TableRow>

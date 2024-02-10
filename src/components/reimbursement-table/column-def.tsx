@@ -1,8 +1,9 @@
-import { formatAmount, formatDate } from "@/utils/format";
+import { formatAmount } from "@/utils/format";
 import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "../ui/badge";
 import { Button } from "@/components/ui/button";
 import { DownloadIcon } from "@radix-ui/react-icons";
+import React from "react";
 
 export type Reimbursement = {
   organization: string;
@@ -20,6 +21,9 @@ export type Reimbursement = {
 
 export const columns: ColumnDef<Reimbursement>[] = [
   {
+    accessorKey: "recipientEmail",
+  },
+  {
     accessorKey: "organization",
     header: "Organization",
     cell: ({ row }) => (
@@ -28,7 +32,7 @@ export const columns: ColumnDef<Reimbursement>[] = [
   },
   {
     accessorKey: "reportName",
-    header: "Representative",
+    header: "Recipient",
     cell: ({ row }) => (
       <div className="capitalize">{row.getValue("reportName")}</div>
     ),
@@ -45,7 +49,7 @@ export const columns: ColumnDef<Reimbursement>[] = [
     header: "Expense Date",
     cell: ({ row }) => (
       <div className="capitalize">
-        {formatDate(row.getValue("transactionDate"))}
+        {(row.getValue("transactionDate") as Date).toLocaleDateString()}
       </div>
     ),
   },
