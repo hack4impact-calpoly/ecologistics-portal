@@ -12,7 +12,11 @@ type IParams = {
   };
 };
 
-export async function PUT(req: NextRequest, { params }: IParams) {
+export async function PUT(
+  req: NextRequest,
+  { params }: IParams,
+  res: NextResponse,
+) {
   try {
     await connectDB();
     const reimbursementId = { id: params.id };
@@ -42,13 +46,14 @@ export async function PUT(req: NextRequest, { params }: IParams) {
         },
       },
     );
-
+    //does status show up in http
+    res.status();
     return NextResponse.json(
       {
         message: `Successfully Updated Reimbursement with ID: ${reimbursementId}`,
       },
       { status: 200 },
-    );
+    ).status();
   } catch (error) {
     return NextResponse.json({ error: error }, { status: 500 });
   }
