@@ -1,7 +1,7 @@
-import connectDB from "@database/db";
+import connectDB from "@/database/db";
 import { NextRequest, NextResponse } from "next/server";
 // import { NextApiRequest, NextApiResponse } from "next";
-import Reimbursement from "@database/reimbursementSchema";
+import Reimbursement from "@/database/reimbursementSchema";
 
 //Get all Reimbursements
 export async function GET() {

@@ -1,6 +1,6 @@
-import connectDB from "@database/db";
+import connectDB from "@/database/db";
 import { NextRequest, NextResponse } from "next/server";
-import Reimbursement from "@database/reimbursementSchema";
+import Reimbursement from "@/database/reimbursementSchema";
 
 export type IParams = {
   params: {
