@@ -1,5 +1,6 @@
 import connectDB from "@/database/db";
 import { NextResponse, NextRequest } from "next/server";
+import Reimbursement from "@/database/reimbursementSchema";
 
 /**
  * Example GET API route
@@ -12,17 +13,20 @@ type IParams = {
   };
 };
 
-export async function PUT(
-  req: NextRequest,
-  { params }: IParams,
-  res: NextResponse,
-) {
+export async function PUT(req: NextRequest, { params }: IParams) {
+  await connectDB();
+  const reimbursementId = { id: params.id };
   try {
-    await connectDB();
-    const reimbursementId = { id: params.id };
     const body = await req.json();
 
     const currentReimbursement = await Reimbursement.findById(reimbursementId);
+
+    if (!currentReimbursement) {
+      return NextResponse.json(
+        { error: "Reimbursement not found" },
+        { status: 404 },
+      );
+    }
 
     const reimbursement = await Reimbursement.findByIdAndUpdate(
       reimbursementId,
@@ -40,38 +44,33 @@ export async function PUT(
           paymentMethod:
             body.paymentMethod || currentReimbursement.paymentMethod,
           purpose: body.purpose || currentReimbursement.purpose,
-          recipientLink:
-            body.recipientLink || currentReimbursement.recipientLink,
+          receiptLink: body.receiptLink || currentReimbursement.receiptLink,
           status: body.status || currentReimbursement.status,
+          comment: body.comment || currentReimbursement.comment,
         },
       },
     );
     //does status show up in http
-    res.status();
-    return NextResponse.json(
-      {
-        message: `Successfully Updated Reimbursement with ID: ${reimbursementId}`,
-      },
-      { status: 200 },
-    ).status();
+    return NextResponse.json({ status: 200 }, reimbursement);
   } catch (error) {
     return NextResponse.json({ error: error }, { status: 500 });
   }
 }
 
-export async function DELETE(req: NextRequest, { params }: IParams) {
+export async function DELETE({ params }: IParams) {
+  await connectDB();
+  const reimbursementId = { id: params.id };
   try {
-    await connectDB();
-    const reimbursementId = { id: params.id };
     await Reimbursement.findByIdAndDelete(reimbursementId);
 
     return NextResponse.json(
-      {
-        message: `Successfully Deleted Reimbursement with ID: ${reimbursementId}`,
-      },
+      { message: "Reimbursement successfully deleted" },
       { status: 200 },
     );
   } catch (error) {
-    return NextResponse.json({ error: error }, { status: 500 });
+    return NextResponse.json(
+      { error: "Error deleting reimbursement" },
+      { status: 500 },
+    );
   }
 }
