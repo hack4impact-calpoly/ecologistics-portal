@@ -19,6 +19,19 @@ type IParams = {
   };
 };
 
+export async function GET(req: NextRequest, { params }: IParams) {
+  await connectDB(); // function from db.ts before
+  const { id } = params;
+
+  try {
+    const blog = await Organization.findOne({ clerkUser: id }).orFail();
+
+    return NextResponse.json(blog, { status: 200 });
+  } catch (err) {
+    return NextResponse.json("Organization not found.", { status: 404 });
+  }
+}
+
 export async function PUT(req: NextRequest, { params }: IParams) {
   await connectDB();
   const { id } = params;
