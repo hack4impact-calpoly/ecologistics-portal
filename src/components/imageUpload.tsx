@@ -11,7 +11,6 @@ export default function ImageUpload({ handleChange }: ImageUploadProps) {
     <div>
       <FileUploader
         handleChange={(file: File) => {
-          // setFile(file);
           handleChange(file);
         }}
         name="file"
