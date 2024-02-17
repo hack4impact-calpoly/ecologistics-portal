@@ -6,39 +6,27 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Image from "next/image";
+import Reimbursement from "@/database/reimbursementSchema";
 
-// Temporary Reimbursement type
-// Will later use Reimbursement schema
-export type ReimbursementInfo = {
-  title: string;
-  status: string;
-  amount: number;
-  date: Date;
-  description: string;
-  recipientName: string;
-  recipientEmail: string;
-  receiptImage: string;
-};
-
-export default function ReimbursementCard(prop: ReimbursementInfo) {
+export default function ReimbursementCard(prop: Reimbursement) {
   return (
     // Entire Card
     <Card className="w-2/5 rounded-2xl p-4">
       {/* Title, status, amount, and date */}
       <CardHeader>
         <div className="flex justify-between items-center">
-          <CardTitle>{prop.title}</CardTitle>
+          <CardTitle>{prop.reportName}</CardTitle>
           {prop.status}
         </div>
         <CardDescription className="flex space-x-4">
           <div>${prop.amount}</div>
-          <div>{prop.date.toLocaleDateString()}</div>
+          <div>{prop.transactionDate.toLocaleDateString()}</div>
         </CardDescription>
       </CardHeader>
       {/* Description, recipient info, and image */}
       <CardContent>
         <div>
-          Receipt Description: {prop.description}
+          Receipt Description: {prop.comment}
           <br></br>
           Request For:<br></br>
           {prop.recipientName} &nbsp;
@@ -46,7 +34,7 @@ export default function ReimbursementCard(prop: ReimbursementInfo) {
         </div>
         <div className="flex justify-center">
           <Image
-            src={prop.receiptImage}
+            src={prop.receiptLink}
             width={500}
             height={500}
             alt="Receipt Picture"
