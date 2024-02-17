@@ -14,8 +14,9 @@ const OrganizationSchema = new Schema({
   logo: { type: String, required: false },
   reimbursements: {
     type: [{ type: Schema.Types.ObjectId, ref: "Reimbursement" }],
+    default: [],
     required: [
-      false,
+      true,
       "Reimbursements array allotted to this organization are required.",
     ],
   },

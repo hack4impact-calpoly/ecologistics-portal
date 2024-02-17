@@ -1,8 +1,6 @@
 import { NextResponse, NextRequest } from "next/server";
-import connectDB from "../../../../database/db";
-import Organization from "../../../../database/organizationSchema";
-
-// "@/app" path is not working for some reason
+import connectDB from "@/database/db";
+import Organization from "@/database/organizationSchema";
 
 type IParams = {
   params: {

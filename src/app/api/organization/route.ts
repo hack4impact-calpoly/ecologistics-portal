@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import connectDB from "../../../database/db";
-import Organization from "../../../database/organizationSchema";
-// using "@/" for the paths don't seem to work. I couldn't fix the tsconfig to make it work either.
+import connectDB from "@/database/db";
+import Organization from "@/database/organizationSchema";
 
 export async function GET(req: NextRequest) {
   await connectDB(); // function from db.ts before
