@@ -1,5 +1,6 @@
 import connectDB from "@/database/db";
 import { NextRequest, NextResponse } from "next/server";
+import { ErrorResponse } from "@/lib/error";
 import Reimbursement from "@/database/reimbursementSchema";
 
 export type IParams = {
@@ -17,6 +18,9 @@ export async function GET(req: NextRequest, { params }: IParams) {
     const reimburse = await Reimbursement.findById(id);
     return NextResponse.json(reimburse);
   } catch (error) {
-    return NextResponse.json("Reimbursement Not Found", { status: 404 });
+    const errorResponse: ErrorResponse = {
+      error: "Reimbursement Not Found",
+    };
+    return NextResponse.json(errorResponse, { status: 404 });
   }
 }
