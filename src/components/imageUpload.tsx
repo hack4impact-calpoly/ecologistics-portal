@@ -1,17 +1,22 @@
 "use client";
-
-import React, { useState } from "react";
 import { FileUploader } from "react-drag-drop-files";
 const fileTypes = ["JPG", "PNG", "JPEG"];
-export default function ImageUpload() {
-  const [file, setFile] = useState<File>();
 
-  const handleChange = (file: File) => {
-    setFile(file);
-  };
+interface ImageUploadProps {
+  handleChange: (file: File) => void;
+}
+
+export default function ImageUpload({ handleChange }: ImageUploadProps) {
   return (
     <div>
-      <FileUploader handleChange={handleChange} name="file" types={fileTypes} />
+      <FileUploader
+        handleChange={(file: File) => {
+          // setFile(file);
+          handleChange(file);
+        }}
+        name="file"
+        types={fileTypes}
+      />{" "}
     </div>
   );
 }
