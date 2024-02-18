@@ -8,7 +8,7 @@ import { ChevronDownIcon } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
 import React from "react";
 import { Table } from "@tanstack/react-table";
-import { Label } from "@radix-ui/react-dropdown-menu";
+import { Label } from "@/components/ui/label";
 
 type TableColumnFilterDropdownProps = {
   table: Table<any>;
@@ -24,7 +24,7 @@ const TableColumnFilterDropdown: React.FC<TableColumnFilterDropdownProps> = ({
   values,
 }) => {
   return (
-    <div>
+    <div className="flex flex-col">
       <Label className="text-xs pl-3">{title}</Label>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>

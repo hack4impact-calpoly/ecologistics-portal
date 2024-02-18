@@ -24,8 +24,8 @@ import {
 } from "@/components/ui/table";
 import { DatePickerWithRange } from "../ui/custom/date-range-picker";
 import { DebouncedInput } from "../ui/custom/debounced-input";
-import { Label } from "@radix-ui/react-dropdown-menu";
-import TableColumnFilterDropdown from "../ui/table-column-filter-dropdown";
+import { Label } from "../ui/label";
+import TableColumnFilterDropdown from "../ui/custom/table-column-filter-dropdown";
 import { columns } from "./column-def";
 import { data } from "./fake-data";
 
@@ -72,7 +72,7 @@ export default function ReimbursementRequestsTable() {
   return (
     <div className="w-full pl-2 pr-2">
       <div className="flex justify-between py-4 w-full">
-        <div>
+        <div className="flex flex-col">
           <Label className="text-xs pl-1 flex-2">Search</Label>
           <DebouncedInput
             value={globalFilter ?? ""}
@@ -99,7 +99,7 @@ export default function ReimbursementRequestsTable() {
           title="Status"
           values={getUniqueValues(data, "status")}
         />
-        <div>
+        <div className="flex flex-col">
           <Label className="text-xs pl-3">Date Range</Label>
           <DatePickerWithRange className="ml-2 self-end" />
         </div>
