@@ -3,27 +3,14 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { DownloadIcon } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
-
-export type Reimbursement = {
-  organization: string;
-  title: string;
-  description: string;
-  recipientName: string;
-  recipientEmail: string;
-  transactionDate: Date;
-  amount: number;
-  paymentMethod: string;
-  receiptLink: string;
-  status: string;
-  comment: string;
-};
+import Reimbursement from "@/database/reimbursementSchema";
 
 export const columns: ColumnDef<Reimbursement>[] = [
   {
-    accessorKey: "title",
+    accessorKey: "reportName",
     header: "Request",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("title")}</div>
+      <div className="capitalize">{row.getValue("reportName")}</div>
     ),
   },
   {
