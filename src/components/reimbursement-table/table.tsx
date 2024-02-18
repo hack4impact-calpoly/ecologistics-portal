@@ -28,7 +28,6 @@ import { Label } from "@radix-ui/react-dropdown-menu";
 import TableColumnFilterDropdown from "../ui/table-column-filter-dropdown";
 import { columns } from "./column-def";
 import { data } from "./fake-data";
-import Link from "next/link";
 
 export default function ReimbursementRequestsTable() {
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -133,7 +132,6 @@ export default function ReimbursementRequestsTable() {
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}
                     onClick={() => {
-                      console.log("clicked");
                       row.toggleExpanded();
                     }}
                   >
@@ -146,32 +144,6 @@ export default function ReimbursementRequestsTable() {
                       </TableCell>
                     ))}
                   </TableRow>
-
-                  {/* EXPANDED section -- hard-coded for now */}
-                  {row.getIsExpanded() ? (
-                    <TableRow key={row.id}>
-                      <TableCell>
-                        <div>Payment Type Info: </div>
-                        <div>
-                          Email Address: {row.getValue("recipientEmail")}
-                        </div>
-                        <div>Billing Type: </div>
-                      </TableCell>
-                      <TableCell></TableCell>
-                      <TableCell></TableCell>
-                      <TableCell></TableCell>
-                      <TableCell></TableCell>
-                      <TableCell>Venmo user was not provided</TableCell>
-                      <TableCell>
-                        <div>
-                          <Link href="">receipt.pdf </Link>
-                        </div>
-                        <div>
-                          <Link href="">receipt.pdf </Link>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ) : null}
                 </>
               ))
             ) : (

@@ -4,6 +4,11 @@ import { Badge } from "../ui/badge";
 import { Button } from "@/components/ui/button";
 import { DownloadIcon } from "@radix-ui/react-icons";
 import React from "react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@radix-ui/react-popover";
 
 export type Reimbursement = {
   organization: string;
@@ -27,7 +32,14 @@ export const columns: ColumnDef<Reimbursement>[] = [
     accessorKey: "organization",
     header: "Organization",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("organization")}</div>
+      <Popover>
+        <PopoverTrigger>
+          <div className="capitalize">{row.getValue("organization")}</div>
+        </PopoverTrigger>
+        <PopoverContent>
+          <div className="border">popover content</div>
+        </PopoverContent>
+      </Popover>
     ),
   },
   {
