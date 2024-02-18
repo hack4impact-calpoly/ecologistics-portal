@@ -1,3 +1,5 @@
+"use client";
+
 import { formatAmount } from "@/utils/format";
 import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "../ui/badge";
