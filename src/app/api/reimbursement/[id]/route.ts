@@ -35,23 +35,30 @@ export async function PUT(req: NextRequest, { params }: IParams) {
       );
     }
 
-    const reimbursement = await Reimbursement.findByIdAndUpdate(id, {
-      $set: {
-        organization: body.organization || currentReimbursement.organization,
-        reportName: body.reportName || currentReimbursement.reportName,
-        recipientName: body.recipientName || currentReimbursement.recipientName,
-        recipientEmail:
-          body.recipientEmail || currentReimbursement.recipientEmail,
-        transactionDate:
-          body.transactionDate || currentReimbursement.transactionDate,
-        amount: body.amount || currentReimbursement.amount,
-        paymentMethod: body.paymentMethod || currentReimbursement.paymentMethod,
-        purpose: body.purpose || currentReimbursement.purpose,
-        receiptLink: body.receiptLink || currentReimbursement.receiptLink,
-        status: body.status || currentReimbursement.status,
-        comment: body.comment || currentReimbursement.comment,
+    const reimbursement = await Reimbursement.findByIdAndUpdate(
+      id,
+      {
+        $set: {
+          organization: body.organization || currentReimbursement.organization,
+          reportName: body.reportName || currentReimbursement.reportName,
+          recipientName:
+            body.recipientName || currentReimbursement.recipientName,
+          recipientEmail:
+            body.recipientEmail || currentReimbursement.recipientEmail,
+          transactionDate:
+            body.transactionDate || currentReimbursement.transactionDate,
+          amount: body.amount || currentReimbursement.amount,
+          paymentMethod:
+            body.paymentMethod || currentReimbursement.paymentMethod,
+          purpose: body.purpose || currentReimbursement.purpose,
+          receiptLink: body.receiptLink || currentReimbursement.receiptLink,
+          status: body.status || currentReimbursement.status,
+          comment: body.comment || currentReimbursement.comment,
+        },
       },
-    });
+      { new: true },
+    );
+    console.log(reimbursement);
 
     return NextResponse.json({ message: reimbursement }, { status: 200 });
   } catch (error) {
