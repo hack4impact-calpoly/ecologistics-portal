@@ -3,11 +3,13 @@ import { NextRequest, NextResponse } from "next/server";
 // import { NextApiRequest, NextApiResponse } from "next";
 import Reimbursement from "@/database/reimbursementSchema";
 
+interface ReimbursementBody extends Reimbursement {}
+
 //Get all Reimbursements
 export async function GET() {
   await connectDB();
   try {
-    const reimbursements = await Reimbursement.find();
+    const reimbursements: ReimbursementBody[] = await Reimbursement.find();
     return NextResponse.json(reimbursements);
   } catch (error) {
     return NextResponse.error();

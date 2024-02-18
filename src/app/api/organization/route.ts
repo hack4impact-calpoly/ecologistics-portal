@@ -2,10 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/database/db";
 import Organization from "@/database/organizationSchema";
 
+interface OrganizationBody extends Organization {}
+
 export async function GET(req: NextRequest) {
   await connectDB(); // function from db.ts before
   try {
-    const organizations = await Organization.find();
+    const organizations: OrganizationBody[] = await Organization.find();
     return NextResponse.json(organizations);
   } catch (error: any) {
     throw new Error(`Error fetching organizations: ${error.message}`);
@@ -14,7 +16,7 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
+    const body: OrganizationBody = await req.json();
 
     const {
       name,
