@@ -1,4 +1,4 @@
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef, FilterFnOption } from "@tanstack/react-table";
 import { DownloadIcon } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
 import Reimbursement from "@/database/reimbursement-schema";
@@ -40,14 +40,10 @@ export const columns: ColumnDef<Reimbursement>[] = [
   {
     accessorKey: "transactionDate",
     header: "Request Date",
+    filterFn: "dateFilterFn" as FilterFnOption<Reimbursement>,
     cell: ({ row }) => {
       const date: Date = row.getValue("transactionDate");
-      const formatted = date.toLocaleDateString("en-US", {
-        month: "2-digit",
-        day: "2-digit",
-        year: "numeric",
-      });
-      return formatted;
+      return date.toLocaleDateString();
     },
   },
   {
@@ -62,3 +58,22 @@ export const columns: ColumnDef<Reimbursement>[] = [
     ),
   },
 ];
+
+export const dateFilterFn = (
+  row: any,
+  columnId: string,
+  value: [Date | undefined, Date | undefined],
+) => {
+  const date = row.getValue(columnId);
+  const [from, to] = value;
+  if (!date) {
+    return false;
+  } else if (from && to) {
+    return date >= from && date <= to;
+  } else if (from) {
+    return date >= from;
+  } else if (to) {
+    return date <= to;
+  }
+  return false;
+};
