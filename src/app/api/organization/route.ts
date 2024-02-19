@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { ErrorResponse } from "@/lib/error";
 import connectDB from "@/database/db";
 import Organization from "@/database/organizationSchema";
 
@@ -10,7 +11,10 @@ export async function GET(req: NextRequest) {
     const organizations: OrganizationBody[] = await Organization.find();
     return NextResponse.json(organizations);
   } catch (error: any) {
-    throw new Error(`Error fetching organizations: ${error.message}`);
+    const errorResponse: ErrorResponse = {
+      error: `Error fetching organizations: ${error.message}`,
+    };
+    return NextResponse.json(errorResponse, { status: 404 });
   }
 }
 
@@ -30,10 +34,11 @@ export async function POST(req: NextRequest) {
 
     // Validate the required fields
     if (!name || !description || !clerkUser || !status) {
-      return NextResponse.json(
-        "Invalid fields provided, make sure every required field is non-null.",
-        { status: 404 },
-      );
+      const errorResponse: ErrorResponse = {
+        error:
+          "Invalid fields provided, make sure every required field is non-null.",
+      };
+      return NextResponse.json(errorResponse, { status: 404 });
     }
 
     const newOrganization = new Organization({
@@ -51,9 +56,9 @@ export async function POST(req: NextRequest) {
     // Respond with the created organization
     return NextResponse.json(savedOrganization);
   } catch (err) {
-    return NextResponse.json(
-      "Please make sure every required field is in your request.",
-      { status: 404 },
-    );
+    const errorResponse: ErrorResponse = {
+      error: "Please make sure every required field is in your request.",
+    };
+    return NextResponse.json(errorResponse, { status: 404 });
   }
 }

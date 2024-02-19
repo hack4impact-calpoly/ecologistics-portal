@@ -1,5 +1,6 @@
 import connectDB from "@/database/db";
 import { NextRequest, NextResponse } from "next/server";
+import { ErrorResponse } from "@/lib/error";
 // import { NextApiRequest, NextApiResponse } from "next";
 import Reimbursement from "@/database/reimbursementSchema";
 
@@ -27,7 +28,10 @@ export async function POST(req: NextRequest) {
 
     //validate input
     if (!reimburse) {
-      return NextResponse.json("No Body in Post Req", { status: 400 });
+      const errorResponse: ErrorResponse = {
+        error: "No Body in Post Req",
+      };
+      return NextResponse.json(errorResponse, { status: 400 });
     }
     const reimbursement = new Reimbursement(reimburse);
     await reimbursement.save();
@@ -35,7 +39,9 @@ export async function POST(req: NextRequest) {
     // res.status(201).json(reimbursement);
   } catch (error) {
     console.log(error);
-    // res.status(400).json({ message: "Reimbursement Post Failed" });
-    return NextResponse.json("Post Failed", { status: 400 });
+    const errorResponse: ErrorResponse = {
+      error: "Post Failed",
+    };
+    return NextResponse.json(errorResponse, { status: 400 });
   }
 }
