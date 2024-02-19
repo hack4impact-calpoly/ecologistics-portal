@@ -3,6 +3,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { ErrorResponse } from "@/lib/error";
 import Reimbursement from "@/database/reimbursementSchema";
 
+interface ReimbursementBody extends Reimbursement {}
+
 export type IParams = {
   params: {
     id: string;

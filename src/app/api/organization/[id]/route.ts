@@ -4,15 +4,17 @@ import Organization from "@/database/organizationSchema";
 import connectDB from "@/database/db";
 import mongoose from "mongoose";
 
-type UpdateOrganizationBody = {
+interface OrganizationBody extends Organization {}
+
+interface UpdateOrganizationBody {
   name?: string;
   description?: string;
   website?: string;
   clerkUser?: string;
   logo?: string;
-  reimbursements?: mongoose.Types.ObjectId[];
+  reimbursements?: string[];
   status?: string;
-};
+}
 
 type IParams = {
   params: {
@@ -25,7 +27,9 @@ export async function GET(req: NextRequest, { params }: IParams) {
   const { id } = params;
 
   try {
-    const blog = await Organization.findOne({ clerkUser: id }).orFail();
+    const blog: OrganizationBody = await Organization.findOne({
+      clerkUser: id,
+    }).orFail();
 
     return NextResponse.json(blog, { status: 200 });
   } catch (err) {
