@@ -22,17 +22,20 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
+import { DatePickerWithRange } from "../ui/custom/date-range-picker";
+import { Label } from "@radix-ui/react-dropdown-menu";
+import TableColumnFilterDropdown from "../ui/custom/table-column-filter-dropdown";
+import { dateFilterFn } from "./columns";
+import { DateRange } from "react-day-picker";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  filterCol: string;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
-  filterCol,
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const table = useReactTable({
@@ -45,19 +48,43 @@ export function DataTable<TData, TValue>({
     state: {
       columnFilters,
     },
+    filterFns: {
+      dateFilterFn,
+    },
   });
+
+  const handleDateRangeChange = (range: DateRange) => {
+    table.getColumn("transactionDate")?.setFilterValue(() => {
+      return [range.from, range.to];
+    });
+  };
 
   return (
     <div>
-      <div className="flex items-center py-4">
+      <div className="flex justify-between py-4">
         <Input
           placeholder="Search"
-          value={(table.getColumn(filterCol)?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn(filterCol)?.setFilterValue(event.target.value)
+          value={
+            (table.getColumn("reportName")?.getFilterValue() as string) ?? ""
           }
-          className="max-w-sm"
+          onChange={(event) =>
+            table.getColumn("reportName")?.setFilterValue(event.target.value)
+          }
+          className="max-w-sm mt-4"
         />
+        <TableColumnFilterDropdown
+          table={table}
+          identifier="status"
+          title="Status"
+          values={["Pending", "Declined", "On Hold", "Paid"]}
+        />
+        <div>
+          <Label className="text-xs pl-3">Date Range</Label>
+          <DatePickerWithRange
+            handleChange={handleDateRangeChange}
+            className="ml-2 self-end"
+          />
+        </div>
       </div>
       <div className="rounded-md border">
         <Table>
