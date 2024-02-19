@@ -2,7 +2,7 @@
 
 import { columns } from "./columns";
 import { DataTable } from "@/components/sponsor-table/data-table";
-import { data } from "./mock-data";
+import { data } from "@/utils/mock-data";
 
 export default function SponsorTable() {
   return (

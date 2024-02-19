@@ -5,20 +5,7 @@ import { Button } from "@/components/ui/button";
 import { DownloadIcon } from "@radix-ui/react-icons";
 import React from "react";
 import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
-
-export type Reimbursement = {
-  organization: string;
-  reportName: string;
-  recipientName: string;
-  recipientEmail: string;
-  transactionDate: Date;
-  amount: number;
-  paymentMethod: string;
-  purpose: string;
-  receiptLink: string;
-  status: string;
-  documents: string;
-};
+import Reimbursement from "@/database/reimbursementSchema";
 
 export const columns: ColumnDef<Reimbursement>[] = [
   {
