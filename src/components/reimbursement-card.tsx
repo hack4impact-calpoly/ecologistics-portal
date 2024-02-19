@@ -6,7 +6,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Image from "next/image";
-import Reimbursement from "@/database/reimbursementSchema";
+import Reimbursement from "@/database/reimbursement-schema";
 
 export default function ReimbursementCard(prop: Reimbursement) {
   return (

@@ -1,4 +1,4 @@
-import Reimbursement from "@/database/reimbursementSchema";
+import Reimbursement from "@/database/reimbursement-schema";
 import { Types } from "mongoose";
 
 export const data: Reimbursement[] = [

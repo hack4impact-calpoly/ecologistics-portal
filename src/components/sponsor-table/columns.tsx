@@ -1,7 +1,7 @@
 import { ColumnDef, FilterFnOption } from "@tanstack/react-table";
 import { DownloadIcon } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
-import Reimbursement from "@/database/reimbursementSchema";
+import Reimbursement from "@/database/reimbursement-schema";
 
 export const columns: ColumnDef<Reimbursement>[] = [
   {
