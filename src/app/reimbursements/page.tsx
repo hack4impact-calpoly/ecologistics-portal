@@ -4,18 +4,16 @@ import Reimbursement from "@/database/reimbursementSchema";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import DatePicker from "react-datepicker";
+import { DatePicker } from "@/components/ui/date-picker";
+import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 
 const formSchema = z.object({
@@ -42,12 +40,21 @@ export default function Page() {
   // submisson handler
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
+
+    // Reset the form fields
+    form.reset({
+      name: "",
+      email: "",
+      transactionDate: new Date(), // Reset to current date or you can set a default date
+      amount: 0,
+      purpose: "",
+    });
   }
 
   // implementation
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 m-5">
         <FormField
           control={form.control}
           name="name"
@@ -77,7 +84,7 @@ export default function Page() {
           name="transactionDate"
           render={({ field }) => (
             <FormItem>
-              <FormLabel> Transaction Date </FormLabel>
+              <FormLabel className="block mb-2"> Transaction Date </FormLabel>
               <FormControl>
                 <DatePicker {...field} />
               </FormControl>
@@ -108,6 +115,7 @@ export default function Page() {
             </FormItem>
           )}
         />
+        <Button type="submit">Submit</Button>
       </form>
     </Form>
   );
