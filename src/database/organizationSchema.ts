@@ -1,4 +1,4 @@
-import { Schema, model, models } from "mongoose";
+import { Schema, model, models, Types } from "mongoose";
 
 interface Organization {
   name: string;
@@ -6,7 +6,7 @@ interface Organization {
   website?: string;
   clerkUser: string;
   logo?: string;
-  reimbursements: Schema.Types.ObjectId[];
+  reimbursements: Types.ObjectId[];
   status: string;
 }
 

@@ -1,8 +1,9 @@
-import { Reimbursement } from "./column-def";
+import Reimbursement from "@/database/reimbursementSchema";
+import { Types } from "mongoose";
 
 export const data: Reimbursement[] = [
   {
-    organization: "123456",
+    organization: new Types.ObjectId(1),
     reportName: "examplename",
     recipientName: "Billy Bob",
     recipientEmail: "billybob@gmail.com",
@@ -12,10 +13,10 @@ export const data: Reimbursement[] = [
     purpose: "Reimbursement for cultural booth event",
     receiptLink: "www.google.com",
     status: "Paid",
-    documents: "",
+    comment: "",
   },
   {
-    organization: "13241",
+    organization: new Types.ObjectId(2),
     reportName: "2exampname",
     recipientName: "Jill Andrews",
     recipientEmail: "jillandrews@gmail.com",
@@ -25,10 +26,10 @@ export const data: Reimbursement[] = [
     purpose: "Reimbursement for lunch catering",
     receiptLink: "www.google.com",
     status: "On Hold",
-    documents: "",
+    comment: "",
   },
   {
-    organization: "09348",
+    organization: new Types.ObjectId(3),
     reportName: "examplename",
     recipientName: "Steve Jones",
     recipientEmail: "steve@yahoo.com",
@@ -38,10 +39,10 @@ export const data: Reimbursement[] = [
     purpose: "Reimbursement for craft materials",
     receiptLink: "www.google.com",
     status: "Paid",
-    documents: "",
+    comment: "",
   },
   {
-    organization: "09348",
+    organization: new Types.ObjectId(4),
     reportName: "examplename",
     recipientName: "Steve Jones",
     recipientEmail: "steve@yahoo.com",
@@ -51,10 +52,10 @@ export const data: Reimbursement[] = [
     purpose: "Reimbursement for craft materials",
     receiptLink: "www.google.com",
     status: "Paid",
-    documents: "",
+    comment: "",
   },
   {
-    organization: "09348",
+    organization: new Types.ObjectId(5),
     reportName: "examplename",
     recipientName: "Steve Jones",
     recipientEmail: "steve@yahoo.com",
@@ -64,10 +65,10 @@ export const data: Reimbursement[] = [
     purpose: "Reimbursement for craft materials",
     receiptLink: "www.google.com",
     status: "Paid",
-    documents: "",
+    comment: "",
   },
   {
-    organization: "09348",
+    organization: new Types.ObjectId(6),
     reportName: "examplename",
     recipientName: "Steve Jones",
     recipientEmail: "steve@yahoo.com",
@@ -77,10 +78,10 @@ export const data: Reimbursement[] = [
     purpose: "Reimbursement for craft materials",
     receiptLink: "www.google.com",
     status: "Paid",
-    documents: "",
+    comment: "",
   },
   {
-    organization: "09348",
+    organization: new Types.ObjectId(7),
     reportName: "examplename",
     recipientName: "Steve Jones",
     recipientEmail: "steve@yahoo.com",
@@ -90,10 +91,10 @@ export const data: Reimbursement[] = [
     purpose: "Reimbursement for craft materials",
     receiptLink: "www.google.com",
     status: "Paid",
-    documents: "",
+    comment: "",
   },
   {
-    organization: "09348",
+    organization: new Types.ObjectId(8),
     reportName: "examplename",
     recipientName: "Steve Jones",
     recipientEmail: "steve@yahoo.com",
@@ -103,6 +104,6 @@ export const data: Reimbursement[] = [
     purpose: "Reimbursement for craft materials",
     receiptLink: "www.google.com",
     status: "Paid",
-    documents: "",
+    comment: "",
   },
 ];
