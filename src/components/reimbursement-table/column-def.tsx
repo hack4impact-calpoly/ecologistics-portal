@@ -1,11 +1,11 @@
-import { formatAmount } from "@/utils/format";
+import { formatAmount } from "@/lib/format";
 import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "../ui/badge";
 import { Button } from "@/components/ui/button";
 import { DownloadIcon } from "@radix-ui/react-icons";
 import React from "react";
 import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
-import Reimbursement from "@/database/reimbursementSchema";
+import Reimbursement from "@/database/reimbursement-schema";
 
 export const columns: ColumnDef<Reimbursement>[] = [
   {

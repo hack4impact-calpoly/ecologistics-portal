@@ -1,12 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { ErrorResponse } from "@/lib/error";
-import Organization from "@/database/organizationSchema";
+import Organization from "@/database/organization-schema";
 import connectDB from "@/database/db";
 import mongoose from "mongoose";
 
-interface OrganizationBody extends Organization {}
-
-interface UpdateOrganizationBody {
+export type UpdateOrganizationBody = {
   name?: string;
   description?: string;
   website?: string;
@@ -14,7 +12,13 @@ interface UpdateOrganizationBody {
   logo?: string;
   reimbursements?: string[];
   status?: string;
-}
+};
+
+export type GetOrganizationResponse = Organization;
+export type UpdateOrganizationResponse = Organization | null;
+export type DeleteOrganizationResponse = {
+  message: string;
+};
 
 type IParams = {
   params: {
@@ -27,7 +31,7 @@ export async function GET(req: NextRequest, { params }: IParams) {
   const { id } = params;
 
   try {
-    const blog: OrganizationBody = await Organization.findOne({
+    const blog: GetOrganizationResponse = await Organization.findOne({
       clerkUser: id,
     }).orFail();
 
@@ -50,15 +54,12 @@ export async function PUT(req: NextRequest, { params }: IParams) {
   const { ...updateFields } = body;
 
   try {
-    const updatedOrganization = await Organization.findByIdAndUpdate(
-      id,
-      updateFields,
-      {
+    const updatedOrganization: UpdateOrganizationResponse =
+      await Organization.findByIdAndUpdate(id, updateFields, {
         new: true,
         runValidators: true,
         omitUndefined: true,
-      },
-    );
+      });
     return NextResponse.json(updatedOrganization, { status: 200 });
   } catch (err) {
     const errorResponse: ErrorResponse = {
@@ -81,8 +82,8 @@ export async function DELETE(req: NextRequest, { params }: IParams) {
     return NextResponse.json(errorResponse, { status: 404 });
   }
 
-  return NextResponse.json(
-    { message: `Organization with ID ${id} was successfully deleted.` },
-    { status: 200 },
-  );
+  const response: DeleteOrganizationResponse = {
+    message: `Organization with ID ${id} was successfully deleted.`,
+  };
+  return NextResponse.json(response, { status: 200 });
 }

@@ -1,9 +1,27 @@
 import connectDB from "@/database/db";
 import { NextRequest, NextResponse } from "next/server";
 import { ErrorResponse } from "@/lib/error";
-import Reimbursement from "@/database/reimbursementSchema";
+import Reimbursement from "@/database/reimbursement-schema";
 
-interface ReimbursementBody extends Reimbursement {}
+export type UpdateReimbursementBody = {
+  organization?: string;
+  reportName?: string;
+  recipientName?: string;
+  recipientEmail?: string;
+  transactionDate?: Date;
+  amount?: number;
+  paymentMethod?: string;
+  purpose?: string;
+  receiptLink?: string;
+  status?: string;
+  comment?: string;
+};
+
+export type GetReimbursementResponse = Reimbursement;
+export type UpdateReimbursementResponse = Reimbursement | null;
+export type DeleteReimbursementResponse = {
+  message: string;
+};
 
 export type IParams = {
   params: {
@@ -16,7 +34,8 @@ export async function GET(req: NextRequest, { params }: IParams) {
   const { id } = params; // Extract the id from params
 
   try {
-    const reimburse = await Reimbursement.findById(id);
+    const reimburse: GetReimbursementResponse =
+      await Reimbursement.findById(id).orFail();
     return NextResponse.json(reimburse);
   } catch (error) {
     const errorResponse: ErrorResponse = {
@@ -31,44 +50,40 @@ export async function PUT(req: NextRequest, { params }: IParams) {
   const { id } = params;
 
   try {
-    const body = await req.json();
+    const body: UpdateReimbursementBody = await req.json();
     const currentReimbursement = await Reimbursement.findById(id);
-
-    if (!currentReimbursement) {
-      return NextResponse.json(
-        { error: "Reimbursement not found" },
-        { status: 404 },
-      );
-    }
-
-    const reimbursement = await Reimbursement.findByIdAndUpdate(
-      id,
-      {
-        $set: {
-          organization: body.organization || currentReimbursement.organization,
-          reportName: body.reportName || currentReimbursement.reportName,
-          recipientName:
-            body.recipientName || currentReimbursement.recipientName,
-          recipientEmail:
-            body.recipientEmail || currentReimbursement.recipientEmail,
-          transactionDate:
-            body.transactionDate || currentReimbursement.transactionDate,
-          amount: body.amount || currentReimbursement.amount,
-          paymentMethod:
-            body.paymentMethod || currentReimbursement.paymentMethod,
-          purpose: body.purpose || currentReimbursement.purpose,
-          receiptLink: body.receiptLink || currentReimbursement.receiptLink,
-          status: body.status || currentReimbursement.status,
-          comment: body.comment || currentReimbursement.comment,
+    const reimbursement: UpdateReimbursementResponse =
+      await Reimbursement.findByIdAndUpdate(
+        id,
+        {
+          $set: {
+            organization:
+              body.organization || currentReimbursement.organization,
+            reportName: body.reportName || currentReimbursement.reportName,
+            recipientName:
+              body.recipientName || currentReimbursement.recipientName,
+            recipientEmail:
+              body.recipientEmail || currentReimbursement.recipientEmail,
+            transactionDate:
+              body.transactionDate || currentReimbursement.transactionDate,
+            amount: body.amount || currentReimbursement.amount,
+            paymentMethod:
+              body.paymentMethod || currentReimbursement.paymentMethod,
+            purpose: body.purpose || currentReimbursement.purpose,
+            receiptLink: body.receiptLink || currentReimbursement.receiptLink,
+            status: body.status || currentReimbursement.status,
+            comment: body.comment || currentReimbursement.comment,
+          },
         },
-      },
-      { new: true },
-    );
-    console.log(reimbursement);
+        { new: true },
+      );
 
-    return NextResponse.json({ message: reimbursement }, { status: 200 });
+    return NextResponse.json(reimbursement, { status: 200 });
   } catch (error) {
-    return NextResponse.json({ error: error }, { status: 500 });
+    const errorResponse: ErrorResponse = {
+      error: "Unable to update reimbursement",
+    };
+    return NextResponse.json(errorResponse, { status: 500 });
   }
 }
 
@@ -77,11 +92,14 @@ export async function DELETE(req: NextRequest, { params }: IParams) {
   const { id } = params;
   try {
     await Reimbursement.findByIdAndDelete(id);
-    return NextResponse.json(
-      { message: "Reimbursement successfully deleted" },
-      { status: 200 },
-    );
+    const response: DeleteReimbursementResponse = {
+      message: "Reimbursement successfully deleted",
+    };
+    return NextResponse.json(response, { status: 200 });
   } catch (error) {
-    return NextResponse.json({ error: error }, { status: 500 });
+    const errorResponse: ErrorResponse = {
+      error: "Unable to delete reimbursement",
+    };
+    return NextResponse.json(errorResponse, { status: 500 });
   }
 }

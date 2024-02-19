@@ -27,7 +27,7 @@ import { DebouncedInput } from "../ui/custom/debounced-input";
 import { Label } from "../ui/label";
 import TableColumnFilterDropdown from "../ui/custom/table-column-filter-dropdown";
 import { columns } from "./column-def";
-import { data } from "@/utils/mock-data";
+import { data } from "@/test/mock-data";
 
 export default function ReimbursementRequestsTable() {
   const [sorting, setSorting] = React.useState<SortingState>([]);

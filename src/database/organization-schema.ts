@@ -10,16 +10,6 @@ interface Organization {
   status: string;
 }
 
-interface GetOrganizationResponse extends Organization {}
-interface GetOrganizationListResponse {
-  organizations: Organization[];
-}
-interface UpdateOrganizationResponse extends Organization {}
-interface DeleteOrganizationResponse {
-  message: string;
-  status: number;
-}
-
 const OrganizationSchema = new Schema({
   name: { type: String, required: [true, "Organization name is required."] },
   description: {
