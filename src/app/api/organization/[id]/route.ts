@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { ErrorResponse } from "@/lib/error";
 import Organization from "@/database/organizationSchema";
 import connectDB from "@/database/db";
 import mongoose from "mongoose";
@@ -28,7 +29,10 @@ export async function GET(req: NextRequest, { params }: IParams) {
 
     return NextResponse.json(blog, { status: 200 });
   } catch (err) {
-    return NextResponse.json("Organization not found.", { status: 404 });
+    const errorResponse: ErrorResponse = {
+      error: `Organization not found.`,
+    };
+    return NextResponse.json(errorResponse, { status: 404 });
   }
 }
 
@@ -53,12 +57,10 @@ export async function PUT(req: NextRequest, { params }: IParams) {
     );
     return NextResponse.json(updatedOrganization, { status: 200 });
   } catch (err) {
-    return NextResponse.json(
-      {
-        error: `No organization found with the provided ID (${id}) or unable to update`,
-      },
-      { status: 404 },
-    );
+    const errorResponse: ErrorResponse = {
+      error: `No organization found with the provided ID (${id}) or unable to update`,
+    };
+    return NextResponse.json(errorResponse, { status: 404 });
   }
 }
 
@@ -69,10 +71,10 @@ export async function DELETE(req: NextRequest, { params }: IParams) {
   const deletedOrganization = await Organization.findByIdAndDelete(id);
 
   if (!deletedOrganization) {
-    return NextResponse.json(
-      { message: `No organization found with the provided ID ${id}.` },
-      { status: 404 },
-    );
+    const errorResponse: ErrorResponse = {
+      error: `No organization found with the provided ID ${id}.`,
+    };
+    return NextResponse.json(errorResponse, { status: 404 });
   }
 
   return NextResponse.json(
