@@ -36,7 +36,7 @@ export async function GET(req: NextRequest, { params }: IParams) {
   try {
     const reimburse: GetReimbursementResponse =
       await Reimbursement.findById(id).orFail();
-    return NextResponse.json(reimburse);
+    return NextResponse.json(reimburse, { status: 200 });
   } catch (error) {
     const errorResponse: ErrorResponse = {
       error: "Reimbursement Not Found",
