@@ -66,3 +66,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(errorResponse, { status: 404 });
   }
 }
+
+export async function SETUP(req: NextRequest) {
+  return NextResponse.redirect("/setup");
+}
