@@ -1,8 +1,9 @@
 "use client";
 
-import Image from "next/image";
-import Link from "next/link";
+import { useState } from "react";
 import { BellIcon } from "@radix-ui/react-icons";
+import Link from "next/link";
+import Image from "next/image";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -11,16 +12,19 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from "components/ui/dropdown-menu";
-import { useState } from "react";
 
 export default function Header() {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [hasNewUpdates, setHasNewUpdates] = useState(true); // Assume there are new updates initially
 
   const statusUpdates = [
     { id: 1, text: "Request A approved" },
-    { id: 1, text: "Request B approved" },
-    { id: 1, text: "Request C denied" },
+    { id: 2, text: "Request B approved" },
+    { id: 3, text: "Request C denied" },
   ];
+
+  const handleDropdownOpen = () => {
+    setHasNewUpdates(false); // Resets the new updates state when dropdown is opened
+  };
 
   return (
     <nav className="bg-white">
@@ -36,8 +40,11 @@ export default function Header() {
           </Link>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button>
-                <BellIcon className="w-6 h-6" />
+              <button onClick={handleDropdownOpen}>
+                <div className="relative">
+                  <BellIcon className="w-6 h-6" />
+                  {hasNewUpdates && <span className="badge"></span>}
+                </div>
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="right-0">
@@ -52,6 +59,17 @@ export default function Header() {
           </DropdownMenu>
         </div>
       </div>
+      <style jsx>{`
+        .badge {
+          position: absolute;
+          top: 0;
+          right: 0;
+          width: 8px;
+          height: 8px;
+          background-color: red;
+          border-radius: 50%;
+        }
+      `}</style>
     </nav>
   );
 }
