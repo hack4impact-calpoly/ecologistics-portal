@@ -28,7 +28,10 @@ const formSchema = z.object({
   name: z.string().min(1).max(50),
   email: z.string().min(1).max(50),
   transactionDate: z.date(),
-  amount: z.number(),
+  amount: z.union([
+    z.number(),
+    z.string().transform((value) => parseFloat(value)),
+  ]),
   purpose: z.string().max(1000),
 });
 
