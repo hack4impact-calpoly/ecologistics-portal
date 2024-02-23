@@ -101,7 +101,10 @@ export default function ReimbursementRequestsTable() {
         />
         <div className="flex flex-col">
           <Label className="text-xs pl-3">Date Range</Label>
-          {/* <DatePickerWithRange className="ml-2 self-end" /> */}
+          <DatePickerWithRange
+            className="ml-2 self-end"
+            handleChange={() => null}
+          />
         </div>
       </div>
       <div className="rounded-md border">
