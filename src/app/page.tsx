@@ -7,8 +7,6 @@ import SponsorTable from "@/components/sponsor-table/sponsor-table";
 export default function Home() {
   return (
     <main>
-      <UserButton afterSignOutUrl="/"></UserButton>
-      <h1>Home</h1>
       {/* <ReimbursementRequestsTable /> */}
       <SponsorTable />
     </main>
