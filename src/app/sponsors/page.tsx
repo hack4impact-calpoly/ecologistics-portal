@@ -85,7 +85,7 @@ async function filterOrganizationsWithPendingReimbursements(
 async function getReimbursement(reimbursementId: string) {
   try {
     const res = await fetch(
-      `http://localhost:3000/api/reimbursement/${reimbursementId}`,
+      `http://localhost:3000/api/reimbursement/${reimbursementId}`, // Replace with official API route
     );
 
     if (!res.ok) {
@@ -124,16 +124,17 @@ export default function Page() {
         if (allOrgs.length === 0) {
           const fetchedOrgs = organizations; // Replace with proper API fetch
           setAllOrgs(fetchedOrgs); // Cache orgs for later
-        }
 
-        if (updatedOrgs.length === 0) {
-          const filteredUpdatedOrgs =
-            await filterOrganizationsWithPendingReimbursements(allOrgs); // Fetch organizations with updates
-          setUpdatedOrgs(filteredUpdatedOrgs); // Cache orgs for later
+          if (fetchedOrgs.length > 0) {
+            const filteredUpdatedOrgs =
+              await filterOrganizationsWithPendingReimbursements(fetchedOrgs); // Fetch organizations with updates
+            console.log(filteredUpdatedOrgs);
+            setUpdatedOrgs(filteredUpdatedOrgs); // Cache orgs for later
+          }
         }
 
         // Set orgs based on viewUpdates and availability of updatedOrgs
-        if (viewUpdates && updatedOrgs.length > 0) {
+        if (viewUpdates) {
           filteredOrgs = updatedOrgs; // For displaying orgs with updates
         } else {
           filteredOrgs = allOrgs; // Otherwise display all orgs
@@ -146,7 +147,7 @@ export default function Page() {
     };
 
     fetchAndFilterOrganizations();
-  }, [viewUpdates, allOrgs, updatedOrgs]);
+  });
 
   return (
     <main className="p-10 w-full">
