@@ -1,4 +1,28 @@
-import { Schema, model, models } from "mongoose";
+import { Schema, model, models, Types } from "mongoose";
+
+interface Reimbursement {
+  organization: Types.ObjectId;
+  reportName: string;
+  recipientName: string;
+  recipientEmail: string;
+  transactionDate: Date;
+  amount: number;
+  paymentMethod: string;
+  purpose: string;
+  receiptLink: string;
+  status: string;
+  comment?: string;
+}
+
+interface GetReimbursementResponse extends Reimbursement {}
+interface GetReimbursementListResponse {
+  reimbursements: Reimbursement[];
+}
+interface UpdateReimbursementResponse extends Reimbursement {}
+interface DeleteReimbursementResponse {
+  message: string;
+  status: number;
+}
 
 const ReimbursementSchema = new Schema({
   organization: {

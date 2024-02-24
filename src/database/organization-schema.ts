@@ -1,4 +1,14 @@
-import { Schema, model, models } from "mongoose";
+import { Schema, model, models, Types } from "mongoose";
+
+interface Organization {
+  name: string;
+  description: string;
+  website?: string;
+  clerkUser: string;
+  logo?: string;
+  reimbursements: Types.ObjectId[];
+  status: string;
+}
 
 const OrganizationSchema = new Schema({
   name: { type: String, required: [true, "Organization name is required."] },
@@ -14,6 +24,7 @@ const OrganizationSchema = new Schema({
   logo: { type: String, required: false },
   reimbursements: {
     type: [{ type: Schema.Types.ObjectId, ref: "Reimbursement" }],
+    default: [],
     required: [
       true,
       "Reimbursements array allotted to this organization are required.",

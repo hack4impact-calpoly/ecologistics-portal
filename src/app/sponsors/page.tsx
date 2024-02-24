@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Toggle } from "@/components/ui/toggle";
 import { Input } from "@/components/ui/input";
+import SponsorCard from "@/components/sponsor-card";
 
 export default function Page() {
   return (
@@ -39,6 +40,16 @@ export default function Page() {
             className="border-none rounded-full p-4 text-xl focus:outline-none"
           />
         </div>
+      </div>
+      <div className="py-10">
+        <SponsorCard
+          image={
+            "https://t4.ftcdn.net/jpg/03/59/58/91/360_F_359589186_JDLl8dIWoBNf1iqEkHxhUeeOulx0wOC5.jpg"
+          }
+          organization={"Test Org"}
+          user={"Test User"}
+          email={"email@example.com"}
+        />
       </div>
     </main>
   );
