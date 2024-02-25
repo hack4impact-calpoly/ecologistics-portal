@@ -29,7 +29,7 @@ import TableColumnFilterDropdown from "../ui/custom/table-column-filter-dropdown
 import { columns } from "./column-def";
 import { data } from "@/test/mock-data";
 
-export default function ReimbursementRequestsTable() {
+export default function AdminTable() {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
