@@ -1,4 +1,5 @@
 "use client";
+import { imageUpload } from "@/services/imageUpload";
 import { FileUploader } from "react-drag-drop-files";
 const fileTypes = ["JPG", "PNG", "JPEG"];
 
@@ -11,7 +12,7 @@ export default function ImageUpload({ handleChange }: ImageUploadProps) {
     <div>
       <FileUploader
         handleChange={(file: File) => {
-          // setFile(file);
+          imageUpload(file, file.name);
           handleChange(file);
         }}
         name="file"
