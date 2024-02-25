@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Toggle } from "@/components/ui/toggle";
 import { Input } from "@/components/ui/input";
-import SponsorCard from "@/components/sponsor-card";
+import SponsoredOrgCard from "@/components/sponsored-org-card";
 
 export default function Page() {
   return (
@@ -42,7 +42,7 @@ export default function Page() {
         </div>
       </div>
       <div className="py-10">
-        <SponsorCard
+        <SponsoredOrgCard
           image={
             "https://t4.ftcdn.net/jpg/03/59/58/91/360_F_359589186_JDLl8dIWoBNf1iqEkHxhUeeOulx0wOC5.jpg"
           }
