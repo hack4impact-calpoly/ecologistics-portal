@@ -29,7 +29,7 @@ import TableColumnFilterDropdown from "../ui/custom/table-column-filter-dropdown
 import { columns } from "./column-def";
 import { data } from "@/test/mock-data";
 
-export default function ReimbursementRequestsTable() {
+export default function AdminTable() {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
@@ -101,7 +101,10 @@ export default function ReimbursementRequestsTable() {
         />
         <div className="flex flex-col">
           <Label className="text-xs pl-3">Date Range</Label>
-          {/* <DatePickerWithRange className="ml-2 self-end" /> */}
+          <DatePickerWithRange
+            className="ml-2 self-end"
+            handleChange={() => null}
+          />
         </div>
       </div>
       <div className="rounded-md border">

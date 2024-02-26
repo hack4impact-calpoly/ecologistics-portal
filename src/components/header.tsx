@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { BellIcon } from "@radix-ui/react-icons";
+import { UserButton } from "@clerk/nextjs";
 import Link from "next/link";
 import Image from "next/image";
 import {

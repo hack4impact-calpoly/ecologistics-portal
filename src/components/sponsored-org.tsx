@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 
-export default function SponsorHome() {
+export default function SponsoredOrg() {
   return (
     <div>
       <h1>Nonprofit Name</h1>
