@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/table";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { DebouncedInput } from "../ui/custom/debounced-input";
 import { useState } from "react";
 import { DatePickerWithRange } from "../ui/custom/date-range-picker";
 import { Label } from "@radix-ui/react-dropdown-menu";
@@ -53,6 +53,7 @@ export function DataTable<TData, TValue>({
   data,
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [globalFilter, setGlobalFilter] = useState("");
   const table = useReactTable({
     data,
     columns,
@@ -60,13 +61,16 @@ export function DataTable<TData, TValue>({
     getPaginationRowModel: getPaginationRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
+    onGlobalFilterChange: setGlobalFilter,
     state: {
       columnFilters,
+      globalFilter,
     },
     filterFns: {
       dateFilterFn,
       fuzzy: fuzzyFilter,
     },
+    globalFilterFn: fuzzyFilter,
   });
 
   const handleDateRangeChange = (range: DateRange) => {
@@ -74,19 +78,14 @@ export function DataTable<TData, TValue>({
       return [range.from, range.to];
     });
   };
-
   return (
     <div>
       <div className="flex justify-between py-4">
-        <Input
-          placeholder="Search"
-          value={
-            (table.getColumn("reportName")?.getFilterValue() as string) ?? ""
-          }
-          onChange={(event) =>
-            table.getColumn("reportName")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm mt-4"
+        <DebouncedInput
+          value={globalFilter ?? ""}
+          onChange={(value) => setGlobalFilter(String(value))}
+          className="px-2 text-sm flex-grow w-100 mt-4 border rounded"
+          placeholder="Search all columns..."
         />
         <TableColumnFilterDropdown
           table={table}
