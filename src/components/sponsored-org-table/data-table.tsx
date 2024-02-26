@@ -8,6 +8,7 @@ import {
   getPaginationRowModel,
   getFilteredRowModel,
   useReactTable,
+  FilterFn,
 } from "@tanstack/react-table";
 
 import {
@@ -27,11 +28,25 @@ import { Label } from "@radix-ui/react-dropdown-menu";
 import TableColumnFilterDropdown from "../ui/custom/table-column-filter-dropdown";
 import { dateFilterFn } from "./columns";
 import { DateRange } from "react-day-picker";
+import { rankItem } from "@tanstack/match-sorter-utils";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
+
+const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
+  // Rank the item
+  const itemRank = rankItem(row.getValue(columnId), value);
+
+  // Store the itemRank info
+  addMeta({
+    itemRank,
+  });
+
+  // Return if the item should be filtered in/out
+  return itemRank.passed;
+};
 
 export function DataTable<TData, TValue>({
   columns,
@@ -50,6 +65,7 @@ export function DataTable<TData, TValue>({
     },
     filterFns: {
       dateFilterFn,
+      fuzzy: fuzzyFilter,
     },
   });
 

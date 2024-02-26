@@ -10,6 +10,7 @@ export const columns: ColumnDef<Reimbursement>[] = [
     cell: ({ row }) => (
       <div className="capitalize">{row.getValue("reportName")}</div>
     ),
+    filterFn: "fuzzy" as FilterFnOption<Reimbursement>,
   },
   {
     accessorKey: "recipientName",
