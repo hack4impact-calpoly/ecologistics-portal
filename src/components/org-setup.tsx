@@ -1,5 +1,3 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Form,
   FormItem,
@@ -8,12 +6,17 @@ import {
   FormDescription,
   FormMessage,
   FormField,
-  useFormField,
 } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 
 export default function OrgSetup() {
-  const { control, handleSubmit } = useForm();
+  const form = useForm({
+    defaultValues: {
+      name: "",
+      description: "",
+      website: "",
+    },
+  });
 
   const onSubmit = async (data: any) => {
     // form submission logic here
@@ -23,12 +26,12 @@ export default function OrgSetup() {
   return (
     <div>
       <h1>Organization Setup</h1>
-      <Form>
+      <Form {...form}>
         <FormItem>
           <FormLabel>Organzation Name</FormLabel>
           <FormControl>
             <FormField
-              control={control}
+              control={form.control}
               name="name"
               render={({ field }) => <input {...field} />}
             />
@@ -39,7 +42,7 @@ export default function OrgSetup() {
           <FormLabel>Organzation Description</FormLabel>
           <FormControl>
             <FormField
-              control={control}
+              control={form.control}
               name="description"
               render={({ field }) => <textarea {...field} />}
             />
@@ -50,7 +53,7 @@ export default function OrgSetup() {
           <FormLabel>Website</FormLabel>
           <FormControl>
             <FormField
-              control={control}
+              control={form.control}
               name="website"
               render={({ field }) => <input {...field} />}
             />
