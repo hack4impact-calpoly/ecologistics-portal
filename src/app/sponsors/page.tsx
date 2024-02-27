@@ -195,7 +195,7 @@ export default function Page() {
           />
         </div>
       </div>
-      <div className="flex flex-wrap justify-between">
+      <div className="flex flex-wrap gap-x-14 gap-y-10">
         {orgs.map((organization, index) => (
           <SponsorCard
             key={index}
