@@ -30,7 +30,7 @@ export const data: Reimbursement[] = [
   },
   {
     organization: new Types.ObjectId(3),
-    reportName: "examplename",
+    reportName: "costrequest",
     recipientName: "Steve Jones",
     recipientEmail: "steve@yahoo.com",
     transactionDate: new Date("2024-12-19"),
@@ -43,7 +43,7 @@ export const data: Reimbursement[] = [
   },
   {
     organization: new Types.ObjectId(4),
-    reportName: "examplename",
+    reportName: "coatrequest",
     recipientName: "Steve Jones",
     recipientEmail: "steve@yahoo.com",
     transactionDate: new Date("2024-3-19"),
@@ -56,7 +56,7 @@ export const data: Reimbursement[] = [
   },
   {
     organization: new Types.ObjectId(5),
-    reportName: "examplename",
+    reportName: "copreqest",
     recipientName: "Steve Jones",
     recipientEmail: "steve@yahoo.com",
     transactionDate: new Date("2024-4-19"),
@@ -69,7 +69,7 @@ export const data: Reimbursement[] = [
   },
   {
     organization: new Types.ObjectId(6),
-    reportName: "examplename",
+    reportName: "cotrequest",
     recipientName: "Steve Jones",
     recipientEmail: "steve@yahoo.com",
     transactionDate: new Date("2024-5-19"),
@@ -82,7 +82,7 @@ export const data: Reimbursement[] = [
   },
   {
     organization: new Types.ObjectId(7),
-    reportName: "examplename",
+    reportName: "createrequest",
     recipientName: "Steve Jones",
     recipientEmail: "steve@yahoo.com",
     transactionDate: new Date("2023-8-19"),
@@ -95,7 +95,7 @@ export const data: Reimbursement[] = [
   },
   {
     organization: new Types.ObjectId(8),
-    reportName: "examplename",
+    reportName: "caoprequest",
     recipientName: "Steve Jones",
     recipientEmail: "steve@yahoo.com",
     transactionDate: new Date("2024-7-19"),

@@ -8,6 +8,7 @@ import {
   getPaginationRowModel,
   getFilteredRowModel,
   useReactTable,
+  FilterFn,
 } from "@tanstack/react-table";
 
 import {
@@ -20,24 +21,39 @@ import {
 } from "@/components/ui/table";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { DebouncedInput } from "../ui/custom/debounced-input";
 import { useState } from "react";
 import { DatePickerWithRange } from "../ui/custom/date-range-picker";
 import { Label } from "@radix-ui/react-dropdown-menu";
 import TableColumnFilterDropdown from "../ui/custom/table-column-filter-dropdown";
 import { dateFilterFn } from "./columns";
 import { DateRange } from "react-day-picker";
+import { rankItem } from "@tanstack/match-sorter-utils";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
 
+const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
+  // Rank the item
+  const itemRank = rankItem(row.getValue(columnId), value);
+
+  // Store the itemRank info
+  addMeta({
+    itemRank,
+  });
+
+  // Return if the item should be filtered in/out
+  return itemRank.passed;
+};
+
 export function DataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [globalFilter, setGlobalFilter] = useState("");
   const table = useReactTable({
     data,
     columns,
@@ -45,12 +61,16 @@ export function DataTable<TData, TValue>({
     getPaginationRowModel: getPaginationRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
+    onGlobalFilterChange: setGlobalFilter,
     state: {
       columnFilters,
+      globalFilter,
     },
     filterFns: {
       dateFilterFn,
+      fuzzy: fuzzyFilter,
     },
+    globalFilterFn: fuzzyFilter,
   });
 
   const handleDateRangeChange = (range: DateRange) => {
@@ -58,19 +78,14 @@ export function DataTable<TData, TValue>({
       return [range.from, range.to];
     });
   };
-
   return (
     <div>
       <div className="flex justify-between py-4">
-        <Input
-          placeholder="Search"
-          value={
-            (table.getColumn("reportName")?.getFilterValue() as string) ?? ""
-          }
-          onChange={(event) =>
-            table.getColumn("reportName")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm mt-4"
+        <DebouncedInput
+          value={globalFilter ?? ""}
+          onChange={(value) => setGlobalFilter(String(value))}
+          className="px-2 text-sm flex-grow w-100 mt-4 border rounded"
+          placeholder="Search all columns..."
         />
         <TableColumnFilterDropdown
           table={table}
