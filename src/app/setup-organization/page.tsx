@@ -1,5 +1,7 @@
 "use client";
 
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormItem,
@@ -9,12 +11,19 @@ import {
   FormField,
 } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
-import { Input } from "./ui/input";
-import { Textarea } from "./ui/textarea";
-import { Button } from "./ui/button";
+import { Input } from "../../components/ui/input";
+import { Textarea } from "../../components/ui/textarea";
+import { Button } from "../../components/ui/button";
 
-export default function OrgSetup() {
+const formSchema = z.object({
+  name: z.string().min(1).max(50),
+  description: z.string().max(1000),
+  website: z.string().url(),
+});
+
+export default function Page() {
   const form = useForm({
+    resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
       description: "",
@@ -29,7 +38,7 @@ export default function OrgSetup() {
 
   return (
     <div>
-      <h1>Organization Setup</h1>
+      <h1>Setup Organization</h1>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 m-5">
           <FormField
@@ -37,7 +46,7 @@ export default function OrgSetup() {
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Organzation Name</FormLabel>
+                <FormLabel>Organization Name</FormLabel>
                 <FormControl>
                   <Input placeholder="name" {...field} />
                 </FormControl>
@@ -49,7 +58,7 @@ export default function OrgSetup() {
             name="description"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Organzation Description</FormLabel>
+                <FormLabel>Organization Description</FormLabel>
                 <FormControl>
                   <Textarea placeholder="description" {...field} />
                 </FormControl>
