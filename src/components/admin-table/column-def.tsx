@@ -6,6 +6,7 @@ import { DownloadIcon } from "@radix-ui/react-icons";
 import React from "react";
 import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
 import Reimbursement from "@/database/reimbursement-schema";
+import { Types } from "mongoose";
 
 export const columns: ColumnDef<Reimbursement>[] = [
   {
@@ -17,10 +18,15 @@ export const columns: ColumnDef<Reimbursement>[] = [
     cell: ({ row }) => (
       <Dialog>
         <DialogTrigger>
-          <div className="capitalize">{row.getValue("organization")}</div>
+          <div className="capitalize">
+            {/* TODO: causes hydration error due to client rendering a different ObjectId than server */}
+            {/* should be fixed when we are rendering organization name instead of id */}
+            {/* {row.getValue<Types.ObjectId>("organization").toString()} */}
+            test org
+          </div>
         </DialogTrigger>
         <DialogContent>
-          <div className="border">popover content</div>
+          <div className="border">dialog content</div>
         </DialogContent>
       </Dialog>
     ),

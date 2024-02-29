@@ -1,17 +1,18 @@
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { UserButton } from "@clerk/nextjs";
-import ReimbursementRequestsTable from "@/components/reimbursement-table/table";
-import SponsorTable from "@/components/sponsor-table/sponsor-table";
+import ReimbursementCard from "@/components/reimbursement-card";
+import AdminTable from "@/components/admin-table/admin-table";
+import SponsoredOrgTable from "@/components/sponsored-org-table/sponsored-org-table";
+import { data } from "@/test/mock-data";
 import OrgSetup from "@/components/org-setup";
 
 export default function Home() {
   return (
     <main>
-      <UserButton afterSignOutUrl="/"></UserButton>
-      <h1>Home</h1>
-      {/* <ReimbursementRequestsTable /> */}
-      <SponsorTable />
+      {/* <AdminTable /> */}
+      {/* <SponsoredOrgTable /> */}
+      {/* <ReimbursementCard
+        {...data[0]}
+        receiptLink="https://legaltemplates.net/wp-content/uploads/receipt-template.png"
+      /> */}
       <OrgSetup />
     </main>
   );
