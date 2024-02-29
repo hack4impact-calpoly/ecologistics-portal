@@ -1,17 +1,26 @@
 import connectDB from "@/database/db";
 import { NextRequest, NextResponse } from "next/server";
+import { ErrorResponse } from "@/lib/error";
 // import { NextApiRequest, NextApiResponse } from "next";
-import Reimbursement from "@/database/reimbursementSchema";
+import Reimbursement from "@/database/reimbursement-schema";
+
+export type CreateReimbursementBody = Reimbursement;
+
+export type GetReimbursementsResponse = Reimbursement[];
+export type CreateReimbursementResponse = Reimbursement;
 
 //Get all Reimbursements
 export async function GET() {
   await connectDB();
   try {
-    const reimbursements = await Reimbursement.find();
+    const reimbursements: GetReimbursementsResponse =
+      await Reimbursement.find();
     return NextResponse.json(reimbursements);
   } catch (error) {
-    return NextResponse.error();
-    // return NextResponse.error({ message: error.message }, 500);
+    const errorResponse: ErrorResponse = {
+      error: "Error fetching reimbursements",
+    };
+    return NextResponse.json(errorResponse, { status: 404 });
   }
 }
 
@@ -20,20 +29,24 @@ export async function POST(req: NextRequest) {
   await connectDB();
 
   try {
-    const reimburse = await req.json();
-    console.log(reimburse);
+    const reimburse: CreateReimbursementBody = await req.json();
 
     //validate input
     if (!reimburse) {
-      return NextResponse.json("No Body in Post Req", { status: 400 });
+      const errorResponse: ErrorResponse = {
+        error: "No Body in Post Req",
+      };
+      return NextResponse.json(errorResponse, { status: 400 });
     }
-    const reimbursement = new Reimbursement(reimburse);
-    await reimbursement.save();
+    const reimbursement: CreateReimbursementResponse = await new Reimbursement(
+      reimburse,
+    ).save();
     return NextResponse.json(reimbursement);
     // res.status(201).json(reimbursement);
   } catch (error) {
-    console.log(error);
-    // res.status(400).json({ message: "Reimbursement Post Failed" });
-    return NextResponse.json("Post Failed", { status: 400 });
+    const errorResponse: ErrorResponse = {
+      error: "Post Failed",
+    };
+    return NextResponse.json(errorResponse, { status: 400 });
   }
 }

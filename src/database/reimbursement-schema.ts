@@ -1,7 +1,7 @@
-import { Schema, model, models } from "mongoose";
+import { Schema, model, models, Types } from "mongoose";
 
 interface Reimbursement {
-  organization: Schema.Types.ObjectId;
+  organization: Types.ObjectId;
   reportName: string;
   recipientName: string;
   recipientEmail: string;
