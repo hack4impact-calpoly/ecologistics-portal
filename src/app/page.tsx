@@ -6,7 +6,7 @@ import { data } from "@/test/mock-data";
 export default function Home() {
   return (
     <main>
-      {/* <AdminTable /> */}
+      <AdminTable />
       {/* <SponsoredOrgTable /> */}
       {/* <ReimbursementCard
         {...data[0]}
