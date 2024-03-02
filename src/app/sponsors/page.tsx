@@ -195,15 +195,18 @@ export default function Page() {
           />
         </div>
       </div>
-      <div className="flex flex-wrap gap-x-14 gap-y-10">
+      {/* Modify mr and ml to align cards to horizontal edge of flex box */}
+      <div className="flex flex-wrap justify-start mr-[-8px] ml-[-8px]">
         {orgs.map((organization, index) => (
-          <SponsorCard
-            key={index}
-            image={organization.logo || ""}
-            organization={organization.name}
-            user={organization.clerkUser}
-            email="temp@domain.com"
-          />
+          // Modify w to fit desired amount of cards in one row
+          <div key={index} className="w-1/5 p-2">
+            <SponsorCard
+              image={organization.logo || ""}
+              organization={organization.name}
+              user={organization.clerkUser}
+              email="temp@domain.com"
+            />
+          </div>
         ))}
       </div>
     </main>
