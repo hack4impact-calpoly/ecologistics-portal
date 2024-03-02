@@ -1,5 +1,5 @@
 import { formatAmount } from "@/lib/format";
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef, FilterFnOption } from "@tanstack/react-table";
 import { Badge } from "../ui/badge";
 import { Button } from "@/components/ui/button";
 import { DownloadIcon } from "@radix-ui/react-icons";
@@ -17,19 +17,24 @@ export const columns: ColumnDef<Reimbursement>[] = [
     cell: ({ row }) => (
       <Dialog>
         <DialogTrigger>
-          <div className="capitalize">{row.getValue("organization")}</div>
+          <div className="capitalize">
+            {/* TODO: causes hydration error due to client rendering a different ObjectId than server */}
+            {/* should be fixed when we are rendering organization name instead of id */}
+            {/* {row.getValue<Types.ObjectId>("organization").toString()} */}
+            test org
+          </div>
         </DialogTrigger>
         <DialogContent>
-          <div className="border">popover content</div>
+          <div className="border">dialog content</div>
         </DialogContent>
       </Dialog>
     ),
   },
   {
-    accessorKey: "reportName",
+    accessorKey: "recipientName",
     header: "Recipient",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("reportName")}</div>
+      <div className="capitalize">{row.getValue("recipientName")}</div>
     ),
   },
   {
@@ -42,6 +47,7 @@ export const columns: ColumnDef<Reimbursement>[] = [
   {
     accessorKey: "transactionDate",
     header: "Expense Date",
+    filterFn: "dateFilterFn" as FilterFnOption<Reimbursement>,
     cell: ({ row }) => (
       <div className="capitalize">
         {(row.getValue("transactionDate") as Date).toLocaleDateString()}
