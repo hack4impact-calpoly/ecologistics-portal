@@ -37,8 +37,8 @@ const Sidebar = () => {
             icon: HomeIcon,
           },
           {
-            title: "Sponsors",
-            route: "/sponsors",
+            title: "Sponsored Organizations",
+            route: "/sponsored-organizations",
             icon: FileTextIcon,
           },
         ]}

@@ -26,10 +26,13 @@ import { DatePickerWithRange } from "../ui/custom/date-range-picker";
 import { DebouncedInput } from "../ui/custom/debounced-input";
 import { Label } from "../ui/label";
 import TableColumnFilterDropdown from "../ui/custom/table-column-filter-dropdown";
-import { columns } from "./column-def";
+import { columns } from "./columns";
 import { data } from "@/test/mock-data";
+import { DateRange } from "react-day-picker";
+import { dateFilterFn } from "@/lib/utils";
+import { fuzzyFilter } from "@/lib/utils";
 
-export default function ReimbursementRequestsTable() {
+export default function AdminTable() {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
@@ -47,6 +50,7 @@ export default function ReimbursementRequestsTable() {
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     onGlobalFilterChange: setGlobalFilter,
+    globalFilterFn: fuzzyFilter,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -60,6 +64,10 @@ export default function ReimbursementRequestsTable() {
       globalFilter,
       expanded,
     },
+    filterFns: {
+      dateFilterFn,
+      fuzzy: fuzzyFilter,
+    },
   });
 
   const getUniqueValues = (data: any[], type: string) => {
@@ -67,6 +75,12 @@ export default function ReimbursementRequestsTable() {
     data.map((d: any) => values.add(d[type]));
 
     return Array.from(values) as string[];
+  };
+
+  const handleDateRangeChange = (range: DateRange) => {
+    table.getColumn("transactionDate")?.setFilterValue(() => {
+      return [range.from, range.to];
+    });
   };
 
   return (
@@ -101,7 +115,10 @@ export default function ReimbursementRequestsTable() {
         />
         <div className="flex flex-col">
           <Label className="text-xs pl-3">Date Range</Label>
-          {/* <DatePickerWithRange className="ml-2 self-end" /> */}
+          <DatePickerWithRange
+            className="ml-2 self-end"
+            handleChange={handleDateRangeChange}
+          />
         </div>
       </div>
       <div className="rounded-md border">
