@@ -14,7 +14,7 @@ const organizations: Organization[] = [
     description: "Placeholder description",
     website: "https://organization1.com",
     clerkUser: "User 1",
-    logo: "/images/sponsor_profile_picture_placeholder.png",
+    logo: "/images/sponsored_org_profile_picture_placeholder.png",
     reimbursements: [new Types.ObjectId("65c97b4056e2e2d7d225fe70")],
     status: "active",
   },
@@ -23,7 +23,7 @@ const organizations: Organization[] = [
     description: "Placeholder description",
     website: "https://organization2.com",
     clerkUser: "User 2",
-    logo: "/images/sponsor_profile_picture_placeholder.png",
+    logo: "/images/sponsored_org_profile_picture_placeholder.png",
     reimbursements: [],
     status: "active",
   },
@@ -32,7 +32,7 @@ const organizations: Organization[] = [
     description: "Placeholder description",
     website: "https://organization3.com",
     clerkUser: "User 3",
-    logo: "/images/sponsor_profile_picture_placeholder.png",
+    logo: "/images/sponsored_org_profile_picture_placeholder.png",
     reimbursements: [new Types.ObjectId("65c97b4056e2e2d7d225fe70")],
     status: "active",
   },
@@ -41,7 +41,7 @@ const organizations: Organization[] = [
     description: "Placeholder description",
     website: "https://organization4.com",
     clerkUser: "User 4",
-    logo: "/images/sponsor_profile_picture_placeholder.png",
+    logo: "/images/sponsored_org_profile_picture_placeholder.png",
     reimbursements: [],
     status: "active",
   },
@@ -50,7 +50,7 @@ const organizations: Organization[] = [
     description: "Placeholder description",
     website: "https://organization5.com",
     clerkUser: "User 5",
-    logo: "/images/sponsor_profile_picture_placeholder.png",
+    logo: "/images/sponsored_org_profile_picture_placeholder.png",
     reimbursements: [new Types.ObjectId("65c97b4056e2e2d7d225fe70")],
     status: "active",
   },
@@ -176,6 +176,7 @@ export default function Page() {
             className="text-lg h-11 rounded-none border px-8 border-[#335543] text-[#335543] data-[state=on]:bg-[#335543] data-[state=on]:text-white"
             data-state={viewUpdates ? "on" : "off"}
             onClick={handleViewUpdatesToggle}
+            value="view-update"
           >
             VIEW UPDATES
             <div className="relative w-7 h-7 ml-3 bg-[#335543] rounded-full flex items-center justify-center text-white text-sm">
