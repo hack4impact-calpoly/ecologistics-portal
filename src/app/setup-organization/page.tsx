@@ -39,8 +39,12 @@ export default function Page() {
   if (!isSignedIn) {
     return redirect("/sign-in");
   }
+  if (user?.unsafeMetadata?.organization || user?.publicMetadata?.admin) {
+    return redirect("/");
+  }
   const onSubmit = async (data: any) => {
     user.unsafeMetadata.organization = { ...data, approved: false };
+    redirect("/");
   };
 
   return (

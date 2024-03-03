@@ -23,6 +23,9 @@ import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { Calendar } from "@/components/ui/calendar";
+import { useUser } from "@clerk/nextjs";
+import { redirect } from "next/navigation";
+import { Description } from "@radix-ui/react-toast";
 
 const formSchema = z.object({
   name: z.string().min(1).max(50),
@@ -62,6 +65,25 @@ export default function Page() {
     });
   }
 
+  const { isLoaded, isSignedIn, user } = useUser();
+  if (!isLoaded) {
+    return <div>Loading...</div>;
+  }
+  if (!isSignedIn) {
+    return redirect("/sign-in");
+  }
+  if (
+    !(
+      user?.unsafeMetadata?.organization as {
+        name: string;
+        description: string;
+        website: string;
+        approved: boolean;
+      }
+    ).approved
+  ) {
+    return redirect("/");
+  }
   // implementation
   return (
     <Form {...form}>

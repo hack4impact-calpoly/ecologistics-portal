@@ -31,7 +31,14 @@ export default function Home() {
       redirect("/setup-organization");
     } else {
       if (
-        (user?.unsafeMetadata?.organization as { approved: boolean }).approved
+        (
+          user?.unsafeMetadata?.organization as {
+            name: string;
+            description: string;
+            website: string;
+            approved: boolean;
+          }
+        ).approved
       ) {
         return (
           <main>
