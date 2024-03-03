@@ -23,6 +23,8 @@ import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { Calendar } from "@/components/ui/calendar";
+import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   name: z.string().min(1).max(50),
@@ -36,6 +38,7 @@ const formSchema = z.object({
 });
 
 export default function Page() {
+  const router = useRouter();
   // definition
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -62,6 +65,25 @@ export default function Page() {
     });
   }
 
+  const { isLoaded, isSignedIn, user } = useUser();
+  if (!isLoaded) {
+    return <div>Loading...</div>;
+  }
+  if (!isSignedIn) {
+    return router.push("/sign-in");
+  }
+  if (
+    !(
+      user?.unsafeMetadata?.organization as {
+        name: string;
+        description: string;
+        website: string;
+        approved: boolean;
+      }
+    )?.approved
+  ) {
+    return router.push("/");
+  }
   // implementation
   return (
     <Form {...form}>

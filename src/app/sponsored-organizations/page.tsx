@@ -1,4 +1,7 @@
 "use client";
+
+import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Toggle } from "@/components/ui/toggle";
 import { Input } from "@/components/ui/input";
@@ -99,6 +102,8 @@ async function getReimbursement(reimbursementId: string) {
 }
 
 export default function Page() {
+  const router = useRouter();
+  const { isLoaded, isSignedIn, user } = useUser();
   const [viewUpdates, setViewUpdates] = useState(false); // State for view updates toggle
   const [orgs, setOrgs] = useState<Organization[]>([]); // State for currently displayed organizations based on view settings
   const [updatedOrgs, setUpdatedOrgs] = useState<Organization[]>([]); // State for organizations with pending updates (filtered)
@@ -148,6 +153,16 @@ export default function Page() {
 
     fetchAndFilterOrganizations();
   });
+
+  if (!isLoaded) {
+    return <div>Loading...</div>;
+  }
+  if (!isSignedIn) {
+    return router.push("/sign-in");
+  }
+  if (!user?.publicMetadata?.admin) {
+    return router.push("/");
+  }
 
   return (
     <main className="p-10 w-full">
