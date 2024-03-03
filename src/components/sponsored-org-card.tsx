@@ -15,7 +15,7 @@ export default function SponsoredOrgCard({
   email,
 }: SponsoredOrgCardProps) {
   return (
-    <Card className="w-72 h-72">
+    <Card className="w-full h-72">
       <CardHeader className="pt-8 pl-4 pr-4 flex flex-row">
         <Image
           className="object-cover rounded-full col-span-3"

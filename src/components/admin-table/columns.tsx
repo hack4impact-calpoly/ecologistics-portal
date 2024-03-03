@@ -1,12 +1,11 @@
 import { formatAmount } from "@/lib/format";
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef, FilterFnOption } from "@tanstack/react-table";
 import { Badge } from "../ui/badge";
 import { Button } from "@/components/ui/button";
 import { DownloadIcon } from "@radix-ui/react-icons";
 import React from "react";
 import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
 import Reimbursement from "@/database/reimbursement-schema";
-import { Types } from "mongoose";
 
 export const columns: ColumnDef<Reimbursement>[] = [
   {
@@ -32,10 +31,10 @@ export const columns: ColumnDef<Reimbursement>[] = [
     ),
   },
   {
-    accessorKey: "reportName",
+    accessorKey: "recipientName",
     header: "Recipient",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("reportName")}</div>
+      <div className="capitalize">{row.getValue("recipientName")}</div>
     ),
   },
   {
@@ -48,6 +47,7 @@ export const columns: ColumnDef<Reimbursement>[] = [
   {
     accessorKey: "transactionDate",
     header: "Expense Date",
+    filterFn: "dateFilterFn" as FilterFnOption<Reimbursement>,
     cell: ({ row }) => (
       <div className="capitalize">
         {(row.getValue("transactionDate") as Date).toLocaleDateString()}

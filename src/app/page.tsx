@@ -1,8 +1,6 @@
 "use client";
-import ReimbursementCard from "@/components/reimbursement-card";
 import AdminTable from "@/components/admin-table/admin-table";
 import SponsoredOrgTable from "@/components/sponsored-org-table/sponsored-org-table";
-import { data } from "@/test/mock-data";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 
@@ -20,11 +18,6 @@ export default function Home() {
       <main>
         <h1 className="text-xl font-bold">Nonprofit Name</h1>
         <AdminTable />
-        {/* <SponsoredOrgTable /> */}
-        {/* <ReimbursementCard
-          {...data[0]}
-          receiptLink="https://legaltemplates.net/wp-content/uploads/receipt-template.png"
-        /> */}
       </main>
     );
   } else {
