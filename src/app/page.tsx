@@ -8,8 +8,11 @@ import { redirect } from "next/navigation";
 
 export default function Home() {
   const { isLoaded, isSignedIn, user } = useUser();
-  if (!isLoaded || !isSignedIn) {
+  if (!isLoaded) {
     return <div>Loading...</div>;
+  }
+  if (!isSignedIn) {
+    return redirect("/sign-in");
   }
   if (user?.publicMetadata?.admin) {
     return (

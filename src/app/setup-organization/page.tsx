@@ -14,6 +14,8 @@ import { useForm } from "react-hook-form";
 import { Input } from "../../components/ui/input";
 import { Textarea } from "../../components/ui/textarea";
 import { Button } from "../../components/ui/button";
+import { useUser } from "@clerk/nextjs";
+import { redirect } from "next/navigation";
 
 const formSchema = z.object({
   name: z.string().min(1).max(50),
@@ -30,10 +32,15 @@ export default function Page() {
       website: "",
     },
   });
-
+  const { isLoaded, isSignedIn, user } = useUser();
+  if (!isLoaded) {
+    return <div>Loading...</div>;
+  }
+  if (!isSignedIn) {
+    return redirect("/sign-in");
+  }
   const onSubmit = async (data: any) => {
-    // form submission logic here
-    console.log("Form data submitted:", data);
+    user.unsafeMetadata.organization = { ...data, approved: false };
   };
 
   return (
