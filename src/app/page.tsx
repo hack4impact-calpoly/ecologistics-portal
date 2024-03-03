@@ -39,7 +39,7 @@ export default function Home() {
             website: string;
             approved: boolean;
           }
-        ).approved
+        )?.approved
       ) {
         return (
           <main>

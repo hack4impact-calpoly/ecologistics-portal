@@ -80,7 +80,7 @@ export default function Page() {
         website: string;
         approved: boolean;
       }
-    ).approved
+    )?.approved
   ) {
     return router.push("/");
   }
