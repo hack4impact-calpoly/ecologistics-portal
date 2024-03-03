@@ -37,7 +37,7 @@ export default function RootLayout({
             <Sidebar />
             {children}
           </div>
-          <Footer />
+          {/* <Footer /> */}
         </body>
       </ClerkProvider>
     </html>
