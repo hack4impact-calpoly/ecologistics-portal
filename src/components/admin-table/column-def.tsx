@@ -50,7 +50,19 @@ export const columns: ColumnDef<Reimbursement>[] = [
     header: "Expense Date",
     cell: ({ row }) => (
       <div className="capitalize">
-        {(row.getValue("transactionDate") as Date).toLocaleDateString()}
+        {(() => {
+          const transactionDate = row.getValue("transactionDate");
+          if (
+            typeof transactionDate === "string" ||
+            typeof transactionDate === "number"
+          ) {
+            const date = new Date(transactionDate);
+            return date.toLocaleDateString();
+          }
+          return transactionDate instanceof Date
+            ? transactionDate.toLocaleDateString()
+            : "";
+        })()}
       </div>
     ),
   },

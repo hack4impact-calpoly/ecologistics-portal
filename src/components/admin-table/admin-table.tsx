@@ -33,7 +33,7 @@ import Reimbursement from "@/database/reimbursement-schema";
 
 async function fetchReimbursements(): Promise<Reimbursement[]> {
   try {
-    const response = await fetch("/api/reimbursements"); // Adjust endpoint as necessary
+    const response = await fetch("/api/reimbursement"); // Adjust endpoint as necessary
     if (!response.ok) {
       throw new Error("Network response was not ok");
     }
