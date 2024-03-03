@@ -1,5 +1,5 @@
 "use client";
-import React, { use, useState } from "react";
+import React, { useState } from "react";
 import { Nav } from "./nav";
 import {
   HomeIcon,
@@ -8,7 +8,6 @@ import {
   PinRightIcon,
 } from "@radix-ui/react-icons";
 import { useUser } from "@clerk/nextjs";
-import { set } from "mongoose";
 
 const links = [
   {
@@ -32,11 +31,11 @@ const selectLink = (user: any) => {
   if (user?.publicMetadata?.admin) {
     return links.slice(0, 2);
   } else if (user?.publicMetadata?.organization) {
-    return links[0];
+    return links.slice(0);
   } else if (user?.publicMetadata?.organization?.approved) {
-    return links.slice(0, 1).concat(links[2]);
+    return links.slice(0, 1).concat(links.slice(2, 2));
   } else {
-    return links[0];
+    return links.slice(0, 1);
   }
 };
 
@@ -65,8 +64,6 @@ const Sidebar = () => {
     );
   }
 
-  const selectedLinks = selectLink(user);
-
   return (
     <div
       className={`flex flex-col h-screen bg-[#335543] ${
@@ -84,7 +81,7 @@ const Sidebar = () => {
           onClick={() => setIsCollapsed(!isCollapsed)}
         />
       )}
-      <Nav isCollapsed={isCollapsed} links={links} />
+      <Nav isCollapsed={isCollapsed} links={selectLink(user) as any[]} />
     </div>
   );
 };
