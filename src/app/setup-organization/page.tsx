@@ -44,7 +44,11 @@ export default function Page() {
     return router.push("/");
   }
   const onSubmit = async (data: any) => {
-    user.unsafeMetadata.organization = { ...data, approved: false };
+    user.update({
+      unsafeMetadata: {
+        organization: { ...data, approved: false },
+      },
+    });
     router.push("/");
   };
 
