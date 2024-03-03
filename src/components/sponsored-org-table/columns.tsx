@@ -43,7 +43,7 @@ export const columns: ColumnDef<Reimbursement>[] = [
     filterFn: "dateFilterFn" as FilterFnOption<Reimbursement>,
     cell: ({ row }) => {
       const date: Date = row.getValue("transactionDate");
-      return date.toLocaleDateString();
+      return new Date(date).toLocaleDateString();
     },
   },
   {
