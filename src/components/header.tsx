@@ -39,25 +39,28 @@ export default function Header() {
               height={36}
             />
           </Link>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button onClick={handleDropdownOpen}>
-                <div className="relative">
-                  <BellIcon className="w-6 h-6" />
-                  {hasNewUpdates && <span className="badge"></span>}
-                </div>
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="right-0">
-              <DropdownMenuLabel>Recent Updates</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              {statusUpdates.map((statusUpdate) => (
-                <DropdownMenuItem key={statusUpdate.id}>
-                  {statusUpdate.text}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <div className="flex space-x-4">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button onClick={handleDropdownOpen}>
+                  <div className="relative">
+                    <BellIcon className="w-6 h-6" />
+                    {hasNewUpdates && <span className="badge"></span>}
+                  </div>
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="right-0">
+                <DropdownMenuLabel>Recent Updates</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {statusUpdates.map((statusUpdate) => (
+                  <DropdownMenuItem key={statusUpdate.id}>
+                    {statusUpdate.text}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <UserButton />
+          </div>
         </div>
       </div>
       <style jsx>{`
