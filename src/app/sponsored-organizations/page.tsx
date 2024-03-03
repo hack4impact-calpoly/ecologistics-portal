@@ -5,18 +5,19 @@ import { Toggle } from "@/components/ui/toggle";
 import { Input } from "@/components/ui/input";
 import SponsoredOrgCard from "@/components/sponsored-org-card";
 import { useUser } from "@clerk/nextjs";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
+  const router = useRouter();
   const { isLoaded, isSignedIn, user } = useUser();
   if (!isLoaded) {
     return <div>Loading...</div>;
   }
   if (!isSignedIn) {
-    return redirect("/sign-in");
+    return router.push("/sign-in");
   }
   if (!user?.publicMetadata?.admin) {
-    return redirect("/");
+    return router.push("/");
   }
   return (
     <main className="m-10">

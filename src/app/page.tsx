@@ -4,15 +4,16 @@ import AdminTable from "@/components/admin-table/admin-table";
 import SponsoredOrgTable from "@/components/sponsored-org-table/sponsored-org-table";
 import { data } from "@/test/mock-data";
 import { useUser } from "@clerk/nextjs";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const router = useRouter();
   const { isLoaded, isSignedIn, user } = useUser();
   if (!isLoaded) {
     return <div>Loading...</div>;
   }
   if (!isSignedIn) {
-    return redirect("/sign-in");
+    return router.push("/sign-in");
   }
   if (user?.publicMetadata?.admin) {
     return (
@@ -28,7 +29,7 @@ export default function Home() {
     );
   } else {
     if (!user?.unsafeMetadata?.organization) {
-      redirect("/setup-organization");
+      router.push("/setup-organization");
     } else {
       if (
         (

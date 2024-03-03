@@ -15,7 +15,7 @@ import { Input } from "../../components/ui/input";
 import { Textarea } from "../../components/ui/textarea";
 import { Button } from "../../components/ui/button";
 import { useUser } from "@clerk/nextjs";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   name: z.string().min(1).max(50),
@@ -24,6 +24,7 @@ const formSchema = z.object({
 });
 
 export default function Page() {
+  const router = useRouter();
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -37,14 +38,14 @@ export default function Page() {
     return <div>Loading...</div>;
   }
   if (!isSignedIn) {
-    return redirect("/sign-in");
+    return router.push("/sign-in");
   }
   if (user?.unsafeMetadata?.organization || user?.publicMetadata?.admin) {
-    return redirect("/");
+    return router.push("/");
   }
   const onSubmit = async (data: any) => {
     user.unsafeMetadata.organization = { ...data, approved: false };
-    redirect("/");
+    router.push("/");
   };
 
   return (
