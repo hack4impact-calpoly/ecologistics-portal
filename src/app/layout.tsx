@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import { ClerkProvider } from "@clerk/nextjs";
+import Sidebar from "@/components/sidebar";
 
 export const fontSans = FontSans({
   subsets: ["latin"],
@@ -32,8 +33,11 @@ export default function RootLayout({
           )}
         >
           <Header />
-          {children}
-          <Footer />
+          <div className="flex">
+            <Sidebar />
+            {children}
+          </div>
+          {/* <Footer /> */}
         </body>
       </ClerkProvider>
     </html>
