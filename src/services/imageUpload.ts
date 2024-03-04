@@ -10,9 +10,10 @@ const client = new S3Client({
 
 export const imageUpload = async (file: any, fileName: string) => {
   const fileBuffer = file;
+  const fileKey = `${process.env.AWS_FILE_NAME}/${fileName}-${Date.now()}`;
   const command = new PutObjectCommand({
     Bucket: process.env.AWS_BUCKET_NAME,
-    Key: `${fileName}-${Date.now()}`,
+    Key: fileKey,
     Body: fileBuffer,
     ContentType: "image",
   });
@@ -23,5 +24,5 @@ export const imageUpload = async (file: any, fileName: string) => {
   } catch (err) {
     console.error(err);
   }
-  return fileName;
+  return `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_S3_LOCATION}.amazonaws.com/${fileKey}`;
 };
