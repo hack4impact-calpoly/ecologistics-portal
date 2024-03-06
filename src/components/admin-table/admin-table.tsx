@@ -71,7 +71,7 @@ export default function AdminTable() {
         setError(err);
         setIsLoading(false);
       });
-  }, [reimbursements]);
+  }, []);
 
   const table = useReactTable({
     data: reimbursements,

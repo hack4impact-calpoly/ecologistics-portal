@@ -51,17 +51,8 @@ export const columns: ColumnDef<Reimbursement>[] = [
     cell: ({ row }) => (
       <div className="capitalize">
         {(() => {
-          const transactionDate = row.getValue("transactionDate");
-          if (
-            typeof transactionDate === "string" ||
-            typeof transactionDate === "number"
-          ) {
-            const date = new Date(transactionDate);
-            return date.toLocaleDateString();
-          }
-          return transactionDate instanceof Date
-            ? transactionDate.toLocaleDateString()
-            : "";
+          const date = new Date(row.getValue("transactionDate"));
+          return date.toLocaleDateString();
         })()}
       </div>
     ),
