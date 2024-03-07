@@ -1,10 +1,13 @@
+"use client";
 import type { Metadata } from "next";
 import "@/styles/globals.css";
 import { Inter as FontSans } from "next/font/google";
 import { cn } from "@/lib/utils";
+import { useState } from "react";
+import React from "react";
+import { ClerkProvider } from "@clerk/nextjs";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
-import { ClerkProvider } from "@clerk/nextjs";
 import Sidebar from "@/components/sidebar";
 
 export const fontSans = FontSans({
@@ -12,17 +15,23 @@ export const fontSans = FontSans({
   variable: "--font-sans",
 });
 
-//! Update metadata to match your project
-export const metadata: Metadata = {
-  title: "Ecologistics",
-  description: "Ecologistics Web Portal",
-};
+// may need to be moved elsewhere
+// export const metadata: Metadata = {
+//   title: "Ecologistics",
+//   description: "Ecologistics Web Portal",
+// };
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true);
+
+  const toggleSidebar = () => {
+    setIsSidebarCollapsed(!isSidebarCollapsed);
+  };
+
   return (
     <html lang="en">
       <ClerkProvider>
@@ -32,9 +41,12 @@ export default function RootLayout({
             fontSans.variable,
           )}
         >
-          <Header />
+          <Header
+            toggleSidebar={toggleSidebar}
+            isSidebarCollapsed={isSidebarCollapsed}
+          />
           <div className="flex">
-            <Sidebar />
+            <Sidebar isSidebarCollapsed={isSidebarCollapsed} />
             {children}
           </div>
           {/* <Footer /> */}

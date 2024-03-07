@@ -1,12 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { Nav } from "./nav";
-import {
-  HomeIcon,
-  FileTextIcon,
-  PinLeftIcon,
-  PinRightIcon,
-} from "@radix-ui/react-icons";
+import { HomeIcon, FileTextIcon, ReaderIcon } from "@radix-ui/react-icons";
 import { useUser } from "@clerk/nextjs";
 
 const links = [
@@ -23,9 +18,13 @@ const links = [
   {
     title: "Submit Request",
     route: "/reimbursements",
-    icon: FileTextIcon,
+    icon: ReaderIcon,
   },
 ];
+
+type SidebarProps = {
+  isSidebarCollapsed: boolean;
+};
 
 const selectLink = (user: any) => {
   if (user?.publicMetadata?.admin) {
@@ -39,49 +38,26 @@ const selectLink = (user: any) => {
   }
 };
 
-const Sidebar = () => {
-  const [isCollapsed, setIsCollapsed] = useState(true);
+const Sidebar = ({ isSidebarCollapsed }: SidebarProps) => {
   const { isLoaded, isSignedIn, user } = useUser();
+
   if (!isLoaded || !isSignedIn) {
     return (
       <div
         className={`flex flex-col h-screen bg-[#335543] ${
-          !isCollapsed ? "w-64" : "w-17"
+          isSidebarCollapsed ? "w-17" : "w-64"
         }`}
-      >
-        {isCollapsed ? (
-          <PinRightIcon
-            className="h-[45px] w-[45px] text-white mx-auto my-2 hover:bg-gray-200 hover:bg-opacity-50 p-2 rounded-full cursor-pointer"
-            onClick={() => setIsCollapsed(!isCollapsed)}
-          />
-        ) : (
-          <PinLeftIcon
-            className="h-[45px] w-[45px] text-white place-self-end my-2 mr-2 p-2 hover:bg-gray-200 hover:bg-opacity-50 rounded-full cursor-pointer"
-            onClick={() => setIsCollapsed(!isCollapsed)}
-          />
-        )}
-      </div>
+      ></div>
     );
   }
 
   return (
     <div
       className={`flex flex-col h-screen bg-[#335543] ${
-        !isCollapsed ? "w-64" : "w-17"
+        isSidebarCollapsed ? "w-17" : "w-64"
       }`}
     >
-      {isCollapsed ? (
-        <PinRightIcon
-          className="h-[45px] w-[45px] text-white mx-auto my-2 hover:bg-gray-200 hover:bg-opacity-50 p-2 rounded-full cursor-pointer"
-          onClick={() => setIsCollapsed(!isCollapsed)}
-        />
-      ) : (
-        <PinLeftIcon
-          className="h-[45px] w-[45px] text-white place-self-end my-2 mr-2 p-2 hover:bg-gray-200 hover:bg-opacity-50 rounded-full cursor-pointer"
-          onClick={() => setIsCollapsed(!isCollapsed)}
-        />
-      )}
-      <Nav isCollapsed={isCollapsed} links={selectLink(user) as any[]} />
+      <Nav isCollapsed={isSidebarCollapsed} links={selectLink(user) as any[]} />
     </div>
   );
 };
