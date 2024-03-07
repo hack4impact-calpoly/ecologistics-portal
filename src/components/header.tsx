@@ -17,7 +17,7 @@ import { PinLeftIcon, PinRightIcon } from "@radix-ui/react-icons";
 
 type HeaderProps = {
   toggleSidebar: () => void;
-  isSidebarCollapsed: boolean; // Add this prop definition
+  isSidebarCollapsed: boolean;
 };
 
 export default function Header({
@@ -37,19 +37,19 @@ export default function Header({
   };
 
   return (
-    <nav className="bg-white">
+    <nav className="bg-orange-100">
       <div className="py-1">
         <div className="flex justify-between items-center px-5 h-16">
           <div className="flex items-center space-x-4">
             {/* handles sidebar collapse */}
             {isSidebarCollapsed ? (
               <PinLeftIcon
-                className="h-[45px] w-[45px] text-white place-self-end my-2 mr-2 p-2 hover:bg-gray-200 hover:bg-opacity-50 rounded-full cursor-pointer"
+                className="h-[45px] w-[45px] text-black place-self-end my-2 mr-2 p-2 hover:bg-gray-100 hover:bg-opacity-50 rounded-full cursor-pointer"
                 onClick={toggleSidebar}
               />
             ) : (
               <PinRightIcon
-                className="h-[45px] w-[45px] text-white mx-auto my-2 hover:bg-gray-200 hover:bg-opacity-50 p-2 rounded-full cursor-pointer"
+                className="h-[45px] w-[45px] text-black mx-auto my-2 hover:bg-gray-100 hover:bg-opacity-50 p-2 rounded-full cursor-pointer"
                 onClick={toggleSidebar}
               />
             )}
