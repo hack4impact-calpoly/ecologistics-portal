@@ -9,14 +9,7 @@ interface ImageUploadProps {
 export default function ImageUpload({ handleChange }: ImageUploadProps) {
   return (
     <div>
-      <FileUploader
-        handleChange={(file: File) => {
-          // setFile(file);
-          handleChange(file);
-        }}
-        name="file"
-        types={fileTypes}
-      />{" "}
+      <FileUploader handleChange={handleChange} name="file" types={fileTypes} />{" "}
     </div>
   );
 }

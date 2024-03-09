@@ -18,6 +18,7 @@ export default function Page() {
       <p>{`Organization Name: ${
         user?.unsafeMetadata?.organization || "No Organization"
       }`}</p>
+      <p>{`Admin Status : ${user?.publicMetadata?.admin}`}</p>
     </div>
   );
 }
