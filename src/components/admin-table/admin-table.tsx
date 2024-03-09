@@ -28,7 +28,6 @@ import { DebouncedInput } from "../ui/custom/debounced-input";
 import { Label } from "../ui/label";
 import TableColumnFilterDropdown from "../ui/custom/table-column-filter-dropdown";
 import { columns } from "./columns";
-import { data } from "@/test/mock-data";
 import Reimbursement from "@/database/reimbursement-schema";
 import { DateRange } from "react-day-picker";
 import { dateFilterFn } from "@/lib/utils";
@@ -141,19 +140,19 @@ export default function AdminTable() {
           table={table}
           identifier="organization"
           title="Organization"
-          values={getUniqueValues(data, "organization")}
+          values={getUniqueValues(reimbursements, "organization")}
         />
         <TableColumnFilterDropdown
           table={table}
           identifier="paymentMethod"
           title="Preferred Payment"
-          values={getUniqueValues(data, "paymentMethod")}
+          values={getUniqueValues(reimbursements, "paymentMethod")}
         />
         <TableColumnFilterDropdown
           table={table}
           identifier="status"
           title="Status"
-          values={getUniqueValues(data, "status")}
+          values={getUniqueValues(reimbursements, "status")}
         />
         <div className="flex flex-col">
           <Label className="text-xs pl-3">Date Range</Label>
