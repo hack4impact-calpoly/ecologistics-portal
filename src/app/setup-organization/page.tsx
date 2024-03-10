@@ -21,6 +21,7 @@ const formSchema = z.object({
   name: z.string().min(1).max(50),
   description: z.string().max(1000),
   website: z.string().url(),
+  email: z.string().email(),
 });
 
 export default function Page() {
@@ -31,6 +32,7 @@ export default function Page() {
       name: "",
       description: "",
       website: "",
+      email: "",
     },
   });
   const { isLoaded, isSignedIn, user } = useUser();
@@ -96,6 +98,45 @@ export default function Page() {
               </FormItem>
             )}
           />
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input placeholder="email" {...field} />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          <Button
+            type="button"
+            onClick={() => {
+              const emailBody = `Hi there,
+
+I would like to set up an organization with the following details:
+
+Name: ${form.getValues("name")}
+Description: ${form.getValues("description")}
+Website: ${form.getValues("website")}
+
+Attached is my W9 form.
+
+Thank you!`;
+
+              const emailLink = `mailto:${form.getValues(
+                "email",
+              )}?subject=Organization%20Setup&body=${encodeURIComponent(
+                emailBody,
+              )}`;
+
+              window.location.href = emailLink;
+            }}
+          >
+            Send Email
+          </Button>
+
           <Button type="submit">Submit</Button>
         </form>
       </Form>
