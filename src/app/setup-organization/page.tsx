@@ -98,18 +98,7 @@ export default function Page() {
               </FormItem>
             )}
           />
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input placeholder="email" {...field} />
-                </FormControl>
-              </FormItem>
-            )}
-          />
+
           <Button
             type="button"
             onClick={() => {
@@ -125,9 +114,7 @@ Attached is my W9 form.
 
 Thank you!`;
 
-              const emailLink = `mailto:${form.getValues(
-                "email",
-              )}?subject=Organization%20Setup&body=${encodeURIComponent(
+              const emailLink = `mailto:stacey@ecologistics.org?subject=Organization%20Setup&body=${encodeURIComponent(
                 emailBody,
               )}`;
 
