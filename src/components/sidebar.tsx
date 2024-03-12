@@ -44,7 +44,7 @@ const Sidebar = ({ isSidebarCollapsed }: SidebarProps) => {
   if (!isLoaded || !isSignedIn) {
     return (
       <div
-        className={`flex flex-col h-screen bg-[#335543] ${
+        className={`flex flex-col h-screen pt-4 bg-[#335543] ${
           isSidebarCollapsed ? "w-17" : "w-64"
         }`}
       ></div>
@@ -53,7 +53,7 @@ const Sidebar = ({ isSidebarCollapsed }: SidebarProps) => {
 
   return (
     <div
-      className={`flex flex-col h-screen bg-[#335543] ${
+      className={`flex flex-col h-screen pt-4 bg-[#335543] ${
         isSidebarCollapsed ? "w-17" : "w-64"
       }`}
     >
