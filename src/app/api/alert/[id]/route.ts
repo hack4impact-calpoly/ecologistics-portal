@@ -8,14 +8,18 @@ export type CreateAlertBody = Alert;
 export type GetAlertResponse = Alert[]; // There might me multiple responses
 export type CreateAlertResponse = Alert;
 
+export type IParams = {
+  params: {
+    id: string;
+  };
+};
+
 //Get all Reimbursements
-export async function GET(req: NextRequest) {
+export async function GET(req: NextRequest, { params }: IParams) {
   await connectDB();
+  const { id } = params;
   try {
-    const jsonResponse: string = JSON.stringify(req);
-    const data: any = JSON.parse(jsonResponse);
-    const userId: string = data.userId;
-    const alerts: GetAlertResponse = await Alert.find({ name: userId });
+    const alerts: GetAlertResponse = await Alert.find({ name: id });
     return NextResponse.json(alerts);
   } catch (error) {
     const errorResponse: ErrorResponse = {
@@ -49,13 +53,16 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// export async function DELETE(req: NextRequest) {
-
-// }
-
-// export async function DELETE(request) {
-//     const id = request.nextUrl.searchParams.get('id')
-//     await connectMongoDB();
-//     await Wisdom.findByIdAndDelete(id);
-//     return NextResponse.json({message: "Wisdom Erased"}, {status: 200});
-// }
+export async function DELETE(req: NextRequest) {
+  await connectDB();
+  const id = req.nextUrl.searchParams.get("id");
+  try {
+    await Alert.findByIdAndDelete(id);
+    return NextResponse.json("Succesfully Deleted Alert", { status: 200 });
+  } catch (error) {
+    const errorResponse: ErrorResponse = {
+      error: "Error deleteing alerts",
+    };
+    return NextResponse.json(errorResponse, { status: 404 });
+  }
+}
