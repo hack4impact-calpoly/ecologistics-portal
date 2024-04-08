@@ -14,6 +14,8 @@ import { useForm } from "react-hook-form";
 import { Input } from "../../components/ui/input";
 import { Textarea } from "../../components/ui/textarea";
 import { Button } from "../../components/ui/button";
+import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   name: z.string().min(1).max(50),
@@ -22,6 +24,7 @@ const formSchema = z.object({
 });
 
 export default function Page() {
+  const router = useRouter();
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -30,10 +33,23 @@ export default function Page() {
       website: "",
     },
   });
-
+  const { isLoaded, isSignedIn, user } = useUser();
+  if (!isLoaded) {
+    return <div>Loading...</div>;
+  }
+  if (!isSignedIn) {
+    return router.push("/sign-in");
+  }
+  if (user?.unsafeMetadata?.organization || user?.publicMetadata?.admin) {
+    return router.push("/");
+  }
   const onSubmit = async (data: any) => {
-    // form submission logic here
-    console.log("Form data submitted:", data);
+    user.update({
+      unsafeMetadata: {
+        organization: { ...data, approved: false },
+      },
+    });
+    router.push("/");
   };
 
   return (

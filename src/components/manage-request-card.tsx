@@ -11,36 +11,36 @@ import Reimbursement from "@/database/reimbursement-schema";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 
-export default function ManageRequestCard(prop: Reimbursement) {
+export default function ManageRequestCard(props: Reimbursement) {
   return (
     // Entire Card
     <Card className="m-5 w-2/5 rounded-2xl p-4">
       {/* Title, status, amount, and date */}
       <CardHeader>
         <div className="flex justify-between items-center">
-          <CardTitle>{prop.reportName}</CardTitle>
-          <StatusDropdown Status={prop.status.toString()} />{" "}
+          <CardTitle>{props.reportName}</CardTitle>
+          <StatusDropdown Status={props.status.toString()} />{" "}
         </div>
         <CardDescription className="flex space-x-4">
-          <div>${prop.amount}</div>
-          <div>{prop.transactionDate.toLocaleDateString()}</div>
+          <div>${props.amount}</div>
+          <div>{props.transactionDate.toLocaleDateString()}</div>
         </CardDescription>
       </CardHeader>
       {/* Description, recipient info, and image */}
       <CardContent>
         <div>
-          Receipt Description: {prop.comment}
+          Receipt Description: {props.comment}
           <br></br>
           Request For:<br></br>
-          {prop.recipientName} &nbsp;
-          {prop.recipientEmail}
+          {props.recipientName} &nbsp;
+          {props.recipientEmail}
           <br></br>
           {/* missing payment type info from database? */}
-          Payment Type Info: {prop.paymentMethod}
+          Payment Type Info: {props.paymentMethod}
         </div>
         <div className="flex justify-center mt-[10px]">
           <Image
-            src={prop.receiptLink}
+            src={props.receiptLink}
             width={500}
             height={500}
             alt="Receipt Picture"

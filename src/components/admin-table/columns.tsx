@@ -50,7 +50,10 @@ export const columns: ColumnDef<Reimbursement>[] = [
     filterFn: "dateFilterFn" as FilterFnOption<Reimbursement>,
     cell: ({ row }) => (
       <div className="capitalize">
-        {(row.getValue("transactionDate") as Date).toLocaleDateString()}
+        {(() => {
+          const date = new Date(row.getValue("transactionDate"));
+          return date.toLocaleDateString();
+        })()}
       </div>
     ),
   },
