@@ -42,7 +42,7 @@ export default function Header() {
           <div className="flex space-x-4">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button onClick={handleDropdownOpen}>
+                <button onClick={handleDropdownOpen} value="bell">
                   <div className="relative">
                     <BellIcon className="w-6 h-6" />
                     {hasNewUpdates && <span className="badge"></span>}

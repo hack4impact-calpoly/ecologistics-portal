@@ -1,9 +1,17 @@
-describe("Sponsor Card Functionality", () => {
-  it("let's us view sponsor cards with updates", () => {
-    // cy.visit("http://localhost:3000/sponsored-organizations");
-    // cy.get('button[value="view-update"]').click({ force: true });
-    cy.visit(
-      "https://quality-goblin-47.accounts.dev/sign-in?redirect_url=http%3A%2F%2Flocalhost%3A3000%2F",
-    );
+describe("Signed in", () => {
+  beforeEach(() => {
+    cy.session("signed-in", () => {
+      cy.signIn();
+    });
+  });
+
+  it("navigate to the dashboard", () => {
+    // open dashboard page
+    cy.visit("http://localhost:3000/setup-organization", {
+      failOnStatusCode: false,
+    });
+    cy.get('button[value="bell"]').click();
+    // check h1 says signed in
+    // cy.get("h1").contains("Signed in");
   });
 });
