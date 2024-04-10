@@ -88,7 +88,7 @@ async function filterOrganizationsWithPendingReimbursements(
 async function getReimbursement(reimbursementId: string) {
   try {
     const res = await fetch(
-      `http://localhost:3000/api/reimbursement/${reimbursementId}`, // Replace with official API route
+      `/api/reimbursement/${reimbursementId}`, // Replace with official API route
     );
 
     if (!res.ok) {
