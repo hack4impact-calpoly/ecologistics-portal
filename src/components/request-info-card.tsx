@@ -11,7 +11,7 @@ import Reimbursement from "@/database/reimbursement-schema";
 export default function RequestInfoCard(props: Reimbursement) {
   return (
     // Entire Card
-    <Card className="w-2/5 rounded-2xl p-4">
+    <Card className="w-full rounded-2xl p-4">
       {/* Title, status, amount, and date */}
       <CardHeader>
         <div className="flex justify-between items-center">
@@ -20,7 +20,7 @@ export default function RequestInfoCard(props: Reimbursement) {
         </div>
         <CardDescription className="flex space-x-4">
           <div>${props.amount}</div>
-          <div>{props.transactionDate.toLocaleDateString()}</div>
+          <div>{new Date(props.transactionDate).toLocaleDateString()}</div>
         </CardDescription>
       </CardHeader>
       {/* Description, recipient info, and image */}
@@ -34,7 +34,9 @@ export default function RequestInfoCard(props: Reimbursement) {
         </div>
         <div className="flex justify-center">
           <Image
-            src={props.receiptLink}
+            src={
+              "https://ohiostate.pressbooks.pub/app/uploads/sites/160/h5p/content/5/images/image-5bd08790e1864.png" //placeholder, later use: props.receiptLink
+            }
             width={500}
             height={500}
             alt="Receipt Picture"
