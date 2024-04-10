@@ -6,7 +6,7 @@ import Reimbursement from "@/database/reimbursement-schema";
 import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
 import RequestInfoCard from "@/components/request-info-card";
 
-const OrganizationCell = ({ row }: { row: any }) => {
+const ReportNameCell = ({ row }: { row: any }) => {
   const [selectedReimbursement, setSelectedReimbursement] =
     useState<Reimbursement | null>(null);
 
@@ -51,17 +51,9 @@ const OrganizationCell = ({ row }: { row: any }) => {
 
 export const columns: ColumnDef<Reimbursement>[] = [
   {
-    accessorKey: "organization",
-    header: "Organization",
-    cell: ({ row }) => <OrganizationCell row={row} />,
-  },
-
-  {
     accessorKey: "reportName",
     header: "Request",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("reportName")}</div>
-    ),
+    cell: ({ row }) => <ReportNameCell row={row} />,
   },
   {
     accessorKey: "recipientName",
