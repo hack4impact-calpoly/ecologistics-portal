@@ -1,7 +1,7 @@
 import Reimbursement from "@/database/reimbursement-schema";
 import { Types } from "mongoose";
 
-export const data: Reimbursement[] = [
+export const MOCK_REIMBURSEMENTS: Reimbursement[] = [
   {
     organization: new Types.ObjectId(6),
     reportName: "examplename",
