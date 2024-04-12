@@ -1,9 +1,9 @@
 import Reimbursement from "@/database/reimbursement-schema";
 import { createMocks } from "node-mocks-http";
 
-export const createMockNextRequest = (request: any) =>
+export const createMockNextRequest = (body: any) =>
   createMocks({
-    json: () => Promise.resolve(request),
+    json: () => Promise.resolve(body),
   });
 
 export const formatMockReimbursementResponse = (
