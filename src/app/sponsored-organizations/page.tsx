@@ -191,7 +191,6 @@ export default function Page() {
             className="text-lg h-11 rounded-none border px-8 border-[#335543] text-[#335543] data-[state=on]:bg-[#335543] data-[state=on]:text-white"
             data-state={viewUpdates ? "on" : "off"}
             onClick={handleViewUpdatesToggle}
-            value="view-update"
           >
             VIEW UPDATES
             <div className="relative w-7 h-7 ml-3 bg-[#335543] rounded-full flex items-center justify-center text-white text-sm">
