@@ -10,11 +10,33 @@ import Image from "next/image";
 import Reimbursement from "@/database/reimbursement-schema";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
 
-export default function ManageRequestCard(props: Reimbursement) {
+export default function ManageRequestCard(
+  props: Reimbursement & { reimbursementId: string },
+) {
+  const [comment, setComment] = useState("");
+
+  const addComment = () => {
+    fetch(`/api/reimbursement/${props.reimbursementId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ comment: props.comment + comment }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   return (
     // Entire Card
-    <Card className="m-5 w-2/5 rounded-2xl p-4">
+    <Card className="w-full rounded-2xl p-4">
       {/* Title, status, amount, and date */}
       <CardHeader>
         <div className="flex justify-between items-center">
@@ -23,7 +45,7 @@ export default function ManageRequestCard(props: Reimbursement) {
         </div>
         <CardDescription className="flex space-x-4">
           <div>${props.amount}</div>
-          <div>{props.transactionDate.toLocaleDateString()}</div>
+          <div>{new Date(props.transactionDate).toLocaleDateString()}</div>
         </CardDescription>
       </CardHeader>
       {/* Description, recipient info, and image */}
@@ -35,7 +57,7 @@ export default function ManageRequestCard(props: Reimbursement) {
           {props.recipientName} &nbsp;
           {props.recipientEmail}
           <br></br>
-          {/* missing payment type info from database? */}
+          {/* ssing payment type info from database? */}
           Payment Type Info: {props.paymentMethod}
         </div>
         <div className="flex justify-center mt-[10px]">
@@ -48,8 +70,14 @@ export default function ManageRequestCard(props: Reimbursement) {
           />
         </div>
         <div className="mt-5">
-          <Textarea placeholder="Additional comments" />
-          <Button className="mt-2">Update Comments</Button>
+          <Textarea
+            placeholder="Additional comments"
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+          />
+          <Button className="mt-2" onClick={() => addComment()}>
+            Update Comments
+          </Button>
         </div>
       </CardContent>
     </Card>
