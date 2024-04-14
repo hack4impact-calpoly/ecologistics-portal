@@ -84,6 +84,21 @@ async function filterOrganizationsWithPendingReimbursements(
   return filteredOrgs;
 }
 
+// Fetch list of organizations
+async function getOrganizations() {
+  try {
+    const res = await fetch("/api/organization/");
+    if (!res.ok) {
+      throw new Error("Failed to fetch organizations");
+    }
+    const data = await res.json();
+    return data;
+  } catch (err: unknown) {
+    console.log(`error: ${err}`);
+    return null;
+  }
+}
+
 // Fetch reimbursement info from API
 async function getReimbursement(reimbursementId: string) {
   try {
@@ -127,7 +142,7 @@ export default function Page() {
 
         // Check if org states are empty, and fetch organizations if needed
         if (allOrgs.length === 0) {
-          const fetchedOrgs = organizations; // Replace with proper API fetch
+          const fetchedOrgs = await getOrganizations();
           setAllOrgs(fetchedOrgs); // Cache orgs for later
 
           if (fetchedOrgs.length > 0) {
