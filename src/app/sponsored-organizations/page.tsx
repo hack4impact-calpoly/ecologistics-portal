@@ -92,7 +92,13 @@ async function getOrganizations() {
       throw new Error("Failed to fetch organizations");
     }
     const data = await res.json();
-    return data;
+    const organizations: Organization[] = [];
+    data.forEach((obj: any) => {
+      if (obj.unsafeMetadata.organization) {
+        organizations.push(obj.unsafeMetadata.organization);
+      }
+    });
+    return organizations;
   } catch (err: unknown) {
     console.log(`error: ${err}`);
     return null;
@@ -143,13 +149,15 @@ export default function Page() {
         // Check if org states are empty, and fetch organizations if needed
         if (allOrgs.length === 0) {
           const fetchedOrgs = await getOrganizations();
-          setAllOrgs(fetchedOrgs); // Cache orgs for later
+          if (fetchedOrgs) {
+            setAllOrgs(fetchedOrgs); // Cache orgs for later
 
-          if (fetchedOrgs.length > 0) {
-            const filteredUpdatedOrgs =
-              await filterOrganizationsWithPendingReimbursements(fetchedOrgs); // Fetch organizations with updates
-            console.log(filteredUpdatedOrgs);
-            setUpdatedOrgs(filteredUpdatedOrgs); // Cache orgs for later
+            if (fetchedOrgs.length > 0) {
+              const filteredUpdatedOrgs =
+                await filterOrganizationsWithPendingReimbursements(fetchedOrgs); // Fetch organizations with updates
+              console.log(filteredUpdatedOrgs);
+              setUpdatedOrgs(filteredUpdatedOrgs); // Cache orgs for later
+            }
           }
         }
 
