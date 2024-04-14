@@ -10,29 +10,12 @@ import Image from "next/image";
 import Reimbursement from "@/database/reimbursement-schema";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function ManageRequestCard(
-  props: Reimbursement & { reimbursementId: string },
+  props: Reimbursement & { updateComment: (input: string) => void },
 ) {
-  const [comment, setComment] = useState("");
-
-  const addComment = () => {
-    fetch(`/api/reimbursement/${props.reimbursementId}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ comment: props.comment + comment }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
+  const [comment, setComment] = useState(props.comment ?? "");
 
   return (
     // Entire Card
@@ -75,7 +58,12 @@ export default function ManageRequestCard(
             value={comment}
             onChange={(e) => setComment(e.target.value)}
           />
-          <Button className="mt-2" onClick={() => addComment()}>
+          <Button
+            className="mt-2"
+            onClick={() => {
+              props.updateComment(comment);
+            }}
+          >
             Update Comments
           </Button>
         </div>

@@ -4,7 +4,12 @@ import { Badge } from "../ui/badge";
 import { Button } from "@/components/ui/button";
 import { DownloadIcon } from "@radix-ui/react-icons";
 import React, { useEffect, useState } from "react";
-import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogClose,
+} from "@/components/ui/dialog";
 import Reimbursement from "@/database/reimbursement-schema";
 import ManageRequestCard from "../manage-request-card";
 
@@ -16,7 +21,7 @@ const OrganizationCell = ({ row }: { row: any }) => {
     console.log(row.original);
   }, []);
 
-  const handleTitleClick = () => {
+  const fetchReimbursementInfo = () => {
     const reimbursementId = row.original._id;
     fetch(`/api/reimbursement/${reimbursementId}`)
       .then((response) => {
@@ -35,20 +40,40 @@ const OrganizationCell = ({ row }: { row: any }) => {
       });
   };
 
+  const updateComment = (comment: String) => {
+    const reimbursementId = row.original._id;
+    fetch(`/api/reimbursement/${reimbursementId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ comment: comment }),
+    })
+      .then((response) => response.json())
+      .then(() => {
+        fetchReimbursementInfo();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   return (
     <Dialog>
       <DialogTrigger>
-        <div className="capitalize" onClick={handleTitleClick}>
+        <div className="capitalize" onClick={fetchReimbursementInfo}>
           {row.getValue("organization")}
         </div>
       </DialogTrigger>
       <DialogContent>
         <div className="border">
           {selectedReimbursement ? (
-            <ManageRequestCard
-              {...selectedReimbursement}
-              reimbursementId={row.original._id}
-            />
+            <>
+              <ManageRequestCard
+                {...selectedReimbursement}
+                updateComment={updateComment}
+              />
+            </>
           ) : (
             <p>Loading reimbursement information...</p>
           )}
