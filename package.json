@@ -9,7 +9,8 @@
     "lint": "next lint",
     "lint:fix": "next lint --fix",
     "format": "prettier --write .",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "cy:open": "cypress open"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.515.0",
@@ -69,6 +70,7 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "autoprefixer": "^10.4.16",
+    "cypress": "^13.6.6",
     "eslint": "^8",
     "eslint-config-next": "14.0.0",
     "eslint-config-prettier": "^9.0.0",
