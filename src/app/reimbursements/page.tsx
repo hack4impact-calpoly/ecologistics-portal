@@ -26,6 +26,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import CenteredSpinner from "@/components/centered-spinner";
 
 const formSchema = z.object({
   name: z.string().min(1).max(50),
@@ -79,7 +80,11 @@ export default function Page() {
 
   const { isLoaded, isSignedIn, user } = useUser();
   if (!isLoaded) {
-    return <div>Loading...</div>;
+    return (
+      <div>
+        <CenteredSpinner />
+      </div>
+    );
   }
   if (!isSignedIn) {
     return router.push("/sign-in");
