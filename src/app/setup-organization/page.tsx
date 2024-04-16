@@ -16,6 +16,7 @@ import { Textarea } from "../../components/ui/textarea";
 import { Button } from "../../components/ui/button";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
+import CenteredSpinner from "@/components/centered-spinner";
 
 const formSchema = z.object({
   name: z.string().min(1).max(50),
@@ -35,7 +36,11 @@ export default function Page() {
   });
   const { isLoaded, isSignedIn, user } = useUser();
   if (!isLoaded) {
-    return <div>Loading...</div>;
+    return (
+      <div>
+        <CenteredSpinner />
+      </div>
+    );
   }
   if (!isSignedIn) {
     return router.push("/sign-in");

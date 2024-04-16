@@ -9,6 +9,7 @@ import SponsorCard from "@/components/sponsored-org-card";
 import Organization from "@/database/organization-schema";
 import { Types } from "mongoose";
 import { useEffect, useState } from "react";
+import CenteredSpinner from "@/components/centered-spinner";
 
 // Example sponsors for testing
 const organizations: Organization[] = [
@@ -88,7 +89,7 @@ async function filterOrganizationsWithPendingReimbursements(
 async function getReimbursement(reimbursementId: string) {
   try {
     const res = await fetch(
-      `http://localhost:3000/api/reimbursement/${reimbursementId}`, // Replace with official API route
+      `/api/reimbursement/${reimbursementId}`, // Replace with official API route
     );
 
     if (!res.ok) {
@@ -155,7 +156,11 @@ export default function Page() {
   });
 
   if (!isLoaded) {
-    return <div>Loading...</div>;
+    return (
+      <div>
+        <CenteredSpinner />
+      </div>
+    );
   }
   if (!isSignedIn) {
     return router.push("/sign-in");
