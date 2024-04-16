@@ -34,7 +34,6 @@ export async function POST(req: NextRequest) {
   await connectDB();
   try {
     const alert: CreateAlertBody = await req.json();
-
     //validate input
     if (!alert) {
       const errorResponse: ErrorResponse = {
@@ -42,9 +41,8 @@ export async function POST(req: NextRequest) {
       };
       return NextResponse.json(errorResponse, { status: 400 });
     }
-    const reimbursement: CreateAlertResponse = await new Alert(alert).save();
+    const alerted: CreateAlertResponse = await new Alert(alert).save();
     return NextResponse.json(alert);
-    // res.status(201).json(reimbursement);
   } catch (error) {
     const errorResponse: ErrorResponse = {
       error: "Post Failed",
@@ -57,11 +55,11 @@ export async function DELETE(req: NextRequest) {
   await connectDB();
   const id = req.nextUrl.searchParams.get("id");
   try {
-    await Alert.findByIdAndDelete(id);
+    await Alert.findByIdAndDelete(id); // not the clerk id but the actual id of the document
     return NextResponse.json("Succesfully Deleted Alert", { status: 200 });
   } catch (error) {
     const errorResponse: ErrorResponse = {
-      error: "Error deleteing alerts",
+      error: "Error Deleteing Alert",
     };
     return NextResponse.json(errorResponse, { status: 404 });
   }
