@@ -4,6 +4,7 @@ import SponsoredOrgTable from "@/components/sponsored-org-table/sponsored-org-ta
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import CenteredSpinner from "@/components/centered-spinner";
+import Popup from "@/components/user-info-popup";
 
 export default function Home() {
   const router = useRouter();
@@ -41,11 +42,29 @@ export default function Home() {
       ) {
         return (
           <main>
+            <Popup
+              organization="Sponsored Organization"
+              user="John"
+              email="john@gmail.com"
+              link="www.com"
+              description="the goal  is to make people happy"
+            />
             <SponsoredOrgTable />
           </main>
         );
       } else {
-        return <div>Pending approval</div>;
+        return (
+          <>
+            <Popup
+              organization="org"
+              user="John"
+              email="john@gmail.com"
+              link="www.com"
+              description="the goal  is to make people happy"
+            />
+            <div>Pending approval</div>
+          </>
+        );
       }
     }
   }
