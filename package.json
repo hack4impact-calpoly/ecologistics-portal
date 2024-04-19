@@ -51,6 +51,7 @@
     "date-fns": "^3.0.6",
     "lucide-react": "^0.303.0",
     "mongoose": "^7.6.8",
+    "multer": "^1.4.5-lts.1",
     "next": "14.0.0",
     "next-themes": "^0.2.1",
     "react": "^18",

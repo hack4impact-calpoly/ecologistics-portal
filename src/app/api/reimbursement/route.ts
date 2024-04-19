@@ -27,6 +27,7 @@ export async function GET() {
 //Post Reimbursement
 export async function POST(req: NextRequest) {
   await connectDB();
+  const multer = require("multer");
 
   try {
     const reimburse: CreateReimbursementBody = await req.json();
