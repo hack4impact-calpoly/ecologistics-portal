@@ -85,5 +85,20 @@ describe("Reimbursement API", () => {
       });
       expect(response.status).toBe(400);
     });
+
+    it("returns an error if the status is invalid", async () => {
+      const invalidReimbursement = {
+        ...MOCK_REIMBURSEMENTS[0],
+        status: "invalid",
+      };
+      const { req } = createMockNextRequest(invalidReimbursement);
+
+      const response = await POST(req as unknown as NextRequest);
+      const data = await response.json();
+      expect(data).toEqual({
+        error: "Status is not valid or undefined",
+      });
+      expect(response.status).toBe(404);
+    });
   });
 });
