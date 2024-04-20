@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { ErrorResponse } from "@/lib/error";
 // import { NextApiRequest, NextApiResponse } from "next";
 import Reimbursement from "@/database/reimbursement-schema";
+import Status from "lib/enum";
 
 export type CreateReimbursementBody = Reimbursement;
 
@@ -38,6 +39,14 @@ export async function POST(req: NextRequest) {
       };
       return NextResponse.json(errorResponse, { status: 400 });
     }
+
+    if (!(reimburse.status in Status)) {
+      const errorResponse: ErrorResponse = {
+        error: "Status is not valid or undefined",
+      };
+      return NextResponse.json(errorResponse, { status: 404 });
+    }
+
     const reimbursement: CreateReimbursementResponse = await new Reimbursement(
       reimburse,
     ).save();
