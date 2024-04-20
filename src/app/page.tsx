@@ -47,7 +47,7 @@ export default function Home() {
           }
         )?.approved
       ) {
-        const orgInfo = user?.unsafeMetadata?.organization;
+        const orgInfo = user?.unsafeMetadata?.organization as organizationInfo;
         return (
           <main>
             <Popup
