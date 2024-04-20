@@ -34,9 +34,7 @@ export default function RequestInfoCard(props: Reimbursement) {
         </div>
         <div className="flex justify-center">
           <Image
-            src={
-              "https://ohiostate.pressbooks.pub/app/uploads/sites/160/h5p/content/5/images/image-5bd08790e1864.png" //placeholder, later use: props.receiptLink
-            }
+            src={props.receiptLink}
             width={500}
             height={500}
             alt="Receipt Picture"
