@@ -47,15 +47,15 @@ export default function Home() {
           }
         )?.approved
       ) {
-        const orgInfo: organizationInfo = user?.unsafeMetadata?.organization;
+        const orgInfo = user?.unsafeMetadata?.organization;
         return (
           <main>
             <Popup
               name={orgInfo.name}
               description={orgInfo.description}
               website={orgInfo.website}
-              email={user.primaryEmailAddress.emailAddress}
-              user={user.fullName}
+              email={(user?.primaryEmailAddress?.emailAddress as string) || ""}
+              user={(user?.fullName as string) || ""}
             />
             <SponsoredOrgTable />
           </main>
