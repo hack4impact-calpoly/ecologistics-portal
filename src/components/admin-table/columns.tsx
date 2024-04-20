@@ -3,9 +3,85 @@ import { ColumnDef, FilterFnOption } from "@tanstack/react-table";
 import { Badge } from "../ui/badge";
 import { Button } from "@/components/ui/button";
 import { DownloadIcon } from "@radix-ui/react-icons";
-import React from "react";
-import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
+import React, { useEffect, useState } from "react";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogClose,
+} from "@/components/ui/dialog";
 import Reimbursement from "@/database/reimbursement-schema";
+import ManageRequestCard from "../manage-request-card";
+
+const OrganizationCell = ({ row }: { row: any }) => {
+  const [selectedReimbursement, setSelectedReimbursement] =
+    useState<Reimbursement | null>(null);
+
+  useEffect(() => {
+    console.log(row.original);
+  }, []);
+
+  const fetchReimbursementInfo = () => {
+    const reimbursementId = row.original._id;
+    fetch(`/api/reimbursement/${reimbursementId}`)
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          response.json().then((errorData) => {
+            console.error(errorData.error);
+          });
+        }
+      })
+      .then((data) => {
+        if (data) {
+          setSelectedReimbursement(data);
+        }
+      });
+  };
+
+  const updateComment = (comment: String) => {
+    const reimbursementId = row.original._id;
+    fetch(`/api/reimbursement/${reimbursementId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ comment: comment }),
+    })
+      .then((response) => response.json())
+      .then(() => {
+        fetchReimbursementInfo();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  return (
+    <Dialog>
+      <DialogTrigger>
+        <div className="capitalize" onClick={fetchReimbursementInfo}>
+          {row.getValue("organization")}
+        </div>
+      </DialogTrigger>
+      <DialogContent>
+        <div className="border">
+          {selectedReimbursement ? (
+            <>
+              <ManageRequestCard
+                {...selectedReimbursement}
+                updateComment={updateComment}
+              />
+            </>
+          ) : (
+            <p>Loading reimbursement information...</p>
+          )}
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+};
 
 export const columns: ColumnDef<Reimbursement>[] = [
   {
@@ -14,21 +90,7 @@ export const columns: ColumnDef<Reimbursement>[] = [
   {
     accessorKey: "organization",
     header: "Organization",
-    cell: ({ row }) => (
-      <Dialog>
-        <DialogTrigger>
-          <div className="capitalize">
-            {/* TODO: causes hydration error due to client rendering a different ObjectId than server */}
-            {/* should be fixed when we are rendering organization name instead of id */}
-            {/* {row.getValue<Types.ObjectId>("organization").toString()} */}
-            test org
-          </div>
-        </DialogTrigger>
-        <DialogContent>
-          <div className="border">dialog content</div>
-        </DialogContent>
-      </Dialog>
-    ),
+    cell: ({ row }) => <OrganizationCell row={row} />,
   },
   {
     accessorKey: "recipientName",

@@ -1,12 +1,17 @@
 "use client";
 import { useUser } from "@clerk/nextjs";
 import React from "react";
+import CenteredSpinner from "@/components/centered-spinner";
 
 export default function Page() {
   const { isLoaded, isSignedIn, user } = useUser();
 
   if (!isLoaded || !isSignedIn) {
-    return <div>Loading...</div>;
+    return (
+      <div>
+        <CenteredSpinner />{" "}
+      </div>
+    );
   }
   const emails = user?.emailAddresses?.map((email) => email.emailAddress);
 
