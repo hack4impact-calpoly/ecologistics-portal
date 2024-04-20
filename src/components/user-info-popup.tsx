@@ -8,34 +8,34 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
-interface PopupProps {
-  organization: string;
+export interface PopupProps {
+  name: string;
   user: string;
   email: string;
-  link: string;
+  website: string;
   description: string;
 }
 
 export default function Popup({
-  organization,
+  name,
   user,
   email,
-  link,
+  website,
   description,
 }: PopupProps) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button>View Info</Button>
+        <Button className="bg-orange-500">View Info</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="mx-5 mt-5">{organization}</DialogTitle>
+          <DialogTitle className="mx-5 mt-5">{name}</DialogTitle>
         </DialogHeader>
         <div className="mx-5 mb-5">
           <div className="my-3">{user}</div>
           <div className="my-3">{email}</div>
-          <div className="my-3">{link}</div>
+          <div className="my-3">{website}</div>
           <div className="my-3">NonProfit Mission: {description}</div>
         </div>
       </DialogContent>

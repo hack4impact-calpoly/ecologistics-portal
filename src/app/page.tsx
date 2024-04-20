@@ -6,6 +6,13 @@ import { useRouter } from "next/navigation";
 import CenteredSpinner from "@/components/centered-spinner";
 import Popup from "@/components/user-info-popup";
 
+type organizationInfo = {
+  name: string;
+  description: string;
+  website: string;
+  approved: boolean;
+};
+
 export default function Home() {
   const router = useRouter();
   const { isLoaded, isSignedIn, user } = useUser();
@@ -40,14 +47,15 @@ export default function Home() {
           }
         )?.approved
       ) {
+        const orgInfo: organizationInfo = user?.unsafeMetadata?.organization;
         return (
           <main>
             <Popup
-              organization="Sponsored Organization"
-              user="John"
-              email="john@gmail.com"
-              link="www.com"
-              description="the goal  is to make people happy"
+              name={orgInfo.name}
+              description={orgInfo.description}
+              website={orgInfo.website}
+              email={user.primaryEmailAddress.emailAddress}
+              user={user.fullName}
             />
             <SponsoredOrgTable />
           </main>
@@ -55,13 +63,6 @@ export default function Home() {
       } else {
         return (
           <>
-            <Popup
-              organization="org"
-              user="John"
-              email="john@gmail.com"
-              link="www.com"
-              description="the goal  is to make people happy"
-            />
             <div>Pending approval</div>
           </>
         );
