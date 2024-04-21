@@ -27,7 +27,6 @@ import { CalendarIcon } from "@radix-ui/react-icons";
 import { Calendar } from "@/components/ui/calendar";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import CenteredSpinner from "@/components/centered-spinner";
 
 const formSchema = z.object({
@@ -69,9 +68,6 @@ export default function Page() {
     });
     fetch("api/reimbursement", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
       body: formData,
     })
       .then((response: Response) => {

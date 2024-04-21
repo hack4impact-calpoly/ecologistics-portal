@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
   await connectDB();
   //validate input
   try {
-    const reuqestData = await req.json();
+    const reuqestData = await req.formData();
     if (!reuqestData) {
       const errorResponse: ErrorResponse = {
         error: "No Body in Post Req",
@@ -39,12 +39,35 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(errorResponse, { status: 400 });
     }
 
-    const link = await imageUpload(reuqestData.file, "reimbursment");
-    delete reuqestData.file;
+    const link = await imageUpload(reuqestData.get("file"), "reimbursment");
+
+    console.log(link);
+
+    // interface Reimbursement {
+    //   organization: Types.ObjectId;
+    //   reportName: string;
+    //   recipientName: string;
+    //   recipientEmail: string;
+    //   transactionDate: Date;
+    //   amount: number;
+    //   paymentMethod: string;
+    //   purpose: string;
+    //   receiptLink: string;
+    //   status: string;
+    //   comment?: string;
+    // }
 
     const reimburse: CreateReimbursementBody = await new Reimbursement({
-      ...reuqestData,
-      file: link,
+      organization: "60b3c8b3c9e7b40015b9b2e4",
+      reportName: reuqestData.get("reportName") as string,
+      recipientName: reuqestData.get("recipientName") as string,
+      recipientEmail: reuqestData.get("recipientEmail") as string,
+      transactionDate: reuqestData.get("transactionDate") as Date,
+      amount: reuqestData.get("amount") as number,
+      paymentMethod: reuqestData.get("paymentMethod") as string,
+      purpose: reuqestData.get("purpose") as string,
+      receiptLink: link,
+      status: Status.Pending,
     }).save();
     return NextResponse.json(reimburse);
     // res.status(201).json(reimbursement);
@@ -52,6 +75,7 @@ export async function POST(req: NextRequest) {
     const errorResponse: ErrorResponse = {
       error: "Post Failed",
     };
+    console.log(error);
     return NextResponse.json(errorResponse, { status: 400 });
   }
 }
