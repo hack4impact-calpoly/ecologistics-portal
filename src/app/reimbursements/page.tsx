@@ -3,6 +3,8 @@
 // import Reimbursement from "@/database/reimbursementSchema";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
+import ImageUpload from "@/components/image-upload";
 
 import {
   Form,
@@ -35,11 +37,13 @@ const formSchema = z.object({
     z.string().transform((value) => parseFloat(value)),
   ]),
   purpose: z.string().max(1000),
+  file: z.any(), // i orginalkly wanted to set to z.instanceOf(Blob), // adding a file (file extends Blob)
 });
 
 export default function Page() {
   const router = useRouter();
   // definition
+  const [file, setFile] = useState<File>();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -48,12 +52,33 @@ export default function Page() {
       transactionDate: new Date(),
       amount: 0,
       purpose: "",
+      file: undefined,
     },
   });
 
   // submisson handler
   function onSubmit(values: z.infer<typeof formSchema>) {
+    // if (!file) {
+    //   alert("Please upload a file.");
+    //   return;
+    // }
+    // console.log(file);
     console.log(values);
+    const formData = new FormData();
+    Object.entries(values).forEach(([key, value]) => {
+      formData.append(key, value);
+    });
+    fetch("api/reimbursement", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: formData,
+    })
+      .then((response: Response) => {
+        response.json();
+      })
+      .then((data) => console.log(data));
 
     // Reset the form fields
     form.reset({
@@ -62,6 +87,7 @@ export default function Page() {
       transactionDate: new Date(), // Reset to current date or you can set a default date
       amount: 0,
       purpose: "",
+      file: setFile(undefined),
     });
   }
 
@@ -174,6 +200,18 @@ export default function Page() {
               <FormLabel> Transaction Purpose </FormLabel>
               <FormControl>
                 <Input placeholder="purpose" {...field} />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="file" // where did this come from?
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel> File Upload </FormLabel>
+              <FormControl>
+                <ImageUpload handleChange={field.onChange}></ImageUpload>
               </FormControl>
             </FormItem>
           )}

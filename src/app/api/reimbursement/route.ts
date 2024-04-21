@@ -9,6 +9,7 @@ export type CreateReimbursementBody = Reimbursement;
 export type GetReimbursementsResponse = Reimbursement[];
 export type CreateReimbursementResponse = Reimbursement;
 
+import { imageUpload } from "@/services/image-upload";
 //Get all Reimbursements
 export async function GET() {
   await connectDB();
@@ -27,22 +28,23 @@ export async function GET() {
 //Post Reimbursement
 export async function POST(req: NextRequest) {
   await connectDB();
-  const multer = require("multer");
-
+  //validate input
   try {
-    const reimburse: CreateReimbursementBody = await req.json();
-
-    //validate input
-    if (!reimburse) {
+    const reuqestData = await req.json();
+    if (!reuqestData) {
       const errorResponse: ErrorResponse = {
         error: "No Body in Post Req",
       };
       return NextResponse.json(errorResponse, { status: 400 });
     }
-    const reimbursement: CreateReimbursementResponse = await new Reimbursement(
-      reimburse,
-    ).save();
-    return NextResponse.json(reimbursement);
+    const link = await imageUpload(reuqestData.file, "reimbursment");
+    delete reuqestData.file;
+    // the request has the file which is differnet form the schema we need, so I use that data and edit it.
+    const reimburse: CreateReimbursementBody = await new Reimbursement({
+      ...reuqestData,
+      file: link,
+    }).save();
+    return NextResponse.json(reimburse);
     // res.status(201).json(reimbursement);
   } catch (error) {
     const errorResponse: ErrorResponse = {
