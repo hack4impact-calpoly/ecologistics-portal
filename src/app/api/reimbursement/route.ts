@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { ErrorResponse } from "@/lib/error";
 // import { NextApiRequest, NextApiResponse } from "next";
 import Reimbursement from "@/database/reimbursement-schema";
+import Status from "@/lib/enum";
 
 export type CreateReimbursementBody = Reimbursement;
 
@@ -37,9 +38,10 @@ export async function POST(req: NextRequest) {
       };
       return NextResponse.json(errorResponse, { status: 400 });
     }
+
     const link = await imageUpload(reuqestData.file, "reimbursment");
     delete reuqestData.file;
-    // the request has the file which is differnet form the schema we need, so I use that data and edit it.
+
     const reimburse: CreateReimbursementBody = await new Reimbursement({
       ...reuqestData,
       file: link,

@@ -1,4 +1,5 @@
 "use client";
+
 import * as React from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -27,10 +28,24 @@ import { DebouncedInput } from "../ui/custom/debounced-input";
 import { Label } from "../ui/label";
 import TableColumnFilterDropdown from "../ui/custom/table-column-filter-dropdown";
 import { columns } from "./columns";
-import { data } from "@/test/mock-data";
+import Reimbursement from "@/database/reimbursement-schema";
 import { DateRange } from "react-day-picker";
 import { dateFilterFn } from "@/lib/utils";
 import { fuzzyFilter } from "@/lib/utils";
+import CenteredSpinner from "@/components/centered-spinner";
+
+async function fetchReimbursements(): Promise<Reimbursement[]> {
+  try {
+    const response = await fetch("/api/reimbursement"); // Adjust endpoint as necessary
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    return response.json();
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    return [];
+  }
+}
 
 export default function AdminTable() {
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -42,8 +57,27 @@ export default function AdminTable() {
     React.useState<VisibilityState>({ recipientEmail: false });
   const [expanded, setExpanded] = React.useState<ExpandedState>({});
 
+  const [reimbursements, setReimbursements] = React.useState<Reimbursement[]>(
+    [],
+  );
+  const [isLoading, setIsLoading] = React.useState<boolean>(true);
+  const [error, setError] = React.useState<Error | null>(null);
+
+  React.useEffect(() => {
+    fetchReimbursements()
+      .then((data) => {
+        setReimbursements(data);
+        setIsLoading(false);
+        console.log(reimbursements);
+      })
+      .catch((err) => {
+        setError(err);
+        setIsLoading(false);
+      });
+  }, []);
+
   const table = useReactTable({
-    data,
+    data: reimbursements,
     columns,
     enableExpanding: true,
     onExpandedChange: setExpanded,
@@ -83,6 +117,19 @@ export default function AdminTable() {
     });
   };
 
+  if (isLoading) {
+    return (
+      <div>
+        {" "}
+        <CenteredSpinner />{" "}
+      </div>
+    );
+  }
+
+  if (error) {
+    return <div> Error: {error.message} </div>;
+  }
+
   return (
     <div className="w-full pl-2 pr-2">
       <div className="flex justify-between py-4 w-full">
@@ -99,19 +146,19 @@ export default function AdminTable() {
           table={table}
           identifier="organization"
           title="Organization"
-          values={getUniqueValues(data, "organization")}
+          values={getUniqueValues(reimbursements, "organization")}
         />
         <TableColumnFilterDropdown
           table={table}
           identifier="paymentMethod"
           title="Preferred Payment"
-          values={getUniqueValues(data, "paymentMethod")}
+          values={getUniqueValues(reimbursements, "paymentMethod")}
         />
         <TableColumnFilterDropdown
           table={table}
           identifier="status"
           title="Status"
-          values={getUniqueValues(data, "status")}
+          values={getUniqueValues(reimbursements, "status")}
         />
         <div className="flex flex-col">
           <Label className="text-xs pl-3">Date Range</Label>
@@ -143,7 +190,7 @@ export default function AdminTable() {
           </TableHeader>
           <TableBody>
             {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row, i) => (
+              table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
