@@ -10,8 +10,9 @@ export const formatMockReimbursementResponse = (
   reimbursement: Reimbursement,
 ) => ({
   ...reimbursement,
-  organization: reimbursement.organization.toHexString(),
-  transactionDate: reimbursement.transactionDate.toISOString(),
+  _id: reimbursement._id.toString(), // Ensure _id is a string
+  organization: reimbursement.organization.toString(), // Convert to string if necessary
+  transactionDate: reimbursement.transactionDate.toISOString(), // Standardize date format
 });
 
 export const createNextRequestWithParams = (

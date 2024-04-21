@@ -78,6 +78,10 @@ export async function PUT(req: NextRequest, { params }: IParams) {
         { new: true },
       );
 
+    if (!reimbursement) {
+      throw new Error("Reimbursement Not Found");
+    }
+
     return NextResponse.json(reimbursement, { status: 200 });
   } catch (error) {
     const errorResponse: ErrorResponse = {
