@@ -7,9 +7,6 @@ import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
 import RequestInfoCard from "@/components/request-info-card";
 import StatusBadge from "@/components/status-badge";
 
-function testFunc(status: any) {
-  console.log(typeof status);
-}
 const ReportNameCell = ({ row }: { row: any }) => {
   const [selectedReimbursement, setSelectedReimbursement] =
     useState<Reimbursement | null>(null);
