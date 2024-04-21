@@ -1,9 +1,11 @@
 "use client";
 
-// import Reimbursement from "@/database/reimbursementSchema";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useUser } from "@clerk/nextjs";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-
 import {
   Form,
   FormControl,
@@ -13,7 +15,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useForm } from "react-hook-form";
 import {
   Popover,
   PopoverContent,
@@ -23,9 +24,6 @@ import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { Calendar } from "@/components/ui/calendar";
-import { useUser } from "@clerk/nextjs";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
 
 const formSchema = z.object({
   name: z.string().min(1).max(50),
@@ -41,7 +39,6 @@ const formSchema = z.object({
 export default function Page() {
   const [isConfirmed, setIsConfirmed] = useState(false);
   const router = useRouter();
-  // definition
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -53,17 +50,15 @@ export default function Page() {
     },
   });
 
-  // submisson handler
   function onSubmit(values: z.infer<typeof formSchema>) {
     if (!isConfirmed) return;
     console.log(values);
 
-    // Reset the form fields
     setIsConfirmed(false);
     form.reset({
       name: "",
       email: "",
-      transactionDate: new Date(), // Reset to current date or you can set a default date
+      transactionDate: new Date(),
       amount: 0,
       purpose: "",
     });
@@ -84,19 +79,31 @@ export default function Page() {
   if (!isSignedIn) {
     return router.push("/sign-in");
   }
-  if (
-    !(
-      user?.unsafeMetadata?.organization as {
-        name: string;
-        description: string;
-        website: string;
-        approved: boolean;
-      }
-    )?.approved
-  ) {
+  if (!user?.unsafeMetadata?.organization?.approved) {
     return router.push("/");
   }
-  // implementation
+
+  const constructEmail = () => {
+    const { name, email, transactionDate, amount, purpose } = form.getValues();
+    const emailBody = `Hi there,
+
+I would like to submit the following transaction details:
+
+Name: ${name}
+Email: ${email}
+Transaction Date: ${format(transactionDate, "PPP")}
+Amount: ${amount}
+Purpose: ${purpose}
+
+Thank you!`;
+
+    const emailLink = `mailto:stacey@ecologistics.org?subject=Transaction%20Details&body=${encodeURIComponent(
+      emailBody,
+    )}`;
+
+    window.location.href = emailLink;
+  };
+
   return (
     <main>
       <Form {...form}>
@@ -213,6 +220,9 @@ export default function Page() {
             No
           </Button>
         </div>
+      </div>
+      <div className="flex justify-center">
+        <Button onClick={constructEmail}>Generate Email Template</Button>
       </div>
     </main>
   );
