@@ -12,6 +12,12 @@ import {
 } from "@/components/ui/dialog";
 import Reimbursement from "@/database/reimbursement-schema";
 import ManageRequestCard from "../manage-request-card";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@radix-ui/react-hover-card";
+import HelpMenu from "../help-menu";
 
 const OrganizationCell = ({ row }: { row: any }) => {
   const [selectedReimbursement, setSelectedReimbursement] =
@@ -130,9 +136,16 @@ export const columns: ColumnDef<Reimbursement>[] = [
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => (
-      <div className="capitalize">
-        <Badge>{row.getValue("status")}</Badge>
-      </div>
+      <HoverCard>
+        <HoverCardTrigger asChild>
+          <Button variant="link">
+            <Badge>{row.getValue("status")}</Badge>
+          </Button>
+        </HoverCardTrigger>
+        <HoverCardContent>
+          <HelpMenu />
+        </HoverCardContent>
+      </HoverCard>
     ),
   },
   {

@@ -33,6 +33,17 @@
     --ring: 0 0% 3.9%;
 
     --radius: 0.5rem;
+
+    --green-bg: #e4f4ed;
+    --green-text: #285435;
+    --orange-bg: #faefe3;
+    --orange-text: #926333;
+    --blue-bg: #d8eafd;
+    --blue-text: #21508c;
+    --purple-bg: #ddcdf3;
+    --purple-text: #3b1671;
+    --red-bg: #f3e1e2;
+    --red-text: #903534;
   }
 
   .dark {
