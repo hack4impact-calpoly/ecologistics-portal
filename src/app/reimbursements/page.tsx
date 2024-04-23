@@ -30,8 +30,8 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
 const formSchema = z.object({
-  name: z.string().min(1).max(50),
-  email: z.string().min(1).max(50),
+  recipientName: z.string().min(1).max(50),
+  recipientEmail: z.string().min(1).max(50),
   transactionDate: z.date(),
   amount: z.union([
     z.number(),
@@ -39,7 +39,7 @@ const formSchema = z.object({
   ]),
   paymentMethod: z.string().min(1).max(100),
   purpose: z.string().max(1000),
-  file: z.any(), // i orginalkly wanted to set to z.instanceOf(Blob), // adding a file (file extends Blob)
+  file: z.any(),
 });
 
 export default function Page() {
@@ -49,8 +49,8 @@ export default function Page() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      email: "",
+      recipientName: "",
+      recipientEmail: "",
       transactionDate: new Date(),
       amount: 0,
       paymentMethod: "",
@@ -69,7 +69,7 @@ export default function Page() {
       formData.append(key, value);
     });
     // set organization field to the user's id
-    formData.append("organization", user?.id as string);
+    formData.append("clerkUserId", user?.id as string);
     fetch("api/reimbursement", {
       method: "POST",
       body: formData,
@@ -81,23 +81,22 @@ export default function Page() {
         throw new Error("Failed to submit reimbursement");
       })
       .then(() => {
+        // Reset the form fields
+        setIsConfirmed(false);
+        form.reset({
+          recipientName: "",
+          recipientEmail: "",
+          transactionDate: new Date(), // Reset to current date or you can set a default date
+          amount: 0,
+          paymentMethod: "",
+          purpose: "",
+          file: undefined,
+        });
         router.push("/");
       })
       .catch((error) => {
         console.error(error);
       });
-
-    // Reset the form fields
-    setIsConfirmed(false);
-    form.reset({
-      name: "",
-      email: "",
-      transactionDate: new Date(), // Reset to current date or you can set a default date
-      amount: 0,
-      paymentMethod: "",
-      purpose: "",
-      file: undefined,
-    });
   }
 
   function handleConfirm() {
@@ -137,24 +136,24 @@ export default function Page() {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 m-5">
           <FormField
             control={form.control}
-            name="name"
+            name="recipientName"
             render={({ field }) => (
               <FormItem>
-                <FormLabel> Name </FormLabel>
+                <FormLabel> Recipient Name </FormLabel>
                 <FormControl>
-                  <Input placeholder="name" {...field} />
+                  <Input placeholder="recipientName" {...field} />
                 </FormControl>
               </FormItem>
             )}
           />
           <FormField
             control={form.control}
-            name="email"
+            name="recipientEmail"
             render={({ field }) => (
               <FormItem>
-                <FormLabel> Email </FormLabel>
+                <FormLabel> Recipient Email </FormLabel>
                 <FormControl>
-                  <Input placeholder="email" {...field} />
+                  <Input placeholder="recipientEmail" {...field} />
                 </FormControl>
               </FormItem>
             )}

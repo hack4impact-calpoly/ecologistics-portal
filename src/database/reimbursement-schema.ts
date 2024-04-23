@@ -1,7 +1,7 @@
 import { Schema, model, models, Types } from "mongoose";
 
 interface Reimbursement {
-  organization: Types.ObjectId;
+  clerkUserId: string;
   reportName: string;
   recipientName: string;
   recipientEmail: string;
@@ -25,9 +25,9 @@ interface DeleteReimbursementResponse {
 }
 
 const ReimbursementSchema = new Schema({
-  organization: {
-    type: Schema.Types.ObjectId,
-    required: [true, "Organization is required"],
+  clerkUserId: {
+    type: String,
+    required: [true, "Clerk User Id is required"],
   },
   reportName: {
     type: String,

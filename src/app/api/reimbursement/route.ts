@@ -5,6 +5,8 @@ import { NextRequest, NextResponse } from "next/server";
 import Reimbursement from "@/database/reimbursement-schema";
 import Status from "@/lib/enum";
 import { imageUpload } from "@/services/image-upload";
+import { clerkClient } from "@clerk/nextjs";
+import Organization from "@/database/organization-schema";
 
 export type CreateReimbursementBody = Reimbursement;
 
@@ -45,11 +47,17 @@ export async function POST(req: NextRequest) {
       "reimbursment",
     );
 
-    console.log(receiptLink);
+    // create report name
+    const clerkUserId = requestData.get("clerkUserId") as string;
+    const clerkUser = await clerkClient.users.getUser(clerkUserId);
+    const organizationName = (
+      clerkUser.unsafeMetadata.organization as Organization
+    ).name;
+    const reportName = `${organizationName} - ${new Date().toDateString()}`;
 
     const reimbursement: CreateReimbursementResponse = await new Reimbursement({
-      organization: requestData.get("organization") as string,
-      reportName: requestData.get("reportName") as string,
+      clerkUserId,
+      reportName,
       recipientName: requestData.get("recipientName") as string,
       recipientEmail: requestData.get("recipientEmail") as string,
       transactionDate: Date.parse(requestData.get("transactionDate") as string),
