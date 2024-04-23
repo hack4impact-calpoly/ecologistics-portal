@@ -1,11 +1,14 @@
 "use client";
 
 // import Reimbursement from "@/database/reimbursementSchema";
-import { z } from "zod";
+import ImageUpload from "@/components/image-upload";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
-import ImageUpload from "@/components/image-upload";
+import { z } from "zod";
 
+import CenteredSpinner from "@/components/centered-spinner";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import {
   Form,
   FormControl,
@@ -14,20 +17,17 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { useForm } from "react-hook-form";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { format } from "date-fns";
 import { cn } from "@/lib/utils";
-import { CalendarIcon } from "@radix-ui/react-icons";
-import { Calendar } from "@/components/ui/calendar";
 import { useUser } from "@clerk/nextjs";
+import { CalendarIcon } from "@radix-ui/react-icons";
+import { format } from "date-fns";
 import { useRouter } from "next/navigation";
-import CenteredSpinner from "@/components/centered-spinner";
+import { useForm } from "react-hook-form";
 
 const formSchema = z.object({
   name: z.string().min(1).max(50),
@@ -37,15 +37,15 @@ const formSchema = z.object({
     z.number(),
     z.string().transform((value) => parseFloat(value)),
   ]),
+  paymentMethod: z.string().min(1).max(100),
   purpose: z.string().max(1000),
   file: z.any(), // i orginalkly wanted to set to z.instanceOf(Blob), // adding a file (file extends Blob)
 });
 
 export default function Page() {
+  const { isLoaded, isSignedIn, user } = useUser();
   const [isConfirmed, setIsConfirmed] = useState(false);
   const router = useRouter();
-  // definition
-  const [file, setFile] = useState<File>();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -53,6 +53,7 @@ export default function Page() {
       email: "",
       transactionDate: new Date(),
       amount: 0,
+      paymentMethod: "",
       purpose: "",
       file: undefined,
     },
@@ -61,19 +62,30 @@ export default function Page() {
   // submisson handler
   function onSubmit(values: z.infer<typeof formSchema>) {
     if (!isConfirmed) return;
-    console.log(values);
+    // initialize multipart form data
     const formData = new FormData();
+    // append all form values to form data
     Object.entries(values).forEach(([key, value]) => {
       formData.append(key, value);
     });
+    // set organization field to the user's id
+    formData.append("organization", user?.id as string);
     fetch("api/reimbursement", {
       method: "POST",
       body: formData,
     })
-      .then((response: Response) => {
-        response.json();
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        throw new Error("Failed to submit reimbursement");
       })
-      .then((data) => console.log(data));
+      .then(() => {
+        router.push("/");
+      })
+      .catch((error) => {
+        console.error(error);
+      });
 
     // Reset the form fields
     setIsConfirmed(false);
@@ -82,8 +94,9 @@ export default function Page() {
       email: "",
       transactionDate: new Date(), // Reset to current date or you can set a default date
       amount: 0,
+      paymentMethod: "",
       purpose: "",
-      file: setFile(undefined),
+      file: undefined,
     });
   }
 
@@ -95,7 +108,6 @@ export default function Page() {
     setIsConfirmed(false);
   }
 
-  const { isLoaded, isSignedIn, user } = useUser();
   if (!isLoaded) {
     return (
       <div>
@@ -197,6 +209,18 @@ export default function Page() {
                 <FormLabel> Transaction Amount </FormLabel>
                 <FormControl>
                   <Input type="number" placeholder="$ amount" {...field} />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="paymentMethod"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel> Payment Method </FormLabel>
+                <FormControl>
+                  <Input placeholder="payment method" {...field} />
                 </FormControl>
               </FormItem>
             )}

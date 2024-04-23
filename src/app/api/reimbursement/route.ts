@@ -1,16 +1,16 @@
 import connectDB from "@/database/db";
-import { NextRequest, NextResponse } from "next/server";
 import { ErrorResponse } from "@/lib/error";
+import { NextRequest, NextResponse } from "next/server";
 // import { NextApiRequest, NextApiResponse } from "next";
 import Reimbursement from "@/database/reimbursement-schema";
 import Status from "@/lib/enum";
+import { imageUpload } from "@/services/image-upload";
 
 export type CreateReimbursementBody = Reimbursement;
 
 export type GetReimbursementsResponse = Reimbursement[];
 export type CreateReimbursementResponse = Reimbursement;
 
-import { imageUpload } from "@/services/image-upload";
 //Get all Reimbursements
 export async function GET() {
   await connectDB();
@@ -29,53 +29,41 @@ export async function GET() {
 //Post Reimbursement
 export async function POST(req: NextRequest) {
   await connectDB();
-  //validate input
   try {
-    const reuqestData = await req.formData();
-    if (!reuqestData) {
+    const requestData = await req.formData();
+    //validate input
+    if (!requestData) {
       const errorResponse: ErrorResponse = {
         error: "No Body in Post Req",
       };
       return NextResponse.json(errorResponse, { status: 400 });
     }
 
-    const link = await imageUpload(reuqestData.get("file"), "reimbursment");
+    // upload image to S3
+    const receiptLink = await imageUpload(
+      requestData.get("file"),
+      "reimbursment",
+    );
 
-    console.log(link);
+    console.log(receiptLink);
 
-    // interface Reimbursement {
-    //   organization: Types.ObjectId;
-    //   reportName: string;
-    //   recipientName: string;
-    //   recipientEmail: string;
-    //   transactionDate: Date;
-    //   amount: number;
-    //   paymentMethod: string;
-    //   purpose: string;
-    //   receiptLink: string;
-    //   status: string;
-    //   comment?: string;
-    // }
-
-    const reimburse: CreateReimbursementBody = await new Reimbursement({
-      organization: "60b3c8b3c9e7b40015b9b2e4",
-      reportName: reuqestData.get("reportName") as string,
-      recipientName: reuqestData.get("recipientName") as string,
-      recipientEmail: reuqestData.get("recipientEmail") as string,
-      transactionDate: reuqestData.get("transactionDate") as Date,
-      amount: reuqestData.get("amount") as number,
-      paymentMethod: reuqestData.get("paymentMethod") as string,
-      purpose: reuqestData.get("purpose") as string,
-      receiptLink: link,
+    const reimbursement: CreateReimbursementResponse = await new Reimbursement({
+      organization: requestData.get("organization") as string,
+      reportName: requestData.get("reportName") as string,
+      recipientName: requestData.get("recipientName") as string,
+      recipientEmail: requestData.get("recipientEmail") as string,
+      transactionDate: Date.parse(requestData.get("transactionDate") as string),
+      amount: parseFloat(requestData.get("amount") as string),
+      paymentMethod: requestData.get("paymentMethod") as string,
+      purpose: requestData.get("purpose") as string,
+      receiptLink: receiptLink,
       status: Status.Pending,
     }).save();
-    return NextResponse.json(reimburse);
-    // res.status(201).json(reimbursement);
+    return NextResponse.json(reimbursement);
   } catch (error) {
     const errorResponse: ErrorResponse = {
       error: "Post Failed",
     };
-    console.log(error);
     return NextResponse.json(errorResponse, { status: 400 });
   }
 }
