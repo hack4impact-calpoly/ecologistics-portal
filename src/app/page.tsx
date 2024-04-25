@@ -5,6 +5,7 @@ import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import CenteredSpinner from "@/components/centered-spinner";
 import Popup from "@/components/user-info-popup";
+import Admin from "@/components/admin";
 
 type organizationInfo = {
   name: string;
@@ -28,8 +29,10 @@ export default function Home() {
   }
   if (user?.publicMetadata?.admin) {
     return (
-      <main>
-        <h1 className="text-xl font-bold">Nonprofit Name</h1>
+      <main className="mx-5 my-7 w-full h-full">
+        <h2 className="text-[26px] font-[600] leading-none text-black mb-8">
+          Reimbursment Requests
+        </h2>
         <AdminTable />
       </main>
     );

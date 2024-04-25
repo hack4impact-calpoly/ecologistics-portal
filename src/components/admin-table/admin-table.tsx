@@ -33,6 +33,7 @@ import { DateRange } from "react-day-picker";
 import { dateFilterFn } from "@/lib/utils";
 import { fuzzyFilter } from "@/lib/utils";
 import CenteredSpinner from "@/components/centered-spinner";
+import { DataTablePagination } from "@/components/data-table-pagination";
 
 async function fetchReimbursements(): Promise<Reimbursement[]> {
   try {
@@ -120,8 +121,7 @@ export default function AdminTable() {
   if (isLoading) {
     return (
       <div>
-        {" "}
-        <CenteredSpinner />{" "}
+        <CenteredSpinner />
       </div>
     );
   }
@@ -131,9 +131,9 @@ export default function AdminTable() {
   }
 
   return (
-    <div className="w-full pl-2 pr-2">
-      <div className="flex justify-between py-4 w-full">
-        <div className="flex flex-col">
+    <div className="w-full h-full">
+      <div className="flex justify-between w-full mb-5">
+        <div className="flex flex-col w-[25%]">
           <Label className="text-xs pl-1 flex-2">Search</Label>
           <DebouncedInput
             value={globalFilter ?? ""}
@@ -142,28 +142,34 @@ export default function AdminTable() {
             placeholder="Search all columns..."
           />
         </div>
-        <TableColumnFilterDropdown
-          table={table}
-          identifier="organization"
-          title="Organization"
-          values={getUniqueValues(reimbursements, "organization")}
-        />
-        <TableColumnFilterDropdown
-          table={table}
-          identifier="paymentMethod"
-          title="Preferred Payment"
-          values={getUniqueValues(reimbursements, "paymentMethod")}
-        />
-        <TableColumnFilterDropdown
-          table={table}
-          identifier="status"
-          title="Status"
-          values={getUniqueValues(reimbursements, "status")}
-        />
+        <div className="flex flex-col w-[20%]">
+          <TableColumnFilterDropdown
+            table={table}
+            identifier="organization"
+            title="Organization"
+            values={getUniqueValues(reimbursements, "organization")}
+          />
+        </div>
+        <div className="flex flex-col w-[15%]">
+          <TableColumnFilterDropdown
+            table={table}
+            identifier="paymentMethod"
+            title="Preferred Payment"
+            values={getUniqueValues(reimbursements, "paymentMethod")}
+          />
+        </div>
+        <div className="flex flex-col w-[15%]">
+          <TableColumnFilterDropdown
+            table={table}
+            identifier="status"
+            title="Status"
+            values={getUniqueValues(reimbursements, "status")}
+          />
+        </div>
         <div className="flex flex-col">
-          <Label className="text-xs pl-3">Date Range</Label>
+          <Label className="text-xs pl-1 min-w-[16rem]">Date Range</Label>
           <DatePickerWithRange
-            className="ml-2 self-end"
+            className=""
             handleChange={handleDateRangeChange}
           />
         </div>
@@ -175,7 +181,10 @@ export default function AdminTable() {
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead className="text-center" key={header.id}>
+                    <TableHead
+                      className="text-left bg-neutral-200 text-black"
+                      key={header.id}
+                    >
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -199,7 +208,7 @@ export default function AdminTable() {
                   }}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell className="text-center" key={cell.id}>
+                    <TableCell className="text-left" key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext(),
@@ -221,26 +230,7 @@ export default function AdminTable() {
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-end space-x-2 py-4">
-        <div className="space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            Previous
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            Next
-          </Button>
-        </div>
-      </div>
+      <DataTablePagination table={table} />
     </div>
   );
 }
