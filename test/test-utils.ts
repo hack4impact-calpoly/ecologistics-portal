@@ -2,18 +2,15 @@ import Reimbursement from "@/database/reimbursement-schema";
 import { ObjectId } from "mongoose";
 import { createMocks, RequestMethod } from "node-mocks-http";
 
-type ReimbursementResponse = Reimbursement & { _id: ObjectId };
-
 export const createMockNextRequest = (body: any) =>
   createMocks({
     json: () => Promise.resolve(body),
   });
 
 export const formatMockReimbursementResponse = (
-  reimbursement: ReimbursementResponse,
+  reimbursement: Reimbursement,
 ) => ({
   ...reimbursement,
-  _id: reimbursement._id.toString(), // Ensure _id is a string
   organization: reimbursement.organization.toString(), // Convert to string if necessary
   transactionDate: reimbursement.transactionDate.toISOString(), // Standardize date format
 });
@@ -38,5 +35,5 @@ export const createNextRequestWithParams = (
 };
 
 export const formatMockReimbursementsResponse = (
-  reimbursements: ReimbursementResponse[],
+  reimbursements: Reimbursement[],
 ) => reimbursements.map(formatMockReimbursementResponse);

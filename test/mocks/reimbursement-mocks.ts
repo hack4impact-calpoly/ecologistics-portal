@@ -132,4 +132,4 @@ export const MOCK_REIMBURSEMENTS: Reimbursement[] = [
     status: "Paid",
     comment: "",
   },
-].map((reimbursement) => ({ ...reimbursement, _id: new Types.ObjectId() }));
+].map((reimbursement) => ({ ...reimbursement, _id: "test-id" }));
