@@ -2,7 +2,7 @@ import connectDB from "@/database/db";
 import { NextRequest, NextResponse } from "next/server";
 import { ErrorResponse } from "@/lib/error";
 import Reimbursement from "@/database/reimbursement-schema";
-import Status from "lib/enum";
+import Status from "@/lib/enum";
 
 export type UpdateReimbursementBody = {
   organization?: string;
