@@ -50,15 +50,17 @@ export default function Page() {
     },
   });
 
+  // submisson handler
   function onSubmit(values: z.infer<typeof formSchema>) {
     if (!isConfirmed) return;
     console.log(values);
 
+    // Reset the form fields
     setIsConfirmed(false);
     form.reset({
       name: "",
       email: "",
-      transactionDate: new Date(),
+      transactionDate: new Date(), // Reset to current date or you can set a default date
       amount: 0,
       purpose: "",
     });
@@ -79,7 +81,16 @@ export default function Page() {
   if (!isSignedIn) {
     return router.push("/sign-in");
   }
-  if (!user?.unsafeMetadata?.organization?.approved) {
+  if (
+    !(
+      user?.unsafeMetadata?.organization as {
+        name: string;
+        description: string;
+        website: string;
+        approved: boolean;
+      }
+    )?.approved
+  ) {
     return router.push("/");
   }
 
