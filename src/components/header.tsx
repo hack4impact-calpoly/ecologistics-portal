@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { BellIcon } from "@radix-ui/react-icons";
-import { UserButton } from "@clerk/nextjs";
+import { UserButton, useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -16,6 +16,7 @@ import {
 
 export default function Header() {
   const [hasNewUpdates, setHasNewUpdates] = useState(true); // Assume there are new updates initially
+  const { user } = useUser();
 
   const statusUpdates = [
     { id: 1, text: "Request A approved" },
@@ -28,9 +29,9 @@ export default function Header() {
   };
 
   return (
-    <nav className="bg-white">
-      <div className="py-1">
-        <div className="flex justify-between items-center px-5 h-16">
+    <nav className="bg-[#EDEBDA]">
+      <div className="py-1.5">
+        <div className="flex justify-between items-center px-7 h-16">
           <Link href="/">
             <Image
               src="/images/ecologistics-logo.svg"
@@ -39,28 +40,31 @@ export default function Header() {
               height={36}
             />
           </Link>
-          <div className="flex space-x-4">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button onClick={handleDropdownOpen}>
-                  <div className="relative">
-                    <BellIcon className="w-6 h-6" />
-                    {hasNewUpdates && <span className="badge"></span>}
-                  </div>
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="right-0">
-                <DropdownMenuLabel>Recent Updates</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                {statusUpdates.map((statusUpdate) => (
-                  <DropdownMenuItem key={statusUpdate.id}>
-                    {statusUpdate.text}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-            <UserButton />
-          </div>
+          {user && (
+            <div className="flex gap-x-8">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button onClick={handleDropdownOpen}>
+                    <div className="relative">
+                      <BellIcon className="w-6 h-6" />
+                      {hasNewUpdates && <span className="badge"></span>}
+                    </div>
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="right-0">
+                  <DropdownMenuLabel>Recent Updates</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  {statusUpdates.map((statusUpdate) => (
+                    <DropdownMenuItem key={statusUpdate.id}>
+                      {statusUpdate.text}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              <UserButton />
+            </div>
+          )}
         </div>
       </div>
       <style jsx>{`
