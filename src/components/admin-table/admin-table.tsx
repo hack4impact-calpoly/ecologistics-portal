@@ -32,6 +32,7 @@ import Reimbursement from "@/database/reimbursement-schema";
 import { DateRange } from "react-day-picker";
 import { dateFilterFn } from "@/lib/utils";
 import { fuzzyFilter } from "@/lib/utils";
+import CenteredSpinner from "@/components/centered-spinner";
 
 async function fetchReimbursements(): Promise<Reimbursement[]> {
   try {
@@ -117,7 +118,12 @@ export default function AdminTable() {
   };
 
   if (isLoading) {
-    return <div> Loading... </div>;
+    return (
+      <div>
+        {" "}
+        <CenteredSpinner />{" "}
+      </div>
+    );
   }
 
   if (error) {

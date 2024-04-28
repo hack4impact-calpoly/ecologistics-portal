@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { ErrorResponse } from "@/lib/error";
 import connectDB from "@/database/db";
 import Organization from "@/database/organization-schema";
+import { clerkClient } from "@clerk/nextjs";
 
 export type CreateOrganizationBody = Organization;
 
@@ -9,9 +10,8 @@ export type GetOrganizationsResponse = Organization[];
 export type CreateOrganizationResponse = Organization;
 
 export async function GET(req: NextRequest) {
-  await connectDB(); // function from db.ts before
   try {
-    const organizations: GetOrganizationsResponse = await Organization.find();
+    const organizations = await clerkClient.users.getUserList();
     return NextResponse.json(organizations);
   } catch (error: any) {
     const errorResponse: ErrorResponse = {

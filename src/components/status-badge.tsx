@@ -3,8 +3,8 @@
 import Status from "@/lib/enum";
 import { Badge } from "@/components/ui/badge";
 
-function choosingTheBadge(ReimbursementStatus: Status) {
-  switch (ReimbursementStatus) {
+function choosingTheBadge(reimbursementStatus: Status) {
+  switch (reimbursementStatus) {
     case Status.Pending:
       return (
         <Badge
@@ -59,6 +59,10 @@ function choosingTheBadge(ReimbursementStatus: Status) {
   }
 }
 
-export default function StatusBadge(ReimbursementStatus: Status) {
-  return <div>{choosingTheBadge(ReimbursementStatus)}</div>;
+interface StatusBadgeProps {
+  reimbursementStatus: Status;
+}
+
+export default function StatusBadge(props: StatusBadgeProps) {
+  return <div>{choosingTheBadge(props.reimbursementStatus)}</div>;
 }

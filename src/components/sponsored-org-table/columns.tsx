@@ -1,15 +1,60 @@
+import React, { useState } from "react";
 import { ColumnDef, FilterFnOption } from "@tanstack/react-table";
 import { DownloadIcon } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
 import Reimbursement from "@/database/reimbursement-schema";
+import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
+import RequestInfoCard from "@/components/request-info-card";
+import StatusBadge from "@/components/status-badge";
+
+const ReportNameCell = ({ row }: { row: any }) => {
+  const [selectedReimbursement, setSelectedReimbursement] =
+    useState<Reimbursement | null>(null);
+
+  const handleTitleClick = () => {
+    const reimbursementId = row.original._id;
+    fetch(`/api/reimbursement/${reimbursementId}`)
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          response.json().then((errorData) => {
+            console.error(errorData.error);
+          });
+        }
+      })
+      .then((data) => {
+        if (data) {
+          setSelectedReimbursement(data);
+        }
+      });
+  };
+
+  return (
+    <Dialog>
+      <DialogTrigger>
+        <div className="capitalize" onClick={handleTitleClick}>
+          {row.getValue("reportName")}
+        </div>
+      </DialogTrigger>
+      <DialogContent>
+        <div className="border">
+          {selectedReimbursement ? (
+            <RequestInfoCard {...selectedReimbursement} />
+          ) : (
+            <p>Loading reimbursement information...</p>
+          )}
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+};
 
 export const columns: ColumnDef<Reimbursement>[] = [
   {
     accessorKey: "reportName",
     header: "Request",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("reportName")}</div>
-    ),
+    cell: ({ row }) => <ReportNameCell row={row} />,
   },
   {
     accessorKey: "recipientName",
@@ -34,7 +79,9 @@ export const columns: ColumnDef<Reimbursement>[] = [
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("status")}</div>
+      <div className="capitalize">
+        <StatusBadge reimbursementStatus={row.getValue("status")} />
+      </div>
     ),
   },
   {

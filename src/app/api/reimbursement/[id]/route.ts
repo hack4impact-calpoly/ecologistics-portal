@@ -2,6 +2,7 @@ import connectDB from "@/database/db";
 import { NextRequest, NextResponse } from "next/server";
 import { ErrorResponse } from "@/lib/error";
 import Reimbursement from "@/database/reimbursement-schema";
+import Status from "lib/enum";
 
 export type UpdateReimbursementBody = {
   organization?: string;
@@ -48,10 +49,17 @@ export async function GET(req: NextRequest, { params }: IParams) {
 export async function PUT(req: NextRequest, { params }: IParams) {
   await connectDB();
   const { id } = params;
-
   try {
     const body: UpdateReimbursementBody = await req.json();
     const currentReimbursement = await Reimbursement.findById(id);
+
+    if (body.status && !(body.status in Status)) {
+      const errorResponse: ErrorResponse = {
+        error: "Status is not valid or undefined",
+      };
+      return NextResponse.json(errorResponse, { status: 404 });
+    }
+
     const reimbursement: UpdateReimbursementResponse =
       await Reimbursement.findByIdAndUpdate(
         id,

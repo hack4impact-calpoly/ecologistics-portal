@@ -3,12 +3,25 @@ import AdminTable from "@/components/admin-table/admin-table";
 import SponsoredOrgTable from "@/components/sponsored-org-table/sponsored-org-table";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
+import CenteredSpinner from "@/components/centered-spinner";
+import Popup from "@/components/user-info-popup";
+
+type organizationInfo = {
+  name: string;
+  description: string;
+  website: string;
+  approved: boolean;
+};
 
 export default function Home() {
   const router = useRouter();
   const { isLoaded, isSignedIn, user } = useUser();
   if (!isLoaded) {
-    return <div>Loading...</div>;
+    return (
+      <div>
+        <CenteredSpinner />{" "}
+      </div>
+    );
   }
   if (!isSignedIn) {
     return router.push("/sign-in");
@@ -34,13 +47,25 @@ export default function Home() {
           }
         )?.approved
       ) {
+        const orgInfo = user?.unsafeMetadata?.organization as organizationInfo;
         return (
           <main>
+            <Popup
+              name={orgInfo.name}
+              description={orgInfo.description}
+              website={orgInfo.website}
+              email={(user?.primaryEmailAddress?.emailAddress as string) || ""}
+              user={(user?.fullName as string) || ""}
+            />
             <SponsoredOrgTable />
           </main>
         );
       } else {
-        return <div>Pending approval</div>;
+        return (
+          <>
+            <div>Pending approval</div>
+          </>
+        );
       }
     }
   }
