@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import { BellIcon } from "@radix-ui/react-icons";
-import { UserButton } from "@clerk/nextjs";
+import { UserButton, UserProfile } from "@clerk/nextjs";
 import Link from "next/link";
 import Image from "next/image";
+import { useUser } from "@clerk/nextjs";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -13,8 +14,10 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from "components/ui/dropdown-menu";
+import NewUserButton from "./user-button";
 
-export default function Header() {
+// Alert component on header
+function Alert({ isLoggedIn }: { isLoggedIn: boolean | undefined }) {
   const [hasNewUpdates, setHasNewUpdates] = useState(true); // Assume there are new updates initially
 
   const statusUpdates = [
@@ -26,12 +29,60 @@ export default function Header() {
   const handleDropdownOpen = () => {
     setHasNewUpdates(false); // Resets the new updates state when dropdown is opened
   };
+  // Show if logged in
+  if (isLoggedIn) {
+    return (
+      <div className="z-10">
+        <div className="flex space-x-4">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button onClick={handleDropdownOpen}>
+                <div className="relative">
+                  <BellIcon className="w-6 h-6" />
+                  {hasNewUpdates && <span className="badge"></span>}
+                </div>
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="right-0">
+              <DropdownMenuLabel>Recent Updates</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              {statusUpdates.map((statusUpdate) => (
+                <DropdownMenuItem key={statusUpdate.id}>
+                  {statusUpdate.text}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <NewUserButton />
+        </div>
+        <style jsx>{`
+          .badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 8px;
+            height: 8px;
+            background-color: red;
+            border-radius: 50%;
+          }
+        `}</style>
+      </div>
+    );
+  }
+  // Hide if logged out
+  else {
+    return null;
+  }
+}
 
+export default function Header() {
+  const { isSignedIn } = useUser();
   return (
-    <nav className="bg-white">
+    <nav>
       <div className="py-1">
         <div className="flex justify-between items-center px-5 h-16">
-          <Link href="/">
+          {/* Priotize header link */}
+          <Link href="/" className="z-10">
             <Image
               src="/images/ecologistics-logo.svg"
               alt="Ecologistics Logo"
@@ -39,41 +90,9 @@ export default function Header() {
               height={36}
             />
           </Link>
-          <div className="flex space-x-4">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button onClick={handleDropdownOpen}>
-                  <div className="relative">
-                    <BellIcon className="w-6 h-6" />
-                    {hasNewUpdates && <span className="badge"></span>}
-                  </div>
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="right-0">
-                <DropdownMenuLabel>Recent Updates</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                {statusUpdates.map((statusUpdate) => (
-                  <DropdownMenuItem key={statusUpdate.id}>
-                    {statusUpdate.text}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-            <UserButton />
-          </div>
+          <Alert isLoggedIn={isSignedIn} />
         </div>
       </div>
-      <style jsx>{`
-        .badge {
-          position: absolute;
-          top: 0;
-          right: 0;
-          width: 8px;
-          height: 8px;
-          background-color: red;
-          border-radius: 50%;
-        }
-      `}</style>
     </nav>
   );
 }
