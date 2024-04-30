@@ -129,13 +129,14 @@ export default function Page() {
   }
 
   const constructEmail = () => {
-    const { name, email, transactionDate, amount, purpose } = form.getValues();
+    const { recipientName, recipientEmail, transactionDate, amount, purpose } =
+      form.getValues();
     const emailBody = `Hi there,
 
 I would like to submit the following transaction details:
 
-Name: ${name}
-Email: ${email}
+Name: ${recipientName}
+Email: ${recipientEmail}
 Transaction Date: ${format(transactionDate, "PPP")}
 Amount: ${amount}
 Purpose: ${purpose}

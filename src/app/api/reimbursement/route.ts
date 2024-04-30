@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 import Reimbursement from "@/database/reimbursement-schema";
 import Status from "@/lib/enum";
 import { imageUpload } from "@/services/image-upload";
-import { clerkClient } from "@clerk/nextjs";
+import { clerkClient } from "@clerk/nextjs/server";
 import Organization from "@/database/organization-schema";
 
 export type CreateReimbursementBody = Reimbursement;
@@ -72,6 +72,7 @@ export async function POST(req: NextRequest) {
     const errorResponse: ErrorResponse = {
       error: "Post Failed",
     };
+    console.log(error);
     return NextResponse.json(errorResponse, { status: 400 });
   }
 }

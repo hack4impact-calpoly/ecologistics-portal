@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { ErrorResponse } from "@/lib/error";
 import connectDB from "@/database/db";
 import Organization from "@/database/organization-schema";
-import { clerkClient } from "@clerk/nextjs";
+import { clerkClient } from "@clerk/nextjs/server";
 
 export type CreateOrganizationBody = Organization;
 

@@ -20,7 +20,6 @@ export const imageUpload = async (file: any, fileName: string) => {
 
   try {
     const response = await client.send(command);
-    console.log(response);
   } catch (err) {
     console.error(err);
   }

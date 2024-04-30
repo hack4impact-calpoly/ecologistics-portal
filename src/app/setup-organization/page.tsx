@@ -29,7 +29,7 @@ export default function Page() {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      recipientName: "",
+      name: "",
       description: "",
       website: "",
     },
