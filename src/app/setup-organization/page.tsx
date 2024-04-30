@@ -60,14 +60,16 @@ export default function Page() {
   return (
     <div>
       <h1>Setup Organization</h1>
-      <Form {...form}>
+      <Form data-testid="cypress-setup-form" {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 m-5">
           <FormField
             control={form.control}
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Organization Name</FormLabel>
+                <FormLabel data-testid="cypress-setup-name">
+                  Organization Name
+                </FormLabel>
                 <FormControl>
                   <Input placeholder="name" {...field} />
                 </FormControl>
@@ -79,7 +81,9 @@ export default function Page() {
             name="description"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Organization Description</FormLabel>
+                <FormLabel data-testid="cypress-setup-description">
+                  Organization Description
+                </FormLabel>
                 <FormControl>
                   <Textarea placeholder="description" {...field} />
                 </FormControl>
@@ -91,7 +95,9 @@ export default function Page() {
             name="website"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Website</FormLabel>
+                <FormLabel data-testid="cypress-setup-website">
+                  Website
+                </FormLabel>
                 <FormControl>
                   <Input placeholder="website" {...field} />
                 </FormControl>

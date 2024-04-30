@@ -1,12 +1,7 @@
 "use client";
 
-// import Reimbursement from "@/database/reimbursementSchema";
-import ImageUpload from "@/components/image-upload";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
-import { z } from "zod";
-
 import CenteredSpinner from "@/components/centered-spinner";
+import ImageUpload from "@/components/image-upload";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -24,10 +19,13 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { useUser } from "@clerk/nextjs";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 const formSchema = z.object({
   recipientName: z.string().min(1).max(50),
@@ -129,7 +127,28 @@ export default function Page() {
   ) {
     return router.push("/");
   }
-  // implementation
+
+  const constructEmail = () => {
+    const { name, email, transactionDate, amount, purpose } = form.getValues();
+    const emailBody = `Hi there,
+
+I would like to submit the following transaction details:
+
+Name: ${name}
+Email: ${email}
+Transaction Date: ${format(transactionDate, "PPP")}
+Amount: ${amount}
+Purpose: ${purpose}
+
+Thank you!`;
+
+    const emailLink = `mailto:stacey@ecologistics.org?subject=Transaction%20Details&body=${encodeURIComponent(
+      emailBody,
+    )}`;
+
+    window.location.href = emailLink;
+  };
+
   return (
     <main>
       <Form {...form}>
@@ -270,6 +289,9 @@ export default function Page() {
             No
           </Button>
         </div>
+      </div>
+      <div className="flex justify-center">
+        <Button onClick={constructEmail}>Generate Email Template</Button>
       </div>
     </main>
   );
