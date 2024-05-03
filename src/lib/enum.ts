@@ -4,6 +4,5 @@ enum Status {
   OnHold = "ON_HOLD",
   Declined = "DECLINED",
   Paid = "PAID",
-  Archived = "ARCHIVED",
 }
 export default Status;

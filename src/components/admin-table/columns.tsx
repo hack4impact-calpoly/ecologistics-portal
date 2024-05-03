@@ -1,6 +1,6 @@
 import { formatAmount } from "@/lib/format";
 import { ColumnDef, FilterFnOption } from "@tanstack/react-table";
-import { Badge } from "../ui/badge";
+import StatusBadge from "@/components/status-badge";
 import { Button } from "@/components/ui/button";
 import { DownloadIcon } from "@radix-ui/react-icons";
 import React, { useEffect, useState } from "react";
@@ -139,7 +139,7 @@ export const columns: ColumnDef<Reimbursement>[] = [
       <HoverCard>
         <HoverCardTrigger asChild>
           <Button variant="link">
-            <Badge>{row.getValue("status")}</Badge>
+            <StatusBadge reimbursementStatus={row.getValue("status")} />
           </Button>
         </HoverCardTrigger>
         <HoverCardContent>

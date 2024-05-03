@@ -6,11 +6,11 @@ export default function HelpMenu() {
   return (
     <Card className="flex w-[350px] gap-2 p-2">
       <div className="flex flex-col gap-2">
-        <StatusBadge ReimbursementStatus={Status.Paid} />
-        <StatusBadge ReimbursementStatus={Status.OnHold} />
-        <StatusBadge ReimbursementStatus={Status.Pending} />
-        <StatusBadge ReimbursementStatus={Status.NeedsReview} />
-        <StatusBadge ReimbursementStatus={Status.Declined} />
+        <StatusBadge reimbursementStatus={Status.Paid} />
+        <StatusBadge reimbursementStatus={Status.OnHold} />
+        <StatusBadge reimbursementStatus={Status.Pending} />
+        <StatusBadge reimbursementStatus={Status.NeedsReview} />
+        <StatusBadge reimbursementStatus={Status.Declined} />
       </div>
       <div className="flex flex-col gap-2.5 text-left">
         <span>Request has been paid</span>
