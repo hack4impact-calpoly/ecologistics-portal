@@ -6,6 +6,7 @@ import Popup from "@/components/user-info-popup";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import * as Tabs from "@radix-ui/react-tabs";
+import { Button } from "@/components/ui/button";
 
 type organizationInfo = {
   name: string;
@@ -14,7 +15,7 @@ type organizationInfo = {
   approved: boolean;
 };
 
-export default function Page() {
+export default function SponsoredHomePage() {
   const router = useRouter();
   const { isLoaded, isSignedIn, user } = useUser();
 
@@ -26,10 +27,12 @@ export default function Page() {
     );
   }
   if (!isSignedIn) {
-    return router.push("/sign-in");
+    router.push("/sign-in");
+    return;
   }
   if (!user?.unsafeMetadata?.organization) {
-    return router.push("/setup-organization");
+    router.push("/setup-organization");
+    return;
   }
 
   const orgInfo = user?.unsafeMetadata?.organization as organizationInfo;
@@ -63,7 +66,13 @@ export default function Page() {
             </Tabs.Trigger>
           </Tabs.List>
 
-          <div className="py-1">
+          <div className="flex flex-col mt-4">
+            <Button
+              onClick={() => router.push("/reimbursements")}
+              className="bg-orange-500 text-[16px] font-[600] place-self-end"
+            >
+              Request Reimbursement
+            </Button>
             <Tabs.Content value="all">
               <SponsoredOrgTable />
             </Tabs.Content>
