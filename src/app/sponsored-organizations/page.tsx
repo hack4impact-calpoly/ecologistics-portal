@@ -11,6 +11,11 @@ import { Types } from "mongoose";
 import { useEffect, useState } from "react";
 import CenteredSpinner from "@/components/centered-spinner";
 
+//clerk user as key and num of updates as value
+type UpdateCounts = {
+  [key: string]: number;
+};
+
 // Example sponsors for testing
 const organizations: Organization[] = [
   {
@@ -65,24 +70,28 @@ async function filterOrganizationsWithPendingReimbursements(
   organizations: Organization[],
 ) {
   const filteredOrgs: Organization[] = [];
+  let updateCount: UpdateCounts = {};
   // Check each organization
   for (const org of organizations) {
     let pending = false;
+    let numOfUpdates = 0;
     for (const reimbursementId of org.reimbursements) {
       // Fetch reimbursement from API
       const reimbursement = await getReimbursement(reimbursementId.toString());
       // Check if reimbursement has a pending status
       if (reimbursement && reimbursement.status === "Pending") {
         pending = true;
-        break; // If it has at least one pending reimbursement, no need to keep checking the same organization
+        numOfUpdates++; // increment number of updates
+        // break; // If it has at least one pending reimbursement, no need to keep checking the same organization
       }
     }
+    updateCount[org.clerkUser] = numOfUpdates;
     // Add organization to list if it had a pending reimbursement
     if (pending) {
       filteredOrgs.push(org);
     }
   }
-  return filteredOrgs;
+  return { filteredOrgs, updateCount };
 }
 
 // Fetch list of organizations
@@ -130,7 +139,7 @@ export default function Page() {
   const [orgs, setOrgs] = useState<Organization[]>([]); // State for currently displayed organizations based on view settings
   const [updatedOrgs, setUpdatedOrgs] = useState<Organization[]>([]); // State for organizations with pending updates (filtered)
   const [allOrgs, setAllOrgs] = useState<Organization[]>([]); // State for all organizations (unfiltered)
-
+  const [updateCount, setUpdateCount] = useState<UpdateCounts>({});
   // Turn off viewUpdates when View All is toggled
   const handleViewAllToggle = () => {
     setViewUpdates(false);
@@ -152,12 +161,11 @@ export default function Page() {
           const fetchedOrgs = await getOrganizations();
           if (fetchedOrgs) {
             setAllOrgs(fetchedOrgs); // Cache orgs for later
-
             if (fetchedOrgs.length > 0) {
               const filteredUpdatedOrgs =
                 await filterOrganizationsWithPendingReimbursements(fetchedOrgs); // Fetch organizations with updates
-              console.log(filteredUpdatedOrgs);
-              setUpdatedOrgs(filteredUpdatedOrgs); // Cache orgs for later
+              setUpdatedOrgs(filteredUpdatedOrgs.filteredOrgs); // Cache orgs for later
+              setUpdateCount(filteredUpdatedOrgs.updateCount);
             }
           }
         }
@@ -168,7 +176,6 @@ export default function Page() {
         } else {
           filteredOrgs = allOrgs; // Otherwise display all orgs
         }
-
         setOrgs(filteredOrgs);
       } catch (error) {
         console.error("Error fetching and filtering organizations:", error);
@@ -248,6 +255,7 @@ export default function Page() {
               organization={organization.name}
               user={organization.clerkUser}
               email="temp@domain.com"
+              updates={updateCount[organization.clerkUser] || 0}
             />
           </div>
         ))}
