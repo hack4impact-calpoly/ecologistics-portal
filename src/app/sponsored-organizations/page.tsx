@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Toggle } from "@/components/ui/toggle";
 import { Input } from "@/components/ui/input";
 import SponsorCard from "@/components/sponsored-org-card";
-import Organization from "@/database/organization-schema";
+import { Organization } from "@/database/organization-schema";
 import { Types } from "mongoose";
 import { useEffect, useState } from "react";
 import CenteredSpinner from "@/components/centered-spinner";
@@ -15,55 +15,6 @@ import CenteredSpinner from "@/components/centered-spinner";
 type UpdateCounts = {
   [key: string]: number;
 };
-
-// Example sponsors for testing
-const organizations: Organization[] = [
-  {
-    name: "Organization 1",
-    description: "Placeholder description",
-    website: "https://organization1.com",
-    clerkUser: "User 1",
-    logo: "/images/sponsored_org_profile_picture_placeholder.png",
-    reimbursements: [new Types.ObjectId("65c97b4056e2e2d7d225fe70")],
-    status: "active",
-  },
-  {
-    name: "Organization 2",
-    description: "Placeholder description",
-    website: "https://organization2.com",
-    clerkUser: "User 2",
-    logo: "/images/sponsored_org_profile_picture_placeholder.png",
-    reimbursements: [],
-    status: "active",
-  },
-  {
-    name: "Organization 3",
-    description: "Placeholder description",
-    website: "https://organization3.com",
-    clerkUser: "User 3",
-    logo: "/images/sponsored_org_profile_picture_placeholder.png",
-    reimbursements: [new Types.ObjectId("65c97b4056e2e2d7d225fe70")],
-    status: "active",
-  },
-  {
-    name: "Organization 4",
-    description: "Placeholder description",
-    website: "https://organization4.com",
-    clerkUser: "User 4",
-    logo: "/images/sponsored_org_profile_picture_placeholder.png",
-    reimbursements: [],
-    status: "active",
-  },
-  {
-    name: "Organization 5",
-    description: "Placeholder description",
-    website: "https://organization5.com",
-    clerkUser: "User 5",
-    logo: "/images/sponsored_org_profile_picture_placeholder.png",
-    reimbursements: [new Types.ObjectId("65c97b4056e2e2d7d225fe70")],
-    status: "active",
-  },
-];
 
 // Helper function to retrieve a list of organizations with pending reimbursements
 async function filterOrganizationsWithPendingReimbursements(

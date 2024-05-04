@@ -16,7 +16,7 @@ import {
 } from "../test-utils";
 import { imageUpload } from "@/services/image-upload";
 import { User, clerkClient } from "@clerk/nextjs/server";
-import Organization from "@/database/organization-schema";
+import { Organization } from "@/database/organization-schema";
 
 jest.mock("@aws-sdk/client-s3");
 

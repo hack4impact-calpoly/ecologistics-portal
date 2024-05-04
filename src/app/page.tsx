@@ -4,7 +4,7 @@ import SponsoredOrgTable from "@/components/sponsored-org-table/sponsored-org-ta
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import CenteredSpinner from "@/components/centered-spinner";
-import SponsoredHomePage from "./sponsored-home/SponsoredHomePage";
+import SponsoredHomePage from "../components/sponsored-org-home";
 
 export default function Home() {
   const router = useRouter();
