@@ -4,11 +4,10 @@ import Alert from "./alert-dropdown";
 
 export default function Header() {
   return (
-    <nav>
-      <div className="py-1">
-        <div className="flex justify-between items-center px-5 h-16">
-          {/* Priotize header link */}
-          <Link href="/" className="z-10">
+    <nav className="bg-[#EDEBDA]">
+      <div className="py-1.5">
+        <div className="flex justify-between items-center px-7 h-16">
+          <Link href="/">
             <Image
               src="/images/ecologistics-logo.svg"
               alt="Ecologistics Logo"
