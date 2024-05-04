@@ -43,7 +43,11 @@ const selectLink = (user: any) => {
 const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(true);
   const { isLoaded, isSignedIn, user } = useUser();
-  if (!isLoaded || !isSignedIn) {
+  // Don't render sidebar when not logged in
+  if (!isSignedIn) {
+    return null;
+  }
+  if (!isLoaded) {
     return (
       <div className={`flex flex-col min-w-[81px] h-screen bg-[#335543]`}>
         {isCollapsed ? (
