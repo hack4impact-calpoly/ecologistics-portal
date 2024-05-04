@@ -8,6 +8,7 @@ interface Organization {
   logo?: string;
   reimbursements: Types.ObjectId[];
   status: string;
+  updates?: number;
 }
 
 const OrganizationSchema = new Schema({
