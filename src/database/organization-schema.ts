@@ -8,6 +8,7 @@ interface Organization {
   logo?: string;
   reimbursements: Types.ObjectId[];
   status: string;
+  approved: boolean;
 }
 
 const OrganizationSchema = new Schema({
@@ -33,6 +34,10 @@ const OrganizationSchema = new Schema({
   status: {
     type: String,
     required: [true, "Organization status is required."],
+  },
+  approved: {
+    type: Boolean,
+    required: [true, "Organization approval status is necessary."],
   },
 });
 

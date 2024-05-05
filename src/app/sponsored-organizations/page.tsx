@@ -21,6 +21,7 @@ const organizations: Organization[] = [
     logo: "/images/sponsored_org_profile_picture_placeholder.png",
     reimbursements: [new Types.ObjectId("65c97b4056e2e2d7d225fe70")],
     status: "active",
+    approved: true,
   },
   {
     name: "Organization 2",
@@ -30,6 +31,7 @@ const organizations: Organization[] = [
     logo: "/images/sponsored_org_profile_picture_placeholder.png",
     reimbursements: [],
     status: "active",
+    approved: true,
   },
   {
     name: "Organization 3",
@@ -39,6 +41,7 @@ const organizations: Organization[] = [
     logo: "/images/sponsored_org_profile_picture_placeholder.png",
     reimbursements: [new Types.ObjectId("65c97b4056e2e2d7d225fe70")],
     status: "active",
+    approved: true,
   },
   {
     name: "Organization 4",
@@ -48,6 +51,7 @@ const organizations: Organization[] = [
     logo: "/images/sponsored_org_profile_picture_placeholder.png",
     reimbursements: [],
     status: "active",
+    approved: true,
   },
   {
     name: "Organization 5",
@@ -57,6 +61,7 @@ const organizations: Organization[] = [
     logo: "/images/sponsored_org_profile_picture_placeholder.png",
     reimbursements: [new Types.ObjectId("65c97b4056e2e2d7d225fe70")],
     status: "active",
+    approved: true,
   },
 ];
 
@@ -68,18 +73,22 @@ async function filterOrganizationsWithPendingReimbursements(
   // Check each organization
   for (const org of organizations) {
     let pending = false;
-    for (const reimbursementId of org.reimbursements) {
-      // Fetch reimbursement from API
-      const reimbursement = await getReimbursement(reimbursementId.toString());
-      // Check if reimbursement has a pending status
-      if (reimbursement && reimbursement.status === "Pending") {
-        pending = true;
-        break; // If it has at least one pending reimbursement, no need to keep checking the same organization
+    if (org?.reimbursements?.length) {
+      for (const reimbursementId of org.reimbursements) {
+        // Fetch reimbursement from API
+        const reimbursement = await getReimbursement(
+          reimbursementId.toString(),
+        );
+        // Check if reimbursement has a pending status
+        if (reimbursement && reimbursement.status === "Pending") {
+          pending = true;
+          break; // If it has at least one pending reimbursement, no need to keep checking the same organization
+        }
       }
-    }
-    // Add organization to list if it had a pending reimbursement
-    if (pending) {
-      filteredOrgs.push(org);
+      // Add organization to list if it had a pending reimbursement
+      if (pending) {
+        filteredOrgs.push(org);
+      }
     }
   }
   return filteredOrgs;
@@ -96,7 +105,8 @@ async function getOrganizations() {
     const organizations: Organization[] = [];
     data.forEach((obj: any) => {
       if (obj.unsafeMetadata.organization) {
-        organizations.push(obj.unsafeMetadata.organization);
+        let org = { clerkUser: obj.id, ...obj.unsafeMetadata.organization };
+        organizations.push(org);
       }
     });
     return organizations;
@@ -126,19 +136,23 @@ async function getReimbursement(reimbursementId: string) {
 export default function Page() {
   const router = useRouter();
   const { isLoaded, isSignedIn, user } = useUser();
-  const [viewUpdates, setViewUpdates] = useState(false); // State for view updates toggle
+  const [viewTab, setViewTab] = useState(""); // State for tab toggle
   const [orgs, setOrgs] = useState<Organization[]>([]); // State for currently displayed organizations based on view settings
   const [updatedOrgs, setUpdatedOrgs] = useState<Organization[]>([]); // State for organizations with pending updates (filtered)
+  const [pendingOrgs, setPendingOrgs] = useState<Organization[]>([]); // State for organizations pending approval
   const [allOrgs, setAllOrgs] = useState<Organization[]>([]); // State for all organizations (unfiltered)
 
-  // Turn off viewUpdates when View All is toggled
   const handleViewAllToggle = () => {
-    setViewUpdates(false);
+    setViewTab("");
   };
 
   // Turn on viewUpdates when View Updates is toggled
   const handleViewUpdatesToggle = () => {
-    setViewUpdates(true);
+    setViewTab("updates");
+  };
+
+  const handleViewPendingToggle = () => {
+    setViewTab("pending");
   };
 
   // Load information into orgs states
@@ -152,19 +166,25 @@ export default function Page() {
           const fetchedOrgs = await getOrganizations();
           if (fetchedOrgs) {
             setAllOrgs(fetchedOrgs); // Cache orgs for later
-
             if (fetchedOrgs.length > 0) {
               const filteredUpdatedOrgs =
                 await filterOrganizationsWithPendingReimbursements(fetchedOrgs); // Fetch organizations with updates
               console.log(filteredUpdatedOrgs);
               setUpdatedOrgs(filteredUpdatedOrgs); // Cache orgs for later
+
+              let filteredPendingApprovalOrgs = fetchedOrgs.filter(
+                (org) => !org.approved,
+              );
+              setPendingOrgs(filteredPendingApprovalOrgs); // Cache orgs for later
             }
           }
         }
 
         // Set orgs based on viewUpdates and availability of updatedOrgs
-        if (viewUpdates) {
+        if (viewTab === "updates") {
           filteredOrgs = updatedOrgs; // For displaying orgs with updates
+        } else if (viewTab === "pending") {
+          filteredOrgs = pendingOrgs;
         } else {
           filteredOrgs = allOrgs; // Otherwise display all orgs
         }
@@ -210,14 +230,14 @@ export default function Page() {
         <div>
           <Toggle
             className="text-lg h-11 rounded-none border px-8 border-[#335543] text-[#335543] data-[state=on]:bg-[#335543] data-[state=on]:text-white"
-            data-state={!viewUpdates ? "on" : "off"}
+            data-state={viewTab === "" ? "on" : "off"}
             onClick={handleViewAllToggle}
           >
             VIEW ALL
           </Toggle>
           <Toggle
             className="text-lg h-11 rounded-none border px-8 border-[#335543] text-[#335543] data-[state=on]:bg-[#335543] data-[state=on]:text-white"
-            data-state={viewUpdates ? "on" : "off"}
+            data-state={viewTab === "updates" ? "on" : "off"}
             onClick={handleViewUpdatesToggle}
           >
             VIEW UPDATES
@@ -227,6 +247,13 @@ export default function Page() {
                 {updatedOrgs.length}
               </div>
             </div>
+          </Toggle>
+          <Toggle
+            className="text-lg h-11 rounded-none border px-8 border-[#335543] text-[#335543] data-[state=on]:bg-[#335543] data-[state=on]:text-white"
+            data-state={viewTab === "pending" ? "on" : "off"}
+            onClick={handleViewPendingToggle}
+          >
+            VIEW PENDING
           </Toggle>
           {/* Search bar */}
         </div>
@@ -244,10 +271,9 @@ export default function Page() {
           // Modify w to fit desired amount of cards in one row
           <div key={index} className="w-1/5 p-2">
             <SponsorCard
-              image={organization.logo || ""}
-              organization={organization.name}
-              user={organization.clerkUser}
+              organizationData={organization}
               email="temp@domain.com"
+              toApprove={organization.approved == false}
             />
           </div>
         ))}
