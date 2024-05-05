@@ -73,7 +73,7 @@ export default function AdminTable() {
   const [error, setError] = React.useState<Error | null>(null);
 
   const [pageIndex, setPageIndex] = React.useState(0);
-  const [pageSize, setPageSize] = React.useState(9);
+  const [pageSize, setPageSize] = React.useState(8);
 
   React.useEffect(() => {
     fetchReimbursements()
