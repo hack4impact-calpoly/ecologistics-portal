@@ -29,8 +29,8 @@ export default function Home() {
   }
   if (user?.publicMetadata?.admin) {
     return (
-      <main className="mx-5 my-7 w-full h-full">
-        <h2 className="text-[26px] font-[600] leading-none text-black mb-8">
+      <main className="mx-5 my-4 w-full">
+        <h2 className="text-[26px] font-[600] leading-none text-black mb-5">
           Reimbursment Requests
         </h2>
         <AdminTable />
