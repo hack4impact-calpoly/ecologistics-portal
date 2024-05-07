@@ -1,6 +1,7 @@
 "use client";
 
 import CenteredSpinner from "@/components/centered-spinner";
+import ImageUpload from "@/components/image-upload";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -27,44 +28,73 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 const formSchema = z.object({
-  name: z.string().min(1).max(50),
-  email: z.string().min(1).max(50),
+  recipientName: z.string().min(1).max(50),
+  recipientEmail: z.string().min(1).max(50),
   transactionDate: z.date(),
   amount: z.union([
     z.number(),
     z.string().transform((value) => parseFloat(value)),
   ]),
+  paymentMethod: z.string().min(1).max(100),
   purpose: z.string().max(1000),
+  file: z.any(),
 });
 
 export default function Page() {
+  const { isLoaded, isSignedIn, user } = useUser();
   const [isConfirmed, setIsConfirmed] = useState(false);
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      email: "",
+      recipientName: "",
+      recipientEmail: "",
       transactionDate: new Date(),
       amount: 0,
+      paymentMethod: "",
       purpose: "",
+      file: undefined,
     },
   });
 
   // submisson handler
   function onSubmit(values: z.infer<typeof formSchema>) {
     if (!isConfirmed) return;
-    console.log(values);
-
-    // Reset the form fields
-    setIsConfirmed(false);
-    form.reset({
-      name: "",
-      email: "",
-      transactionDate: new Date(), // Reset to current date or you can set a default date
-      amount: 0,
-      purpose: "",
+    // initialize multipart form data
+    const formData = new FormData();
+    // append all form values to form data
+    Object.entries(values).forEach(([key, value]) => {
+      formData.append(key, value);
     });
+    // set organization field to the user's id
+    formData.append("clerkUserId", user?.id as string);
+    fetch("api/reimbursement", {
+      method: "POST",
+      body: formData,
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        throw new Error("Failed to submit reimbursement");
+      })
+      .then(() => {
+        // Reset the form fields
+        setIsConfirmed(false);
+        form.reset({
+          recipientName: "",
+          recipientEmail: "",
+          transactionDate: new Date(), // Reset to current date or you can set a default date
+          amount: 0,
+          paymentMethod: "",
+          purpose: "",
+          file: undefined,
+        });
+        router.push("/");
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 
   function handleConfirm() {
@@ -75,7 +105,6 @@ export default function Page() {
     setIsConfirmed(false);
   }
 
-  const { isLoaded, isSignedIn, user } = useUser();
   if (!isLoaded) {
     return (
       <div>
@@ -100,13 +129,14 @@ export default function Page() {
   }
 
   const constructEmail = () => {
-    const { name, email, transactionDate, amount, purpose } = form.getValues();
+    const { recipientName, recipientEmail, transactionDate, amount, purpose } =
+      form.getValues();
     const emailBody = `Hi there,
 
 I would like to submit the following transaction details:
 
-Name: ${name}
-Email: ${email}
+Name: ${recipientName}
+Email: ${recipientEmail}
 Transaction Date: ${format(transactionDate, "PPP")}
 Amount: ${amount}
 Purpose: ${purpose}
@@ -126,24 +156,24 @@ Thank you!`;
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 m-5">
           <FormField
             control={form.control}
-            name="name"
+            name="recipientName"
             render={({ field }) => (
               <FormItem>
-                <FormLabel> Name </FormLabel>
+                <FormLabel> Recipient Name </FormLabel>
                 <FormControl>
-                  <Input placeholder="name" {...field} />
+                  <Input placeholder="recipientName" {...field} />
                 </FormControl>
               </FormItem>
             )}
           />
           <FormField
             control={form.control}
-            name="email"
+            name="recipientEmail"
             render={({ field }) => (
               <FormItem>
-                <FormLabel> Email </FormLabel>
+                <FormLabel> Recipient Email </FormLabel>
                 <FormControl>
-                  <Input placeholder="email" {...field} />
+                  <Input placeholder="recipientEmail" {...field} />
                 </FormControl>
               </FormItem>
             )}
@@ -204,12 +234,36 @@ Thank you!`;
           />
           <FormField
             control={form.control}
+            name="paymentMethod"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel> Payment Method </FormLabel>
+                <FormControl>
+                  <Input placeholder="payment method" {...field} />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
             name="purpose"
             render={({ field }) => (
               <FormItem>
                 <FormLabel> Transaction Purpose </FormLabel>
                 <FormControl>
                   <Input placeholder="purpose" {...field} />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="file" // where did this come from?
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel> File Upload </FormLabel>
+                <FormControl>
+                  <ImageUpload handleChange={field.onChange}></ImageUpload>
                 </FormControl>
               </FormItem>
             )}

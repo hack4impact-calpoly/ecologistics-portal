@@ -6,68 +6,26 @@ import { Button } from "@/components/ui/button";
 import { Toggle } from "@/components/ui/toggle";
 import { Input } from "@/components/ui/input";
 import SponsorCard from "@/components/sponsored-org-card";
-import Organization from "@/database/organization-schema";
+import { Organization } from "@/database/organization-schema";
 import { Types } from "mongoose";
 import { useEffect, useState } from "react";
 import CenteredSpinner from "@/components/centered-spinner";
 
-// Example sponsors for testing
-const organizations: Organization[] = [
-  {
-    name: "Organization 1",
-    description: "Placeholder description",
-    website: "https://organization1.com",
-    clerkUser: "User 1",
-    logo: "/images/sponsored_org_profile_picture_placeholder.png",
-    reimbursements: [new Types.ObjectId("65c97b4056e2e2d7d225fe70")],
-    status: "active",
-  },
-  {
-    name: "Organization 2",
-    description: "Placeholder description",
-    website: "https://organization2.com",
-    clerkUser: "User 2",
-    logo: "/images/sponsored_org_profile_picture_placeholder.png",
-    reimbursements: [],
-    status: "active",
-  },
-  {
-    name: "Organization 3",
-    description: "Placeholder description",
-    website: "https://organization3.com",
-    clerkUser: "User 3",
-    logo: "/images/sponsored_org_profile_picture_placeholder.png",
-    reimbursements: [new Types.ObjectId("65c97b4056e2e2d7d225fe70")],
-    status: "active",
-  },
-  {
-    name: "Organization 4",
-    description: "Placeholder description",
-    website: "https://organization4.com",
-    clerkUser: "User 4",
-    logo: "/images/sponsored_org_profile_picture_placeholder.png",
-    reimbursements: [],
-    status: "active",
-  },
-  {
-    name: "Organization 5",
-    description: "Placeholder description",
-    website: "https://organization5.com",
-    clerkUser: "User 5",
-    logo: "/images/sponsored_org_profile_picture_placeholder.png",
-    reimbursements: [new Types.ObjectId("65c97b4056e2e2d7d225fe70")],
-    status: "active",
-  },
-];
+//clerk user as key and num of updates as value
+type UpdateCounts = {
+  [key: string]: number;
+};
 
 // Helper function to retrieve a list of organizations with pending reimbursements
 async function filterOrganizationsWithPendingReimbursements(
   organizations: Organization[],
 ) {
   const filteredOrgs: Organization[] = [];
+  let updateCount: UpdateCounts = {};
   // Check each organization
   for (const org of organizations) {
     let pending = false;
+    let numOfUpdates = 0;
     if (org.reimbursements) {
       for (const reimbursementId of org.reimbursements) {
         // Fetch reimbursement from API
@@ -77,16 +35,18 @@ async function filterOrganizationsWithPendingReimbursements(
         // Check if reimbursement has a pending status
         if (reimbursement && reimbursement.status === "Pending") {
           pending = true;
+          numOfUpdates++; // increment number of updates
           break; // If it has at least one pending reimbursement, no need to keep checking the same organization
         }
       }
     }
+    updateCount[org.clerkUser] = numOfUpdates;
     // Add organization to list if it had a pending reimbursement
     if (pending) {
       filteredOrgs.push(org);
     }
   }
-  return filteredOrgs;
+  return { filteredOrgs, updateCount };
 }
 
 // Fetch list of organizations
@@ -136,7 +96,7 @@ export default function Page() {
   const [allOrgs, setAllOrgs] = useState<Organization[]>([]); // State for all organizations (unfiltered)
   const [allUpdatedOrgs, setAllUpdatedOrgs] = useState<Organization[]>([]); // State for all organizations with pending updates (filtered)
   const [search, setSearch] = useState("");
-
+  const [updateCount, setUpdateCount] = useState<UpdateCounts>({});
   // Turn off viewUpdates when View All is toggled
   const handleViewAllToggle = () => {
     setViewUpdates(false);
@@ -159,7 +119,8 @@ export default function Page() {
           if (fetchedOrgs.length > 0) {
             const filteredUpdatedOrgs =
               await filterOrganizationsWithPendingReimbursements(fetchedOrgs); // Fetch organizations with updates
-            setAllUpdatedOrgs(filteredUpdatedOrgs); // Cache orgs for later
+            setAllUpdatedOrgs(filteredUpdatedOrgs.filteredOrgs); // Cache orgs for later
+            setUpdateCount(filteredUpdatedOrgs.updateCount);
           }
         }
       } catch (error) {
@@ -259,6 +220,7 @@ export default function Page() {
                   organization={organization.name}
                   user={organization.clerkUser}
                   email="temp@domain.com"
+                  updates={updateCount[organization.clerkUser] || 0}
                 />
               </div>
             ))
@@ -269,6 +231,7 @@ export default function Page() {
                   organization={organization.name}
                   user={organization.clerkUser}
                   email="temp@domain.com"
+                  updates={updateCount[organization.clerkUser] || 0}
                 />
               </div>
             ))}

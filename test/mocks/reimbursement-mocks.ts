@@ -3,7 +3,7 @@ import { Types } from "mongoose";
 
 export const MOCK_REIMBURSEMENTS: Reimbursement[] = [
   {
-    organization: new Types.ObjectId(6),
+    clerkUserId: "6",
     reportName: "examplename",
     recipientName: "Steve Jones",
     recipientEmail: "steve@yahoo.com",
@@ -16,7 +16,7 @@ export const MOCK_REIMBURSEMENTS: Reimbursement[] = [
     comment: "",
   },
   {
-    organization: new Types.ObjectId(6),
+    clerkUserId: "6",
     reportName: "anotherexample",
     recipientName: "Alice Smith",
     recipientEmail: "alice@gmail.com",
@@ -29,7 +29,7 @@ export const MOCK_REIMBURSEMENTS: Reimbursement[] = [
     comment: "Waiting for approval",
   },
   {
-    organization: new Types.ObjectId(6),
+    clerkUserId: "6",
     reportName: "report3",
     recipientName: "John Doe",
     recipientEmail: "john.doe@example.com",
@@ -42,7 +42,7 @@ export const MOCK_REIMBURSEMENTS: Reimbursement[] = [
     comment: "Awaiting processing",
   },
   {
-    organization: new Types.ObjectId(6),
+    clerkUserId: "6",
     reportName: "report4",
     recipientName: "Emily Brown",
     recipientEmail: "emily@example.com",
@@ -55,7 +55,7 @@ export const MOCK_REIMBURSEMENTS: Reimbursement[] = [
     comment: "",
   },
   {
-    organization: new Types.ObjectId(6),
+    clerkUserId: "6",
     reportName: "report5",
     recipientName: "Michael Johnson",
     recipientEmail: "michael@example.com",
@@ -68,7 +68,7 @@ export const MOCK_REIMBURSEMENTS: Reimbursement[] = [
     comment: "Receipt to be provided",
   },
   {
-    organization: new Types.ObjectId(6),
+    clerkUserId: "6",
     reportName: "report6",
     recipientName: "Sarah Williams",
     recipientEmail: "sarah@example.com",
@@ -81,7 +81,7 @@ export const MOCK_REIMBURSEMENTS: Reimbursement[] = [
     comment: "",
   },
   {
-    organization: new Types.ObjectId(6),
+    clerkUserId: "6",
     reportName: "report7",
     recipientName: "David Taylor",
     recipientEmail: "david@example.com",
@@ -94,7 +94,7 @@ export const MOCK_REIMBURSEMENTS: Reimbursement[] = [
     comment: "In review",
   },
   {
-    organization: new Types.ObjectId(6),
+    clerkUserId: "6",
     reportName: "report8",
     recipientName: "Olivia Martinez",
     recipientEmail: "olivia@example.com",
@@ -107,7 +107,7 @@ export const MOCK_REIMBURSEMENTS: Reimbursement[] = [
     comment: "Awaiting confirmation",
   },
   {
-    organization: new Types.ObjectId(6),
+    clerkUserId: "6",
     reportName: "report9",
     recipientName: "James Brown",
     recipientEmail: "james@example.com",
@@ -120,7 +120,7 @@ export const MOCK_REIMBURSEMENTS: Reimbursement[] = [
     comment: "",
   },
   {
-    organization: new Types.ObjectId(6),
+    clerkUserId: "6",
     reportName: "report10",
     recipientName: "Emma Wilson",
     recipientEmail: "emma@example.com",

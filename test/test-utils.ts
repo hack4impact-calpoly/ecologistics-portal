@@ -7,15 +7,7 @@ export const createMockNextRequest = (body: any) =>
     json: () => Promise.resolve(body),
   });
 
-export const formatMockReimbursementResponse = (
-  reimbursement: Reimbursement,
-) => ({
-  ...reimbursement,
-  organization: reimbursement.organization.toString(), // Convert to string if necessary
-  transactionDate: reimbursement.transactionDate.toISOString(), // Standardize date format
-});
-
-export const createNextRequestWithParams = (
+export const createMockNextRequestWithParams = (
   body: any,
   id: string,
   method: RequestMethod = "GET",
@@ -33,6 +25,27 @@ export const createNextRequestWithParams = (
 
   return { req, res };
 };
+
+export const createMockFormDataRequest = (body: any) => {
+  const { req, res } = createMocks({
+    body,
+  });
+
+  // Convert body to map for FormData
+  const formData = body ? new Map(Object.entries(body)) : null;
+
+  // Mock req.formData to simulate form data parsing
+  req.formData = async () => Promise.resolve(formData);
+
+  return { req, res };
+};
+
+export const formatMockReimbursementResponse = (
+  reimbursement: Reimbursement,
+) => ({
+  ...reimbursement,
+  transactionDate: reimbursement.transactionDate.toISOString(), // Standardize date format
+});
 
 export const formatMockReimbursementsResponse = (
   reimbursements: Reimbursement[],

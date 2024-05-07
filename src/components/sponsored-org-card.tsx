@@ -6,6 +6,7 @@ export interface SponsoredOrgCardProps {
   organization: string;
   user: string;
   email: string;
+  updates?: number;
 }
 
 export default function SponsoredOrgCard({
@@ -13,7 +14,9 @@ export default function SponsoredOrgCard({
   organization,
   user,
   email,
+  updates,
 }: SponsoredOrgCardProps) {
+  // console.log(organization, " Updates:" + updates);
   return (
     <Card className="w-full h-72">
       <CardHeader className="pt-8 pl-4 pr-4 flex flex-row">
@@ -28,7 +31,13 @@ export default function SponsoredOrgCard({
           {organization}
         </CardTitle>
       </CardHeader>
+
       <CardContent className="pt-4 pl-9 pr-3 space-y-3">
+        {updates! > 0 && (
+          <span className="p-[8px_12px_8px_12px] bg-[#335543] rounded-[20px] text-white">
+            {updates === 1 ? `${updates} UPDATE` : `${updates} UPDATES`}
+          </span>
+        )}{" "}
         <div className="grid grid-cols-6 h-7 content-center">
           <Image
             className="col-span-1 self-center"

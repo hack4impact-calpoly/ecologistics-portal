@@ -9,7 +9,7 @@ const client = new S3Client({
 });
 
 export const imageUpload = async (file: any, fileName: string) => {
-  const fileBuffer = file;
+  const fileBuffer = Buffer.from(await file.arrayBuffer());
   const fileKey = `${fileName}-${Date.now()}`;
   const command = new PutObjectCommand({
     Bucket: process.env.H4I_AWS_S3_BUCKET,
@@ -20,7 +20,6 @@ export const imageUpload = async (file: any, fileName: string) => {
 
   try {
     const response = await client.send(command);
-    console.log(response);
   } catch (err) {
     console.error(err);
   }
