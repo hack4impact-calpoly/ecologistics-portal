@@ -199,13 +199,13 @@ export default function Page() {
           </Toggle>
           {/* Search bar */}
         </div>
-        <div className="w-72 h-11 rounded-full shadow-xl">
+        <div className="w-72 h-11">
           {/* Add magnifying glass here */}
           <Input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search"
-            className="border-none rounded-full p-4 text-xl focus:outline-none"
+            className="p-4"
           />
         </div>
       </div>
