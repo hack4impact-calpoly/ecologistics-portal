@@ -26,14 +26,18 @@ async function filterOrganizationsWithPendingReimbursements(
   for (const org of organizations) {
     let pending = false;
     let numOfUpdates = 0;
-    for (const reimbursementId of org.reimbursements) {
-      // Fetch reimbursement from API
-      const reimbursement = await getReimbursement(reimbursementId.toString());
-      // Check if reimbursement has a pending status
-      if (reimbursement && reimbursement.status === "Pending") {
-        pending = true;
-        numOfUpdates++; // increment number of updates
-        // break; // If it has at least one pending reimbursement, no need to keep checking the same organization
+    if (org.reimbursements) {
+      for (const reimbursementId of org.reimbursements) {
+        // Fetch reimbursement from API
+        const reimbursement = await getReimbursement(
+          reimbursementId.toString(),
+        );
+        // Check if reimbursement has a pending status
+        if (reimbursement && reimbursement.status === "Pending") {
+          pending = true;
+          numOfUpdates++; // increment number of updates
+          break; // If it has at least one pending reimbursement, no need to keep checking the same organization
+        }
       }
     }
     updateCount[org.clerkUser] = numOfUpdates;
@@ -88,8 +92,10 @@ export default function Page() {
   const { isLoaded, isSignedIn, user } = useUser();
   const [viewUpdates, setViewUpdates] = useState(false); // State for view updates toggle
   const [orgs, setOrgs] = useState<Organization[]>([]); // State for currently displayed organizations based on view settings
-  const [updatedOrgs, setUpdatedOrgs] = useState<Organization[]>([]); // State for organizations with pending updates (filtered)
+  const [updatedOrgs, setUpdatedOrgs] = useState<Organization[]>([]); // State for displayed organizations with pending updates (filtered)
   const [allOrgs, setAllOrgs] = useState<Organization[]>([]); // State for all organizations (unfiltered)
+  const [allUpdatedOrgs, setAllUpdatedOrgs] = useState<Organization[]>([]); // State for all organizations with pending updates (filtered)
+  const [search, setSearch] = useState("");
   const [updateCount, setUpdateCount] = useState<UpdateCounts>({});
   // Turn off viewUpdates when View All is toggled
   const handleViewAllToggle = () => {
@@ -105,36 +111,41 @@ export default function Page() {
   useEffect(() => {
     const fetchAndFilterOrganizations = async () => {
       try {
-        let filteredOrgs: Organization[] = [];
-
         // Check if org states are empty, and fetch organizations if needed
-        if (allOrgs.length === 0) {
-          const fetchedOrgs = await getOrganizations();
-          if (fetchedOrgs) {
-            setAllOrgs(fetchedOrgs); // Cache orgs for later
-            if (fetchedOrgs.length > 0) {
-              const filteredUpdatedOrgs =
-                await filterOrganizationsWithPendingReimbursements(fetchedOrgs); // Fetch organizations with updates
-              setUpdatedOrgs(filteredUpdatedOrgs.filteredOrgs); // Cache orgs for later
-              setUpdateCount(filteredUpdatedOrgs.updateCount);
-            }
+        const fetchedOrgs = await getOrganizations();
+        if (fetchedOrgs) {
+          setAllOrgs(fetchedOrgs); // Cache orgs for later
+
+          if (fetchedOrgs.length > 0) {
+            const filteredUpdatedOrgs =
+              await filterOrganizationsWithPendingReimbursements(fetchedOrgs); // Fetch organizations with updates
+            setAllUpdatedOrgs(filteredUpdatedOrgs.filteredOrgs); // Cache orgs for later
+            setUpdateCount(filteredUpdatedOrgs.updateCount);
           }
         }
-
-        // Set orgs based on viewUpdates and availability of updatedOrgs
-        if (viewUpdates) {
-          filteredOrgs = updatedOrgs; // For displaying orgs with updates
-        } else {
-          filteredOrgs = allOrgs; // Otherwise display all orgs
-        }
-        setOrgs(filteredOrgs);
       } catch (error) {
         console.error("Error fetching and filtering organizations:", error);
       }
     };
 
     fetchAndFilterOrganizations();
-  });
+  }, []);
+
+  useEffect(() => {
+    if (search) {
+      const filteredOrgs = allOrgs.filter(
+        (org) => org.name.includes(search) || org.clerkUser?.includes(search),
+      );
+      const filteredUpdatedOrgs = updatedOrgs.filter(
+        (org) => org.name.includes(search) || org.clerkUser?.includes(search),
+      );
+      setOrgs(filteredOrgs);
+      setUpdatedOrgs(filteredUpdatedOrgs);
+    } else {
+      setOrgs(allOrgs);
+      setUpdatedOrgs(allUpdatedOrgs);
+    }
+  }, [search, allOrgs, allUpdatedOrgs, updatedOrgs]);
 
   if (!isLoaded) {
     return (
@@ -188,28 +199,42 @@ export default function Page() {
           </Toggle>
           {/* Search bar */}
         </div>
-        <div className="w-72 h-11 rounded-full shadow-xl">
+        <div className="w-72 h-11">
           {/* Add magnifying glass here */}
           <Input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
             placeholder="Search"
-            className="border-none rounded-full p-4 text-xl focus:outline-none"
+            className="p-4"
           />
         </div>
       </div>
       {/* Modify mr and ml to align cards to horizontal edge of flex box */}
       <div className="flex flex-wrap justify-start mr-[-8px] ml-[-8px]">
-        {orgs.map((organization, index) => (
-          // Modify w to fit desired amount of cards in one row
-          <div key={index} className="w-1/5 p-2">
-            <SponsorCard
-              image={organization.logo || ""}
-              organization={organization.name}
-              user={organization.clerkUser}
-              email="temp@domain.com"
-              updates={updateCount[organization.clerkUser] || 0}
-            />
-          </div>
-        ))}
+        {!viewUpdates
+          ? orgs.map((organization, index) => (
+              // Modify w to fit desired amount of cards in one row
+              <div key={index} className="w-1/5 p-2">
+                <SponsorCard
+                  image={organization.logo || ""}
+                  organization={organization.name}
+                  user={organization.clerkUser}
+                  email="temp@domain.com"
+                  updates={updateCount[organization.clerkUser] || 0}
+                />
+              </div>
+            ))
+          : updatedOrgs.map((organization, index) => (
+              <div key={index} className="w-1/5 p-2">
+                <SponsorCard
+                  image={organization.logo || ""}
+                  organization={organization.name}
+                  user={organization.clerkUser}
+                  email="temp@domain.com"
+                  updates={updateCount[organization.clerkUser] || 0}
+                />
+              </div>
+            ))}
       </div>
     </main>
   );
