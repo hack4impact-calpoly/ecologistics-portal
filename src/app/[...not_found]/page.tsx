@@ -1,5 +1,8 @@
-import { notFound } from "next/navigation";
+"use client";
+
+import { useRouter } from "next/router";
 
 export default function NotFoundCatchAll() {
-  notFound();
+  const router = useRouter();
+  return router.push("/");
 }

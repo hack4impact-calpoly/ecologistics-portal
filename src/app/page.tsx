@@ -1,26 +1,18 @@
 "use client";
 import AdminTable from "@/components/admin-table/admin-table";
-import SponsoredOrgTable from "@/components/sponsored-org-table/sponsored-org-table";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import CenteredSpinner from "@/components/centered-spinner";
-import Popup from "@/components/user-info-popup";
-import Admin from "@/components/admin";
-
-type organizationInfo = {
-  name: string;
-  description: string;
-  website: string;
-  approved: boolean;
-};
+import SponsoredHomePage from "../components/sponsored-org-home";
 
 export default function Home() {
   const router = useRouter();
   const { isLoaded, isSignedIn, user } = useUser();
+
   if (!isLoaded) {
     return (
       <div>
-        <CenteredSpinner />{" "}
+        <CenteredSpinner />
       </div>
     );
   }
@@ -29,7 +21,7 @@ export default function Home() {
   }
   if (user?.publicMetadata?.admin) {
     return (
-      <main className="mx-5 my-4 w-full">
+      <main className={`mx-5 my-4 w-full`}>
         <h2 className="text-[26px] font-[600] leading-none text-black mb-5">
           Reimbursment Requests
         </h2>
@@ -50,19 +42,7 @@ export default function Home() {
           }
         )?.approved
       ) {
-        const orgInfo = user?.unsafeMetadata?.organization as organizationInfo;
-        return (
-          <main>
-            <Popup
-              name={orgInfo.name}
-              description={orgInfo.description}
-              website={orgInfo.website}
-              email={(user?.primaryEmailAddress?.emailAddress as string) || ""}
-              user={(user?.fullName as string) || ""}
-            />
-            <SponsoredOrgTable />
-          </main>
-        );
+        return <SponsoredHomePage />;
       } else {
         return (
           <>
