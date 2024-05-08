@@ -71,7 +71,7 @@ export default function AdminTable() {
   const [error, setError] = React.useState<Error | null>(null);
   const [pageIndex, setPageIndex] = React.useState(0);
   const [pageSize, setPageSize] = React.useState(10);
-  const [width, setWidth] = React.useState(0);
+  // const [width, setWidth] = React.useState(0);
 
   // First render flag to determine number of rows that can fit without overflow
   // Necessary for when the div size changes, the pageSize state can remain consistent, preventing render bugs
@@ -135,16 +135,13 @@ export default function AdminTable() {
     }
   }, [div, row]);
 
-  window.addEventListener("resize", () => {
-    setWidth(Math.floor(window.innerWidth - 136));
-  });
-  window.removeEventListener("resize", () => {
-    setWidth(Math.floor(window.innerWidth - 136));
-  });
+  // window.addEventListener("resize", () => {
+  //   setWidth(Math.floor(window.innerWidth - 136));
+  // });
 
-  React.useEffect(() => {
-    setWidth(Math.floor(window.innerWidth - 136));
-  }, []);
+  // React.useEffect(() => {
+  //   setWidth(Math.floor(window.innerWidth - 136));
+  // }, []);
 
   const getUniqueValues = (data: any[], type: string) => {
     let values = new Set();
@@ -171,7 +168,7 @@ export default function AdminTable() {
     <>
       <ScrollArea
         className={`h-[81vh] whitespace-nowrap`}
-        style={{ width: width }}
+        // style={{ width: width }}
       >
         <div className=" flex flex-col">
           <div className="flex justify-between space-x-1 w-full mb-5 text-gray-400">
@@ -257,7 +254,10 @@ export default function AdminTable() {
                       }}
                     >
                       {row.getVisibleCells().map((cell) => (
-                        <TableCell className="text-left" key={cell.id}>
+                        <TableCell
+                          className="text-left [&_button_svg]:mx-5 [&_div]:items-left [&_div]:justify-start"
+                          key={cell.id}
+                        >
                           {flexRender(
                             cell.column.columnDef.cell,
                             cell.getContext(),
