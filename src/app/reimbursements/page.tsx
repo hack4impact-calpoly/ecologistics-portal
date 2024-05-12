@@ -53,6 +53,7 @@ export default function Page() {
   const { isLoaded, isSignedIn, user } = useUser();
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
+  const [submitDisabled, setSubmitDisabled] = useState(false);
   const popupRef = useRef<{ openDialog: () => void } | null>(null);
 
   const router = useRouter();
@@ -72,6 +73,7 @@ export default function Page() {
 
   // submisson handler
   function onSubmit(values: z.infer<typeof formSchema>) {
+    setSubmitDisabled(true);
     if (!isConfirmed) return;
     // initialize multipart form data
     const formData = new FormData();
@@ -93,6 +95,7 @@ export default function Page() {
         }
         setUploadSuccess(false);
         popupRef.current?.openDialog();
+        setSubmitDisabled(false);
         throw new Error("Failed to submit reimbursement");
       })
       .then(() => {
@@ -110,6 +113,7 @@ export default function Page() {
         router.push("/");
       })
       .catch((error) => {
+        setSubmitDisabled(false);
         console.error(error);
       });
   }
@@ -340,7 +344,9 @@ Thank you!`;
               </FormItem>
             )}
           />
-          <Button type="submit">Submit</Button>
+          <Button type="submit" disabled={submitDisabled}>
+            Submit
+          </Button>
         </form>
       </Form>
       <ImagePopup ref={popupRef} success={uploadSuccess} />
