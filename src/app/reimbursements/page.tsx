@@ -4,6 +4,7 @@ import CenteredSpinner from "@/components/centered-spinner";
 import ImageUpload from "@/components/image-upload";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
+import ImagePopup from "../../components/upload-popup";
 import {
   Form,
   FormControl,
@@ -30,7 +31,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -51,6 +52,9 @@ const formSchema = z.object({
 export default function Page() {
   const { isLoaded, isSignedIn, user } = useUser();
   const [isConfirmed, setIsConfirmed] = useState(false);
+  const [uploadSuccess, setUploadSuccess] = useState(false);
+  const popupRef = useRef<{ openDialog: () => void } | null>(null);
+
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -83,8 +87,12 @@ export default function Page() {
     })
       .then((response) => {
         if (response.ok) {
+          setUploadSuccess(true);
+          popupRef.current?.openDialog();
           return response.json();
         }
+        setUploadSuccess(false);
+        popupRef.current?.openDialog();
         throw new Error("Failed to submit reimbursement");
       })
       .then(() => {
@@ -335,6 +343,8 @@ Thank you!`;
           <Button type="submit">Submit</Button>
         </form>
       </Form>
+      <ImagePopup ref={popupRef} success={uploadSuccess} />
+
       <div className="flex flex-col bg-gray-200 items-center space-y-2">
         <h4 className="p-3 pb-0 text-2xl font-bold ">
           Did you email your W9 form to Stacey?
