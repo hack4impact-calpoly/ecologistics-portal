@@ -5,13 +5,13 @@ import { CheckIcon, Cross2Icon } from "@radix-ui/react-icons";
 import Organization from "@/database/organization-schema";
 
 export interface SponsoredOrgCardProps {
-  organizationData: Organization;
+  organizationData: typeof Organization;
   email: string;
   updates?: number;
   toApprove: boolean;
 }
 
-const updateOrg = (orgData: Organization, approve: Boolean) => {
+const updateOrg = (orgData: typeof Organization, approve: Boolean) => {
   let updatedOrg = orgData as any;
 
   if (approve) {
