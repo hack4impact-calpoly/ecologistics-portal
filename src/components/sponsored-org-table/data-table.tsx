@@ -20,6 +20,16 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+
 import { Button } from "@/components/ui/button";
 import { DebouncedInput } from "../ui/custom/debounced-input";
 import { useState } from "react";
@@ -29,6 +39,7 @@ import TableColumnFilterDropdown from "../ui/custom/table-column-filter-dropdown
 import { dateFilterFn } from "./columns";
 import { DateRange } from "react-day-picker";
 import { rankItem } from "@tanstack/match-sorter-utils";
+import React from "react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -54,6 +65,10 @@ export function DataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
+
+  const [pageIndex, setPageIndex] = React.useState(0);
+  const [pageSize, setPageSize] = React.useState(6);
+
   const table = useReactTable({
     data,
     columns,
@@ -65,6 +80,10 @@ export function DataTable<TData, TValue>({
     state: {
       columnFilters,
       globalFilter,
+      pagination: {
+        pageIndex,
+        pageSize,
+      },
     },
     filterFns: {
       dateFilterFn,
@@ -72,6 +91,22 @@ export function DataTable<TData, TValue>({
     },
     globalFilterFn: fuzzyFilter,
   });
+
+  const pageCount = table.getPageCount();
+
+  const renderPagination = () => {
+    let pages = [];
+    for (let i = 0; i < pageCount; i++) {
+      pages.push(
+        <PaginationItem key={i}>
+          <PaginationLink onClick={() => setPageIndex(i)}>
+            {i + 1}
+          </PaginationLink>
+        </PaginationItem>,
+      );
+    }
+    return pages;
+  };
 
   const handleDateRangeChange = (range: DateRange) => {
     table.getColumn("transactionDate")?.setFilterValue(() => {
@@ -151,24 +186,9 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-end space-x-2 py-4">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          Previous
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          Next
-        </Button>
-      </div>
+      <Pagination>
+        <PaginationContent>{renderPagination()}</PaginationContent>
+      </Pagination>
     </div>
   );
 }

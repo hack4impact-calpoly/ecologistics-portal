@@ -27,9 +27,5 @@ export default function SponsoredOrgTable() {
     getReimbursements();
   }, []);
 
-  return (
-    <div className="container mx-auto py-10">
-      <DataTable columns={columns} data={reimbursements} />
-    </div>
-  );
+  return <DataTable columns={columns} data={reimbursements} />;
 }

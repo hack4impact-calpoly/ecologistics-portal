@@ -1,12 +1,10 @@
-import { Schema, model, models, Types } from "mongoose";
-
-interface Organization {
+export interface Organization {
   name: string;
   description: string;
   website?: string;
   clerkUser: string;
   logo?: string;
-  reimbursements: Types.ObjectId[];
+  reimbursements: string[];
   status: string;
   approved: boolean;
 }

@@ -17,6 +17,13 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import { useUser } from "@clerk/nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -38,6 +45,7 @@ const formSchema = z.object({
   paymentMethod: z.string().min(1).max(100),
   purpose: z.string().max(1000),
   file: z.any(),
+  comment: z.string(),
 });
 
 export default function Page() {
@@ -54,6 +62,7 @@ export default function Page() {
       paymentMethod: "",
       purpose: "",
       file: undefined,
+      comment: "",
     },
   });
 
@@ -238,8 +247,63 @@ Thank you!`;
             render={({ field }) => (
               <FormItem>
                 <FormLabel> Payment Method </FormLabel>
+                <br />
                 <FormControl>
-                  <Input placeholder="payment method" {...field} />
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline" className="w-64">
+                        {field.value || "Select payment method"}
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-64">
+                      <DropdownMenuGroup>
+                        <DropdownMenuItem onClick={() => field.onChange("ACH")}>
+                          ACH
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => field.onChange("Check")}
+                        >
+                          Check
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => field.onChange("PayPal")}
+                        >
+                          PayPal
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => field.onChange("Venmo")}
+                        >
+                          Venmo
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => field.onChange("Zelle")}
+                        >
+                          Zelle
+                        </DropdownMenuItem>
+                      </DropdownMenuGroup>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </FormControl>
+                {field.value && (
+                  <>
+                    <div>
+                      Please submit your account information in the comment
+                      field. If the information is sensitive, please send it via
+                      email instead.
+                    </div>
+                  </>
+                )}
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="comment"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel> Comment </FormLabel>
+                <FormControl>
+                  <Input placeholder="comment (optional)" {...field} />
                 </FormControl>
               </FormItem>
             )}

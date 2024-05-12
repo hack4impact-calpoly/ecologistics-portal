@@ -7,6 +7,7 @@ import Organization from "@/database/organization-schema";
 export interface SponsoredOrgCardProps {
   organizationData: Organization;
   email: string;
+  updates?: number;
   toApprove: boolean;
 }
 
@@ -48,7 +49,9 @@ export default function SponsoredOrgCard({
   organizationData,
   email,
   toApprove,
+  updates,
 }: SponsoredOrgCardProps) {
+  // console.log(organization, " Updates:" + updates);
   return (
     <Card className="w-full h-72 relative">
       {toApprove && (
@@ -83,7 +86,13 @@ export default function SponsoredOrgCard({
           {organizationData?.name}
         </CardTitle>
       </CardHeader>
+
       <CardContent className="pt-4 pl-9 pr-3 space-y-3">
+        {updates! > 0 && (
+          <span className="p-[8px_12px_8px_12px] bg-[#335543] rounded-[20px] text-white">
+            {updates === 1 ? `${updates} UPDATE` : `${updates} UPDATES`}
+          </span>
+        )}{" "}
         <div className="grid grid-cols-6 h-7 content-center">
           <Image
             className="col-span-1 self-center"

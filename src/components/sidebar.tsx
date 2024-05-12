@@ -6,6 +6,7 @@ import {
   FileTextIcon,
   PinLeftIcon,
   PinRightIcon,
+  DashboardIcon,
 } from "@radix-ui/react-icons";
 import { useUser } from "@clerk/nextjs";
 
@@ -16,12 +17,12 @@ const links = [
     icon: HomeIcon,
   },
   {
-    title: "Sponsored Organizations",
+    title: "Sponsors",
     route: "/sponsored-organizations",
-    icon: FileTextIcon,
+    icon: DashboardIcon,
   },
   {
-    title: "Submit Request",
+    title: "Requests",
     route: "/reimbursements",
     icon: FileTextIcon,
   },
@@ -42,13 +43,13 @@ const selectLink = (user: any) => {
 const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(true);
   const { isLoaded, isSignedIn, user } = useUser();
-  if (!isLoaded || !isSignedIn) {
+  // Don't render sidebar when not logged in
+  if (!isSignedIn) {
+    return null;
+  }
+  if (!isLoaded) {
     return (
-      <div
-        className={`flex flex-col h-screen bg-[#335543] ${
-          !isCollapsed ? "w-64" : "w-17"
-        }`}
-      >
+      <div className={`flex flex-col min-w-[81px] h-screen bg-[#335543]`}>
         {isCollapsed ? (
           <PinRightIcon
             className="h-[45px] w-[45px] text-white mx-auto my-2 hover:bg-gray-200 hover:bg-opacity-50 p-2 rounded-full cursor-pointer"
@@ -65,11 +66,7 @@ const Sidebar = () => {
   }
 
   return (
-    <div
-      className={`flex flex-col h-screen bg-[#335543] ${
-        !isCollapsed ? "w-64" : "w-17"
-      }`}
-    >
+    <div className="flex flex-col h-screen bg-[#335543]">
       {isCollapsed ? (
         <PinRightIcon
           className="h-[45px] w-[45px] text-white mx-auto my-2 hover:bg-gray-200 hover:bg-opacity-50 p-2 rounded-full cursor-pointer"

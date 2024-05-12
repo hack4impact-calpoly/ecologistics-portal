@@ -33,6 +33,15 @@ import { DateRange } from "react-day-picker";
 import { dateFilterFn } from "@/lib/utils";
 import { fuzzyFilter } from "@/lib/utils";
 import CenteredSpinner from "@/components/centered-spinner";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 async function fetchReimbursements(): Promise<Reimbursement[]> {
   try {
@@ -62,6 +71,9 @@ export default function AdminTable() {
   );
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
   const [error, setError] = React.useState<Error | null>(null);
+
+  const [pageIndex, setPageIndex] = React.useState(0);
+  const [pageSize, setPageSize] = React.useState(8);
 
   React.useEffect(() => {
     fetchReimbursements()
@@ -97,12 +109,32 @@ export default function AdminTable() {
       columnVisibility,
       globalFilter,
       expanded,
+      pagination: {
+        pageIndex,
+        pageSize,
+      },
     },
     filterFns: {
       dateFilterFn,
       fuzzy: fuzzyFilter,
     },
   });
+
+  const pageCount = table.getPageCount();
+
+  const renderPagination = () => {
+    let pages = [];
+    for (let i = 0; i < pageCount; i++) {
+      pages.push(
+        <PaginationItem key={i}>
+          <PaginationLink onClick={() => setPageIndex(i)}>
+            {i + 1}
+          </PaginationLink>
+        </PaginationItem>,
+      );
+    }
+    return pages;
+  };
 
   const getUniqueValues = (data: any[], type: string) => {
     let values = new Set();
@@ -221,26 +253,9 @@ export default function AdminTable() {
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-end space-x-2 py-4">
-        <div className="space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            Previous
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            Next
-          </Button>
-        </div>
-      </div>
+      <Pagination>
+        <PaginationContent>{renderPagination()}</PaginationContent>
+      </Pagination>
     </div>
   );
 }
