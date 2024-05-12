@@ -171,10 +171,6 @@ export default function Page() {
       </h1>
       {/* Row of buttons */}
       <div className="w-full flex items-center justify-between mb-10">
-        {/* Add New Org Button */}
-        <Button className="w-44 h-11 bg-[#F18030] hover:bg-orange-400 text-white drop-shadow-md">
-          + Add New Org
-        </Button>
         {/* View All / View Updates toggles */}
         <div>
           <Toggle
