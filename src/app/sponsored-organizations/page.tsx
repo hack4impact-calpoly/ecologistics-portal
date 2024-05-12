@@ -127,7 +127,7 @@ export default function Page() {
             if (fetchedOrgs.length > 0) {
               const filteredUpdatedOrgs =
                 await filterOrganizationsWithPendingReimbursements(fetchedOrgs); // Fetch organizations with updates
-              setUpdatedOrgs(filteredUpdatedOrgs); // Cache orgs for later
+              setUpdatedOrgs(filteredUpdatedOrgs.filteredOrgs); // Cache orgs for later
 
               let filteredPendingApprovalOrgs = fetchedOrgs.filter(
                 (org) => !org.approved,
