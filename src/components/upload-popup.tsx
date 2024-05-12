@@ -27,9 +27,9 @@ const UploadPopup = forwardRef(({ success }: UploadPopupProps, ref) => {
         <DialogContent>
           <DialogHeader>
             {success ? (
-              <DialogTitle>Image Successfully Uploaded</DialogTitle>
+              <DialogTitle>Receipt Upload Complete/</DialogTitle>
             ) : (
-              <DialogTitle>Image Failed to Upload</DialogTitle>
+              <DialogTitle>Receipt Upload Failed/</DialogTitle>
             )}
           </DialogHeader>
         </DialogContent>
