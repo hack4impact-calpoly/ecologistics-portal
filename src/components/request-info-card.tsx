@@ -8,8 +8,26 @@ import {
 import Image from "next/image";
 import Reimbursement from "@/database/reimbursement-schema";
 import StatusBadge from "./status-badge";
+import Status from "@/lib/enum";
 
 export default function RequestInfoCard(props: Reimbursement) {
+  const getStatus = (status: string) => {
+    switch (status) {
+      case "Paid":
+        return Status.Paid;
+      case "Pending":
+        return Status.Pending;
+      case "On Hold":
+        return Status.OnHold;
+      case "Declined":
+        return Status.Declined;
+      case "Needs Review":
+        return Status.NeedsReview;
+      default:
+        return Status.OnHold;
+    }
+  };
+
   return (
     // Entire Card
     <Card className="w-[700px] rounded-2xl p-8">
@@ -17,7 +35,7 @@ export default function RequestInfoCard(props: Reimbursement) {
       <CardHeader>
         <div className="flex justify-between items-center">
           <CardTitle className="text-[30px]">{props.reportName}</CardTitle>
-          <StatusBadge reimbursementStatus={props.status} />
+          <StatusBadge reimbursementStatus={getStatus(props.status)} />
         </div>
         <CardDescription className="flex items-center space-x-6">
           <div className="px-4 py-[8px] border-[1.5px] border-black rounded-full text-black font-bold text-[16px]">
