@@ -1,4 +1,4 @@
-import { Schema } from "mongoose";
+import { Schema, model, models } from "mongoose";
 
 export interface Organization {
   name: string;
