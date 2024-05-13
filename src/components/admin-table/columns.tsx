@@ -72,18 +72,16 @@ const OrganizationCell = ({ row }: { row: any }) => {
         </div>
       </DialogTrigger>
       <DialogContent>
-        <div className="border">
-          {selectedReimbursement ? (
-            <>
-              <ManageRequestCard
-                {...selectedReimbursement}
-                updateComment={updateComment}
-              />
-            </>
-          ) : (
-            <p>Loading reimbursement information...</p>
-          )}
-        </div>
+        {selectedReimbursement ? (
+          <>
+            <ManageRequestCard
+              {...selectedReimbursement}
+              updateComment={updateComment}
+            />
+          </>
+        ) : (
+          <p>Loading reimbursement information...</p>
+        )}
       </DialogContent>
     </Dialog>
   );
