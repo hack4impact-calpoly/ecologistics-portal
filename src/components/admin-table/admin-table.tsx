@@ -75,7 +75,7 @@ export default function AdminTable() {
   const [pageSize, setPageSize] = React.useState(10);
 
   // First render flag to determine number of rows that can fit without overflow
-  // Necessary for when the div size changes, the pageSize state can remain consistent, preventing render bugs
+  // necessary for first render only
   const firstRender = React.useRef(true);
   const row = document
     .getElementById("admin-table-row")
@@ -277,7 +277,6 @@ export default function AdminTable() {
         </div>
         <ScrollBar orientation="horizontal" />
       </ScrollArea>
-      {/* Table pagination Stuff*/}
       <div className="flex justify-center">
         <div className="flex  space-x-6 lg:space-x-8 pt-2 content-center">
           <div className="flex items-center space-x-2">
