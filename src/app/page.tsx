@@ -1,10 +1,9 @@
 "use client";
-import AdminTable from "@/components/admin-table/admin-table";
-import SponsoredOrgTable from "@/components/sponsored-org-table/sponsored-org-table";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import CenteredSpinner from "@/components/centered-spinner";
 import SponsoredHomePage from "../components/sponsored-org-home";
+import AdminHomePage from "../components/admin-home-page";
 
 export default function Home() {
   const router = useRouter();
@@ -20,12 +19,7 @@ export default function Home() {
     return router.push("/sign-in");
   }
   if (user?.publicMetadata?.admin) {
-    return (
-      <main>
-        <h1 className="text-xl font-bold">Nonprofit Name</h1>
-        <AdminTable />
-      </main>
-    );
+    return <AdminHomePage />;
   } else {
     if (!user?.unsafeMetadata?.organization) {
       router.push("/setup-organization");
