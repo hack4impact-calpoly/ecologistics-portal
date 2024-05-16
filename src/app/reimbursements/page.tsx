@@ -128,7 +128,7 @@ export default function Page() {
 
   if (!isLoaded) {
     return (
-      <div>
+      <div className="w-screen h-screen">
         <CenteredSpinner />
       </div>
     );

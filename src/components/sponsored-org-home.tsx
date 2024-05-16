@@ -66,7 +66,7 @@ export default function SponsoredHomePage() {
 
   if (!isLoaded) {
     return (
-      <div>
+      <div className="w-screen h-screen">
         <CenteredSpinner />
       </div>
     );

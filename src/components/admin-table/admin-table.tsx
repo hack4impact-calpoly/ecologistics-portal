@@ -151,9 +151,8 @@ export default function AdminTable() {
 
   if (isLoading) {
     return (
-      <div>
-        {" "}
-        <CenteredSpinner />{" "}
+      <div className="w-screen h-screen">
+        <CenteredSpinner />
       </div>
     );
   }

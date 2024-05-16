@@ -37,7 +37,7 @@ export default function Page() {
   const { isLoaded, isSignedIn, user } = useUser();
   if (!isLoaded) {
     return (
-      <div>
+      <div className="w-screen h-screen">
         <CenteredSpinner />
       </div>
     );

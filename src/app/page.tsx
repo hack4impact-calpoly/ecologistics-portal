@@ -11,8 +11,8 @@ export default function Home() {
   const { isLoaded, isSignedIn, user } = useUser();
   if (!isLoaded) {
     return (
-      <div>
-        <CenteredSpinner />{" "}
+      <div className="w-screen h-screen">
+        <CenteredSpinner />
       </div>
     );
   }
