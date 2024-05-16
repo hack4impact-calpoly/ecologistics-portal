@@ -127,6 +127,7 @@ export function DataTable<TData, TValue>({
           identifier="status"
           title="Status"
           values={["Pending", "Declined", "On Hold", "Paid"]}
+          placeholder=""
         />
         <div>
           <Label className="text-xs pl-3">Date Range</Label>
