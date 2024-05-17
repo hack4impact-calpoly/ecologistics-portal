@@ -3,6 +3,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { ErrorResponse } from "@/lib/error";
 import Reimbursement from "@/database/reimbursement-schema";
 import Status from "@/lib/enum";
+import { CreateAlertResponse } from "../../alert/[id]/route";
+import Alert from "@/database/alert-schema";
 
 export type UpdateReimbursementBody = {
   organization?: string;
@@ -58,6 +60,19 @@ export async function PUT(req: NextRequest, { params }: IParams) {
         error: "Status is not valid or undefined",
       };
       return NextResponse.json(errorResponse, { status: 404 });
+    }
+
+    if (
+      (body.status && body.status !== currentReimbursement.status) ||
+      (body.comment && body.comment !== currentReimbursement.comment)
+    ) {
+      const newAlert: CreateAlertResponse = await new Alert({
+        userId: currentReimbursement.clerkUserId,
+        title: "Reimbursement Update",
+        description: `Status: ${
+          body.status || currentReimbursement.status
+        }\nComment: ${body.comment || currentReimbursement.comment || "N/A"}`,
+      }).save();
     }
 
     const reimbursement: UpdateReimbursementResponse =
