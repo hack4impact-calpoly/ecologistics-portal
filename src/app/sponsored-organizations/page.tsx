@@ -6,83 +6,49 @@ import { Button } from "@/components/ui/button";
 import { Toggle } from "@/components/ui/toggle";
 import { Input } from "@/components/ui/input";
 import SponsorCard from "@/components/sponsored-org-card";
-import Organization from "@/database/organization-schema";
+import { Organization } from "@/database/organization-schema";
 import { Types } from "mongoose";
 import { useEffect, useState } from "react";
 import CenteredSpinner from "@/components/centered-spinner";
 
-// Example sponsors for testing
-const organizations: Organization[] = [
-  {
-    name: "Organization 1",
-    description: "Placeholder description",
-    website: "https://organization1.com",
-    clerkUser: "User 1",
-    logo: "/images/sponsored_org_profile_picture_placeholder.png",
-    reimbursements: [new Types.ObjectId("65c97b4056e2e2d7d225fe70")],
-    status: "active",
-  },
-  {
-    name: "Organization 2",
-    description: "Placeholder description",
-    website: "https://organization2.com",
-    clerkUser: "User 2",
-    logo: "/images/sponsored_org_profile_picture_placeholder.png",
-    reimbursements: [],
-    status: "active",
-  },
-  {
-    name: "Organization 3",
-    description: "Placeholder description",
-    website: "https://organization3.com",
-    clerkUser: "User 3",
-    logo: "/images/sponsored_org_profile_picture_placeholder.png",
-    reimbursements: [new Types.ObjectId("65c97b4056e2e2d7d225fe70")],
-    status: "active",
-  },
-  {
-    name: "Organization 4",
-    description: "Placeholder description",
-    website: "https://organization4.com",
-    clerkUser: "User 4",
-    logo: "/images/sponsored_org_profile_picture_placeholder.png",
-    reimbursements: [],
-    status: "active",
-  },
-  {
-    name: "Organization 5",
-    description: "Placeholder description",
-    website: "https://organization5.com",
-    clerkUser: "User 5",
-    logo: "/images/sponsored_org_profile_picture_placeholder.png",
-    reimbursements: [new Types.ObjectId("65c97b4056e2e2d7d225fe70")],
-    status: "active",
-  },
-];
+//clerk user as key and num of updates as value
+type UpdateCounts = {
+  [key: string]: number;
+};
 
 // Helper function to retrieve a list of organizations with pending reimbursements
 async function filterOrganizationsWithPendingReimbursements(
   organizations: Organization[],
 ) {
   const filteredOrgs: Organization[] = [];
+  let updateCount: UpdateCounts = {};
   // Check each organization
   for (const org of organizations) {
     let pending = false;
-    for (const reimbursementId of org.reimbursements) {
-      // Fetch reimbursement from API
-      const reimbursement = await getReimbursement(reimbursementId.toString());
-      // Check if reimbursement has a pending status
-      if (reimbursement && reimbursement.status === "Pending") {
-        pending = true;
-        break; // If it has at least one pending reimbursement, no need to keep checking the same organization
+    if (org?.reimbursements?.length) {
+      let numOfUpdates = 0;
+      if (org.reimbursements) {
+        for (const reimbursementId of org.reimbursements) {
+          // Fetch reimbursement from API
+          const reimbursement = await getReimbursement(
+            reimbursementId.toString(),
+          );
+          // Check if reimbursement has a pending status
+          if (reimbursement && reimbursement.status === "Pending") {
+            pending = true;
+            numOfUpdates++; // increment number of updates
+            break; // If it has at least one pending reimbursement, no need to keep checking the same organization
+          }
+        }
+      }
+      updateCount[org.clerkUser] = numOfUpdates;
+      // Add organization to list if it had a pending reimbursement
+      if (pending) {
+        filteredOrgs.push(org);
       }
     }
-    // Add organization to list if it had a pending reimbursement
-    if (pending) {
-      filteredOrgs.push(org);
-    }
   }
-  return filteredOrgs;
+  return { filteredOrgs, updateCount };
 }
 
 // Fetch list of organizations
@@ -96,7 +62,8 @@ async function getOrganizations() {
     const organizations: Organization[] = [];
     data.forEach((obj: any) => {
       if (obj.unsafeMetadata.organization) {
-        organizations.push(obj.unsafeMetadata.organization);
+        let org = { clerkUser: obj.id, ...obj.unsafeMetadata.organization };
+        organizations.push(org);
       }
     });
     return organizations;
@@ -126,45 +93,56 @@ async function getReimbursement(reimbursementId: string) {
 export default function Page() {
   const router = useRouter();
   const { isLoaded, isSignedIn, user } = useUser();
-  const [viewUpdates, setViewUpdates] = useState(false); // State for view updates toggle
+  const [viewTab, setViewTab] = useState(""); // State for tab toggle
   const [orgs, setOrgs] = useState<Organization[]>([]); // State for currently displayed organizations based on view settings
   const [updatedOrgs, setUpdatedOrgs] = useState<Organization[]>([]); // State for organizations with pending updates (filtered)
+  const [pendingOrgs, setPendingOrgs] = useState<Organization[]>([]); // State for organizations pending approval
   const [allOrgs, setAllOrgs] = useState<Organization[]>([]); // State for all organizations (unfiltered)
-
+  const [allUpdatedOrgs, setAllUpdatedOrgs] = useState<Organization[]>([]); // State for all organizations with pending updates (filtered)
+  const [search, setSearch] = useState("");
+  const [updateCount, setUpdateCount] = useState<UpdateCounts>({});
   // Turn off viewUpdates when View All is toggled
   const handleViewAllToggle = () => {
-    setViewUpdates(false);
+    setViewTab("");
   };
 
   // Turn on viewUpdates when View Updates is toggled
   const handleViewUpdatesToggle = () => {
-    setViewUpdates(true);
+    setViewTab("updates");
+  };
+
+  const handleViewPendingToggle = () => {
+    setViewTab("pending");
   };
 
   // Load information into orgs states
   useEffect(() => {
     const fetchAndFilterOrganizations = async () => {
       try {
-        let filteredOrgs: Organization[] = [];
-
         // Check if org states are empty, and fetch organizations if needed
         if (allOrgs.length === 0) {
           const fetchedOrgs = await getOrganizations();
           if (fetchedOrgs) {
             setAllOrgs(fetchedOrgs); // Cache orgs for later
-
             if (fetchedOrgs.length > 0) {
               const filteredUpdatedOrgs =
                 await filterOrganizationsWithPendingReimbursements(fetchedOrgs); // Fetch organizations with updates
-              console.log(filteredUpdatedOrgs);
-              setUpdatedOrgs(filteredUpdatedOrgs); // Cache orgs for later
+              setUpdatedOrgs(filteredUpdatedOrgs.filteredOrgs); // Cache orgs for later
+
+              let filteredPendingApprovalOrgs = fetchedOrgs.filter(
+                (org) => !org.approved,
+              );
+              setPendingOrgs(filteredPendingApprovalOrgs); // Cache orgs for later
             }
           }
         }
 
+        let filteredOrgs = [];
         // Set orgs based on viewUpdates and availability of updatedOrgs
-        if (viewUpdates) {
+        if (viewTab === "updates") {
           filteredOrgs = updatedOrgs; // For displaying orgs with updates
+        } else if (viewTab === "pending") {
+          filteredOrgs = pendingOrgs;
         } else {
           filteredOrgs = allOrgs; // Otherwise display all orgs
         }
@@ -176,7 +154,23 @@ export default function Page() {
     };
 
     fetchAndFilterOrganizations();
-  });
+  }, [viewTab]);
+
+  useEffect(() => {
+    if (search) {
+      const filteredOrgs = allOrgs.filter(
+        (org) => org.name.includes(search) || org.clerkUser?.includes(search),
+      );
+      const filteredUpdatedOrgs = updatedOrgs.filter(
+        (org) => org.name.includes(search) || org.clerkUser?.includes(search),
+      );
+      setOrgs(filteredOrgs);
+      setUpdatedOrgs(filteredUpdatedOrgs);
+    } else {
+      setOrgs(allOrgs);
+      setUpdatedOrgs(allUpdatedOrgs);
+    }
+  }, [search, allOrgs, allUpdatedOrgs, updatedOrgs]);
 
   if (!isLoaded) {
     return (
@@ -202,22 +196,18 @@ export default function Page() {
       </h1>
       {/* Row of buttons */}
       <div className="w-full flex items-center justify-between mb-10">
-        {/* Add New Org Button */}
-        <Button className="w-44 h-11 bg-[#F18030] hover:bg-orange-400 text-white drop-shadow-md">
-          + Add New Org
-        </Button>
         {/* View All / View Updates toggles */}
         <div>
           <Toggle
             className="text-lg h-11 rounded-none border px-8 border-[#335543] text-[#335543] data-[state=on]:bg-[#335543] data-[state=on]:text-white"
-            data-state={!viewUpdates ? "on" : "off"}
+            data-state={viewTab === "" ? "on" : "off"}
             onClick={handleViewAllToggle}
           >
             VIEW ALL
           </Toggle>
           <Toggle
             className="text-lg h-11 rounded-none border px-8 border-[#335543] text-[#335543] data-[state=on]:bg-[#335543] data-[state=on]:text-white"
-            data-state={viewUpdates ? "on" : "off"}
+            data-state={viewTab === "updates" ? "on" : "off"}
             onClick={handleViewUpdatesToggle}
           >
             VIEW UPDATES
@@ -228,13 +218,22 @@ export default function Page() {
               </div>
             </div>
           </Toggle>
+          <Toggle
+            className="text-lg h-11 rounded-none border px-8 border-[#335543] text-[#335543] data-[state=on]:bg-[#335543] data-[state=on]:text-white"
+            data-state={viewTab === "pending" ? "on" : "off"}
+            onClick={handleViewPendingToggle}
+          >
+            VIEW PENDING
+          </Toggle>
           {/* Search bar */}
         </div>
-        <div className="w-72 h-11 rounded-full shadow-xl">
+        <div className="w-72 h-11">
           {/* Add magnifying glass here */}
           <Input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
             placeholder="Search"
-            className="border-none rounded-full p-4 text-xl focus:outline-none"
+            className="p-4"
           />
         </div>
       </div>
@@ -244,10 +243,10 @@ export default function Page() {
           // Modify w to fit desired amount of cards in one row
           <div key={index} className="w-1/5 p-2">
             <SponsorCard
-              image={organization.logo || ""}
-              organization={organization.name}
-              user={organization.clerkUser}
+              organizationData={organization}
               email="temp@domain.com"
+              toApprove={organization.approved == false}
+              updates={updateCount[organization.clerkUser] || 0}
             />
           </div>
         ))}

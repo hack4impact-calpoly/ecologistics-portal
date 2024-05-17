@@ -1,13 +1,14 @@
-import { Schema, model, models, Types } from "mongoose";
+import { Schema, model, models } from "mongoose";
 
-interface Organization {
+export interface Organization {
   name: string;
   description: string;
   website?: string;
   clerkUser: string;
   logo?: string;
-  reimbursements: Types.ObjectId[];
+  reimbursements: string[];
   status: string;
+  approved: boolean;
 }
 
 const OrganizationSchema = new Schema({
@@ -33,6 +34,10 @@ const OrganizationSchema = new Schema({
   status: {
     type: String,
     required: [true, "Organization status is required."],
+  },
+  approved: {
+    type: Boolean,
+    required: [true, "Organization approval status is necessary."],
   },
 });
 

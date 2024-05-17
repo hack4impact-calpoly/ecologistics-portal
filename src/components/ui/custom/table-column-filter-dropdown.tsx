@@ -15,6 +15,7 @@ type TableColumnFilterDropdownProps = {
   title: string;
   identifier: string;
   values: string[];
+  placeholder: string;
 };
 
 const TableColumnFilterDropdown: React.FC<TableColumnFilterDropdownProps> = ({
@@ -22,16 +23,18 @@ const TableColumnFilterDropdown: React.FC<TableColumnFilterDropdownProps> = ({
   title,
   identifier,
   values,
+  placeholder,
 }) => {
   return (
-    <div className="flex flex-col">
-      <Label className="text-xs pl-3">{title}</Label>
+    <div className="flex flex-col w-full">
+      <Label className="text-xs pl-1">{title}</Label>
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="outline" className="ml-2 mr-2">
+        <DropdownMenuTrigger asChild className="w-full self-start">
+          <Button variant="outline" className="flex justify-between">
             {(table?.getColumn(identifier)?.getFilterValue() as string) ??
+              placeholder ??
               "All"}
-            <ChevronDownIcon className="ml-2 h-4 w-4" />
+            <ChevronDownIcon className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>

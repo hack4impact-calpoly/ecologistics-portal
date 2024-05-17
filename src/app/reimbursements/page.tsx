@@ -1,9 +1,10 @@
 "use client";
 
-// import Reimbursement from "@/database/reimbursementSchema";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-
+import CenteredSpinner from "@/components/centered-spinner";
+import ImageUpload from "@/components/image-upload";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import ImagePopup from "../../components/upload-popup";
 import {
   Form,
   FormControl,
@@ -12,62 +13,109 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { useForm } from "react-hook-form";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { format } from "date-fns";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
-import { CalendarIcon } from "@radix-ui/react-icons";
-import { Calendar } from "@/components/ui/calendar";
 import { useUser } from "@clerk/nextjs";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { CalendarIcon } from "@radix-ui/react-icons";
+import { format } from "date-fns";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import CenteredSpinner from "@/components/centered-spinner";
+import { useRef, useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 const formSchema = z.object({
-  name: z.string().min(1).max(50),
-  email: z.string().min(1).max(50),
+  recipientName: z.string().min(1).max(50),
+  recipientEmail: z.string().min(1).max(50),
   transactionDate: z.date(),
   amount: z.union([
     z.number(),
     z.string().transform((value) => parseFloat(value)),
   ]),
+  paymentMethod: z.string().min(1).max(100),
   purpose: z.string().max(1000),
+  file: z.any(),
+  comment: z.string(),
 });
 
 export default function Page() {
+  const { isLoaded, isSignedIn, user } = useUser();
   const [isConfirmed, setIsConfirmed] = useState(false);
+  const [uploadSuccess, setUploadSuccess] = useState(false);
+  const [submitDisabled, setSubmitDisabled] = useState(false);
+  const popupRef = useRef<{ openDialog: () => void } | null>(null);
+
   const router = useRouter();
-  // definition
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      email: "",
+      recipientName: "",
+      recipientEmail: "",
       transactionDate: new Date(),
       amount: 0,
+      paymentMethod: "",
       purpose: "",
+      file: undefined,
+      comment: "",
     },
   });
 
   // submisson handler
   function onSubmit(values: z.infer<typeof formSchema>) {
+    setSubmitDisabled(true);
     if (!isConfirmed) return;
-    console.log(values);
-
-    // Reset the form fields
-    setIsConfirmed(false);
-    form.reset({
-      name: "",
-      email: "",
-      transactionDate: new Date(), // Reset to current date or you can set a default date
-      amount: 0,
-      purpose: "",
+    // initialize multipart form data
+    const formData = new FormData();
+    // append all form values to form data
+    Object.entries(values).forEach(([key, value]) => {
+      formData.append(key, value);
     });
+    // set organization field to the user's id
+    formData.append("clerkUserId", user?.id as string);
+    fetch("api/reimbursement", {
+      method: "POST",
+      body: formData,
+    })
+      .then((response) => {
+        if (response.ok) {
+          setUploadSuccess(true);
+          popupRef.current?.openDialog();
+          return response.json();
+        }
+        setUploadSuccess(false);
+        popupRef.current?.openDialog();
+        setSubmitDisabled(false);
+        throw new Error("Failed to submit reimbursement");
+      })
+      .then(() => {
+        // Reset the form fields
+        setIsConfirmed(false);
+        form.reset({
+          recipientName: "",
+          recipientEmail: "",
+          transactionDate: new Date(), // Reset to current date or you can set a default date
+          amount: 0,
+          paymentMethod: "",
+          purpose: "",
+          file: undefined,
+        });
+        router.push("/");
+      })
+      .catch((error) => {
+        setSubmitDisabled(false);
+        console.error(error);
+      });
   }
 
   function handleConfirm() {
@@ -78,7 +126,6 @@ export default function Page() {
     setIsConfirmed(false);
   }
 
-  const { isLoaded, isSignedIn, user } = useUser();
   if (!isLoaded) {
     return (
       <div>
@@ -101,31 +148,53 @@ export default function Page() {
   ) {
     return router.push("/");
   }
-  // implementation
+
+  const constructEmail = () => {
+    const { recipientName, recipientEmail, transactionDate, amount, purpose } =
+      form.getValues();
+    const emailBody = `Hi there,
+
+I would like to submit the following transaction details:
+
+Name: ${recipientName}
+Email: ${recipientEmail}
+Transaction Date: ${format(transactionDate, "PPP")}
+Amount: ${amount}
+Purpose: ${purpose}
+
+Thank you!`;
+
+    const emailLink = `mailto:stacey@ecologistics.org?subject=Transaction%20Details&body=${encodeURIComponent(
+      emailBody,
+    )}`;
+
+    window.location.href = emailLink;
+  };
+
   return (
     <main>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 m-5">
           <FormField
             control={form.control}
-            name="name"
+            name="recipientName"
             render={({ field }) => (
               <FormItem>
-                <FormLabel> Name </FormLabel>
+                <FormLabel> Recipient Name </FormLabel>
                 <FormControl>
-                  <Input placeholder="name" {...field} />
+                  <Input placeholder="recipientName" {...field} />
                 </FormControl>
               </FormItem>
             )}
           />
           <FormField
             control={form.control}
-            name="email"
+            name="recipientEmail"
             render={({ field }) => (
               <FormItem>
-                <FormLabel> Email </FormLabel>
+                <FormLabel> Recipient Email </FormLabel>
                 <FormControl>
-                  <Input placeholder="email" {...field} />
+                  <Input placeholder="recipientEmail" {...field} />
                 </FormControl>
               </FormItem>
             )}
@@ -186,6 +255,73 @@ export default function Page() {
           />
           <FormField
             control={form.control}
+            name="paymentMethod"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel> Payment Method </FormLabel>
+                <br />
+                <FormControl>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline" className="w-64">
+                        {field.value || "Select payment method"}
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-64">
+                      <DropdownMenuGroup>
+                        <DropdownMenuItem onClick={() => field.onChange("ACH")}>
+                          ACH
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => field.onChange("Check")}
+                        >
+                          Check
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => field.onChange("PayPal")}
+                        >
+                          PayPal
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => field.onChange("Venmo")}
+                        >
+                          Venmo
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => field.onChange("Zelle")}
+                        >
+                          Zelle
+                        </DropdownMenuItem>
+                      </DropdownMenuGroup>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </FormControl>
+                {field.value && (
+                  <>
+                    <div>
+                      Please submit your account information in the comment
+                      field. If the information is sensitive, please send it via
+                      email instead.
+                    </div>
+                  </>
+                )}
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="comment"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel> Comment </FormLabel>
+                <FormControl>
+                  <Input placeholder="comment (optional)" {...field} />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
             name="purpose"
             render={({ field }) => (
               <FormItem>
@@ -196,9 +332,25 @@ export default function Page() {
               </FormItem>
             )}
           />
-          <Button type="submit">Submit</Button>
+          <FormField
+            control={form.control}
+            name="file" // where did this come from?
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel> File Upload </FormLabel>
+                <FormControl>
+                  <ImageUpload handleChange={field.onChange}></ImageUpload>
+                </FormControl>
+              </FormItem>
+            )}
+          />
+          <Button type="submit" disabled={submitDisabled}>
+            Submit
+          </Button>
         </form>
       </Form>
+      <ImagePopup ref={popupRef} success={uploadSuccess} />
+
       <div className="flex flex-col bg-gray-200 items-center space-y-2">
         <h4 className="p-3 pb-0 text-2xl font-bold ">
           Did you email your W9 form to Stacey?
@@ -218,6 +370,9 @@ export default function Page() {
             No
           </Button>
         </div>
+      </div>
+      <div className="flex justify-center">
+        <Button onClick={constructEmail}>Generate Email Template</Button>
       </div>
     </main>
   );
