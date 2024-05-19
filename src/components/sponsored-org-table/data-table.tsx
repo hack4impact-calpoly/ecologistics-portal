@@ -115,28 +115,41 @@ export function DataTable<TData, TValue>({
   };
   return (
     <div>
-      <div className="flex justify-between py-4">
-        <DebouncedInput
-          value={globalFilter ?? ""}
-          onChange={(value) => setGlobalFilter(String(value))}
-          className="px-2 text-sm flex-grow w-100 mt-4 border rounded"
-          placeholder="Search all columns..."
-        />
-        <TableColumnFilterDropdown
-          table={table}
-          identifier="status"
-          title="Status"
-          values={["Pending", "Declined", "On Hold", "Paid"]}
-          placeholder=""
-        />
-        <div>
-          <Label className="text-xs pl-3">Date Range</Label>
-          <DatePickerWithRange
-            handleChange={handleDateRangeChange}
-            className="ml-2 self-end"
+      <div className="flex justify-between py-4 ">
+        <div className="flex">
+          <DebouncedInput
+            value={globalFilter ?? ""}
+            onChange={(value) => setGlobalFilter(String(value))}
+            className="px-2 text-sm flex-grow w-100 mt-4 border rounded"
+            placeholder="Search all columns..."
           />
         </div>
+        <div className="flex pl-3">
+          <div>
+            <TableColumnFilterDropdown
+              className=""
+              table={table}
+              identifier="status"
+              title="Status"
+              values={["Pending", "Declined", "On Hold", "Paid"]}
+              placeholder={
+                <span>
+                  <span style={{ color: "black" }}>All</span>
+                  <span style={{ color: "white" }}>__</span>
+                </span>
+              }
+            />
+          </div>
+          <div>
+            <Label className="text-xs pl-3">Date Range</Label>
+            <DatePickerWithRange
+              handleChange={handleDateRangeChange}
+              className="ml-2 self-end"
+            />
+          </div>
+        </div>
       </div>
+
       <div className="rounded-md border">
         <Table>
           <TableHeader>
