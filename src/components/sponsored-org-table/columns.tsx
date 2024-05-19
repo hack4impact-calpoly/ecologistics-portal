@@ -37,8 +37,8 @@ const ReportNameCell = ({ row }: { row: any }) => {
           {row.getValue("reportName")}
         </div>
       </DialogTrigger>
-      <DialogContent>
-        <div className="border">
+      <DialogContent className="min-w-[700px]">
+        <div>
           {selectedReimbursement ? (
             <RequestInfoCard {...selectedReimbursement} />
           ) : (
