@@ -127,11 +127,7 @@ export default function Page() {
   }
 
   if (!isLoaded) {
-    return (
-      <div className="w-screen h-screen">
-        <CenteredSpinner />
-      </div>
-    );
+    return <CenteredSpinner />;
   }
   if (!isSignedIn) {
     return router.push("/sign-in");

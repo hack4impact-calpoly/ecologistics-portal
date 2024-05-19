@@ -173,11 +173,7 @@ export default function Page() {
   }, [search, allOrgs, allUpdatedOrgs, updatedOrgs]);
 
   if (!isLoaded) {
-    return (
-      <div className="w-screen h-screen">
-        <CenteredSpinner />
-      </div>
-    );
+    return <CenteredSpinner />;
   }
   if (!isSignedIn) {
     return router.push("/sign-in");

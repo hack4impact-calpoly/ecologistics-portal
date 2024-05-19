@@ -65,11 +65,7 @@ export default function SponsoredHomePage() {
   const { isLoaded, isSignedIn, user } = useUser();
 
   if (!isLoaded) {
-    return (
-      <div className="w-screen h-screen">
-        <CenteredSpinner />
-      </div>
-    );
+    return <CenteredSpinner />;
   }
   if (!isSignedIn) {
     router.push("/sign-in");
