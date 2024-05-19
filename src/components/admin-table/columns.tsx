@@ -151,7 +151,13 @@ export const columns: ColumnDef<Reimbursement>[] = [
     header: "Documents",
     cell: ({ row }) => (
       <div className="w-full flex items-center justify-center">
-        <Button className="p-0 px-3" variant={"ghost"}>
+        <Button
+          onClick={() => {
+            window.open(row.getValue("receiptLink"), "_blank");
+          }}
+          className="p-0 px-3"
+          variant={"ghost"}
+        >
           <DownloadIcon />
         </Button>
       </div>
