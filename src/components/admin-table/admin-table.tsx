@@ -129,12 +129,20 @@ export default function AdminTable() {
 
   React.useEffect(() => {
     if (firstRender.current && row) {
-      setPageSize(Math.floor((window.innerHeight - 348) / row.height));
+      setPageSize(
+        Math.floor((window.innerHeight - 348) / row.height) <= 0
+          ? 3
+          : Math.floor((window.innerHeight - 348) / row.height),
+      );
       firstRender.current = false;
     }
     const handleWindowResize = () => {
       if (row) {
-        setPageSize(Math.floor((window.innerHeight - 348) / row.height));
+        setPageSize(
+          Math.floor((window.innerHeight - 348) / row.height) <= 0
+            ? 3
+            : Math.floor((window.innerHeight - 348) / row.height),
+        );
       }
     };
     window.addEventListener("resize", handleWindowResize);
