@@ -30,7 +30,7 @@ export default function RequestInfoCard(props: Reimbursement) {
 
   return (
     // Entire Card
-    <Card className="w-[700px] rounded-2xl p-8">
+    <Card className="border-none shadow-none">
       {/* Title, status, amount, and date */}
       <CardHeader>
         <div className="flex justify-between items-center">
@@ -64,11 +64,11 @@ export default function RequestInfoCard(props: Reimbursement) {
             </div>
           </div>
         </div>
-        <div className="flex justify-center mt-6">
+        <div className="flex w-[607px] h-[380px] justify-center mt-6">
           <Image
             src={props.receiptLink}
-            width={564}
-            height={340}
+            width={607}
+            height={380}
             alt="Receipt Picture"
             className="border border-blue-400 w-full"
           />
