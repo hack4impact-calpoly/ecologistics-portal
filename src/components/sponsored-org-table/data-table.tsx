@@ -108,11 +108,12 @@ export function DataTable<TData, TValue>({
     return pages;
   };
 
-  const handleDateRangeChange = (range: DateRange) => {
+  const handleDateRangeChange = (range: DateRange | undefined) => {
     table.getColumn("transactionDate")?.setFilterValue(() => {
-      return [range.from, range.to];
+      return range ? [range.from, range.to] : undefined;
     });
   };
+
   return (
     <div>
       <div className="flex justify-between py-4">

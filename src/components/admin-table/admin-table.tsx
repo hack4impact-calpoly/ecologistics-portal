@@ -156,9 +156,9 @@ export default function AdminTable() {
     return Array.from(values) as string[];
   };
 
-  const handleDateRangeChange = (range: DateRange) => {
+  const handleDateRangeChange = (range: DateRange | undefined) => {
     table.getColumn("transactionDate")?.setFilterValue(() => {
-      return [range.from, range.to];
+      return range ? [range.from, range.to] : undefined;
     });
   };
 
