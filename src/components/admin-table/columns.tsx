@@ -117,7 +117,11 @@ export const columns: ColumnDef<Reimbursement>[] = [
     cell: ({ row }) => (
       <div className="capitalize">
         {(() => {
-          const date = new Date(row.getValue("transactionDate"));
+          const datePart = (row.getValue("transactionDate") as string)?.slice(
+            0,
+            10,
+          );
+          const date = new Date(datePart);
           return date.toLocaleDateString();
         })()}
       </div>

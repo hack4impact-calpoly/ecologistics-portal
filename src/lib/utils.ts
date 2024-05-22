@@ -27,14 +27,18 @@ export const dateFilterFn = (
 ) => {
   const date = row.getValue(columnId);
   const [from, to] = value;
+  const datePart = date.slice(0, 10);
+  const fromPart = from?.toISOString().slice(0, 10);
+  const toPart = to?.toISOString().slice(0, 10);
+
   if (!date) {
     return false;
-  } else if (from && to) {
-    return date >= from && date <= to;
-  } else if (from) {
-    return date >= from;
-  } else if (to) {
-    return date <= to;
+  } else if (fromPart && toPart) {
+    return datePart >= fromPart && datePart <= toPart;
+  } else if (fromPart) {
+    return datePart >= fromPart;
+  } else if (toPart) {
+    return datePart <= toPart;
   }
   return false;
 };
