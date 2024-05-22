@@ -36,7 +36,7 @@ import { useState } from "react";
 import { DatePickerWithRange } from "../ui/custom/date-range-picker";
 import { Label } from "@radix-ui/react-dropdown-menu";
 import TableColumnFilterDropdown from "../ui/custom/table-column-filter-dropdown";
-import { dateFilterFn } from "./columns";
+import { dateFilterFn } from "@/lib/utils";
 import { DateRange } from "react-day-picker";
 import { rankItem } from "@tanstack/match-sorter-utils";
 import React from "react";
