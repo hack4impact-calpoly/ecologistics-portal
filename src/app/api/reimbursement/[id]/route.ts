@@ -68,7 +68,7 @@ export async function PUT(req: NextRequest, { params }: IParams) {
     ) {
       const newAlert: CreateAlertResponse = await new Alert({
         userId: currentReimbursement.clerkUserId,
-        title: "Reimbursement Update",
+        title: currentReimbursement.reportName,
         description: `Status: ${
           body.status || currentReimbursement.status
         }\nComment: ${body.comment || currentReimbursement.comment || "N/A"}`,
