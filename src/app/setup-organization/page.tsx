@@ -36,11 +36,7 @@ export default function Page() {
   });
   const { isLoaded, isSignedIn, user } = useUser();
   if (!isLoaded) {
-    return (
-      <div className="w-screen h-screen">
-        <CenteredSpinner />
-      </div>
-    );
+    return <CenteredSpinner />;
   }
   if (!isSignedIn) {
     return router.push("/sign-in");
