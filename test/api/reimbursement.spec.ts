@@ -15,7 +15,7 @@ import {
   createMockFormDataRequest,
 } from "../test-utils";
 import { imageUpload } from "@/services/image-upload";
-import { User, clerkClient } from "@clerk/nextjs/server";
+import { User, clerkClient, currentUser } from "@clerk/nextjs/server";
 import { Organization } from "@/database/organization-schema";
 
 jest.mock("@aws-sdk/client-s3");
@@ -38,6 +38,11 @@ const mockedClerkClient = mocked(clerkClient);
 mockedClerkClient.users.getUser.mockResolvedValue({
   unsafeMetadata: { organization: { name: "Test Org" } },
 } as unknown as User);
+const mockedCurrentUser = mocked(currentUser);
+mockedCurrentUser.mockResolvedValue({
+  id: "test",
+  publicMetadata: {},
+} as unknown as User);
 
 describe("Reimbursement API", () => {
   beforeEach(() => {
@@ -45,13 +50,31 @@ describe("Reimbursement API", () => {
   });
 
   describe("GET /api/reimbursement", () => {
-    it("returns a list of reimbursements", async () => {
+    it("returns a list of reimbursements for regular user", async () => {
       const response = await GET();
       const data = await response.json();
       expect(data).toEqual(
         formatMockReimbursementsResponse(MOCK_REIMBURSEMENTS),
       );
       expect(response.status).toBe(200);
+      expect(mockedReimbursement.find).toBeCalledWith({
+        clerkUserId: "test",
+      });
+    });
+
+    it("return a list of all reimbursements for admin user", async () => {
+      mockedCurrentUser.mockResolvedValue({
+        id: "test",
+        publicMetadata: { admin: true },
+      } as unknown as User);
+
+      const response = await GET();
+      const data = await response.json();
+      expect(data).toEqual(
+        formatMockReimbursementsResponse(MOCK_REIMBURSEMENTS),
+      );
+      expect(response.status).toBe(200);
+      expect(mockedReimbursement.find).toBeCalledWith();
     });
 
     it("returns an error if the get fails", async () => {
