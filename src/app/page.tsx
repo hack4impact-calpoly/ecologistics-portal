@@ -9,11 +9,7 @@ export default function Home() {
   const router = useRouter();
   const { isLoaded, isSignedIn, user } = useUser();
   if (!isLoaded) {
-    return (
-      <div>
-        <CenteredSpinner />{" "}
-      </div>
-    );
+    return <CenteredSpinner />;
   }
   if (!isSignedIn) {
     return router.push("/sign-in");
