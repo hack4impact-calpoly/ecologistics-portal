@@ -1,5 +1,5 @@
 import { formatAmount } from "@/lib/format";
-import { ColumnDef, FilterFnOption } from "@tanstack/react-table";
+import { ColumnDef, FilterFnOption, Row } from "@tanstack/react-table";
 import StatusBadge from "@/components/status-badge";
 import { Button } from "@/components/ui/button";
 import { DownloadIcon } from "@radix-ui/react-icons";
@@ -22,10 +22,7 @@ import HelpMenu from "../help-menu";
 const OrganizationCell = ({ row }: { row: any }) => {
   const [selectedReimbursement, setSelectedReimbursement] =
     useState<Reimbursement | null>(null);
-
-  useEffect(() => {
-    console.log(row.original);
-  }, []);
+  const [organizationName, setOrganizationName] = useState<string>("");
 
   const fetchReimbursementInfo = () => {
     const reimbursementId = row.original._id;
@@ -46,7 +43,7 @@ const OrganizationCell = ({ row }: { row: any }) => {
       });
   };
 
-  const updateComment = (comment: String) => {
+  const updateComment = (comment: string) => {
     const reimbursementId = row.original._id;
     fetch(`/api/reimbursement/${reimbursementId}`, {
       method: "PUT",
@@ -64,11 +61,34 @@ const OrganizationCell = ({ row }: { row: any }) => {
       });
   };
 
+  const fetchOrganizationName = (clerkUserId: string): string | undefined => {
+    fetch(`/api/user/${clerkUserId}`)
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          response.json().then((errorData) => {
+            console.error(errorData.error);
+          });
+        }
+      })
+      .then((data) => {
+        if (data) {
+          setOrganizationName(data?.unsafeMetadata?.organization?.name || "");
+        }
+      });
+    return undefined;
+  };
+
+  useEffect(() => {
+    fetchOrganizationName(row.getValue("clerkUserId"));
+  }, [row]);
+
   return (
     <Dialog>
       <DialogTrigger>
         <div className="capitalize" onClick={fetchReimbursementInfo}>
-          {row.getValue("organization")}
+          {organizationName}
         </div>
       </DialogTrigger>
       <DialogContent>
@@ -92,7 +112,7 @@ export const columns: ColumnDef<Reimbursement>[] = [
     accessorKey: "recipientEmail",
   },
   {
-    accessorKey: "organization",
+    accessorKey: "clerkUserId",
     header: "Organization",
     cell: ({ row }) => <OrganizationCell row={row} />,
   },
@@ -151,7 +171,7 @@ export const columns: ColumnDef<Reimbursement>[] = [
     ),
   },
   {
-    accessorKey: "documents",
+    accessorKey: "receiptLink",
     header: "Documents",
     cell: ({ row }) => (
       <div className="w-full flex items-center justify-center">
