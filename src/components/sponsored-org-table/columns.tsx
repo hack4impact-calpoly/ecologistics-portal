@@ -89,8 +89,13 @@ export const columns: ColumnDef<Reimbursement>[] = [
     header: "Request Date",
     filterFn: "dateFilterFn" as FilterFnOption<Reimbursement>,
     cell: ({ row }) => {
-      const date: Date = row.getValue("transactionDate");
-      return new Date(date).toLocaleDateString();
+      // const date: Date = row.getValue("transactionDate");
+      const datePart = (row.getValue("transactionDate") as string)?.slice(
+        0,
+        10,
+      );
+      const date = new Date(datePart);
+      return date.toLocaleDateString();
     },
   },
   {
@@ -105,22 +110,3 @@ export const columns: ColumnDef<Reimbursement>[] = [
     ),
   },
 ];
-
-export const dateFilterFn = (
-  row: any,
-  columnId: string,
-  value: [Date | undefined, Date | undefined],
-) => {
-  const date = row.getValue(columnId);
-  const [from, to] = value;
-  if (!date) {
-    return false;
-  } else if (from && to) {
-    return date >= from && date <= to;
-  } else if (from) {
-    return date >= from;
-  } else if (to) {
-    return date <= to;
-  }
-  return false;
-};
