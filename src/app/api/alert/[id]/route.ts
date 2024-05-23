@@ -19,7 +19,7 @@ export async function GET(req: NextRequest, { params }: IParams) {
   await connectDB();
   const { id } = params;
   try {
-    const alerts: GetAlertResponse = await Alert.find({ name: id });
+    const alerts: GetAlertResponse = await Alert.find({ userId: id });
     return NextResponse.json(alerts);
   } catch (error) {
     const errorResponse: ErrorResponse = {
