@@ -18,11 +18,14 @@ import {
   HoverCardTrigger,
 } from "@radix-ui/react-hover-card";
 import HelpMenu from "../help-menu";
+import {
+  ReimbursementWithOrganization,
+  fetchOrganizationName,
+} from "./admin-table";
 
 const OrganizationCell = ({ row }: { row: any }) => {
   const [selectedReimbursement, setSelectedReimbursement] =
-    useState<Reimbursement | null>(null);
-  const [organizationName, setOrganizationName] = useState<string>("");
+    useState<ReimbursementWithOrganization | null>(null);
 
   const fetchReimbursementInfo = () => {
     const reimbursementId = row.original._id;
@@ -36,6 +39,10 @@ const OrganizationCell = ({ row }: { row: any }) => {
           });
         }
       })
+      .then(async (data) => ({
+        ...data,
+        organization: await fetchOrganizationName(data.clerkUserId),
+      }))
       .then((data) => {
         if (data) {
           setSelectedReimbursement(data);
@@ -61,41 +68,18 @@ const OrganizationCell = ({ row }: { row: any }) => {
       });
   };
 
-  const fetchOrganizationName = (clerkUserId: string): string | undefined => {
-    fetch(`/api/user/${clerkUserId}`)
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          response.json().then((errorData) => {
-            console.error(errorData.error);
-          });
-        }
-      })
-      .then((data) => {
-        if (data) {
-          setOrganizationName(data?.unsafeMetadata?.organization?.name || "");
-        }
-      });
-    return undefined;
-  };
-
-  useEffect(() => {
-    fetchOrganizationName(row.getValue("clerkUserId"));
-  }, [row]);
-
   return (
     <Dialog>
       <DialogTrigger>
         <div className="capitalize" onClick={fetchReimbursementInfo}>
-          {organizationName}
+          {row.getValue("organization")}
         </div>
       </DialogTrigger>
       <DialogContent>
         {selectedReimbursement ? (
           <>
             <ManageRequestCard
-              {...selectedReimbursement}
+              reimbursement={selectedReimbursement}
               updateComment={updateComment}
             />
           </>
@@ -107,12 +91,12 @@ const OrganizationCell = ({ row }: { row: any }) => {
   );
 };
 
-export const columns: ColumnDef<Reimbursement>[] = [
+export const columns: ColumnDef<ReimbursementWithOrganization>[] = [
   {
     accessorKey: "recipientEmail",
   },
   {
-    accessorKey: "clerkUserId",
+    accessorKey: "organization",
     header: "Organization",
     cell: ({ row }) => <OrganizationCell row={row} />,
   },
