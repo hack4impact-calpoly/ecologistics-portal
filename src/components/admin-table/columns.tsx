@@ -117,7 +117,7 @@ export const columns: ColumnDef<ReimbursementWithOrganization>[] = [
   {
     accessorKey: "transactionDate",
     header: "Expense Date",
-    filterFn: "dateFilterFn" as FilterFnOption<Reimbursement>,
+    filterFn: "dateFilterFn" as FilterFnOption<ReimbursementWithOrganization>,
     cell: ({ row }) => (
       <div className="capitalize">
         {(() => {
