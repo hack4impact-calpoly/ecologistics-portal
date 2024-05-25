@@ -30,6 +30,6 @@ export async function PUT(
     });
     return createSuccessResponse(user, 200);
   } catch (err) {
-    return createErrorResponse(err, "Error updating user", 404);
+    return createErrorResponse(err, "Error updating user", 500);
   }
 }

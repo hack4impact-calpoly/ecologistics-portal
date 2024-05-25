@@ -8,10 +8,7 @@ import mongoose, { Query } from "mongoose";
 import { NextRequest } from "next/server";
 import { MOCK_ALERT } from "../mocks/alert-mocks";
 import { MOCK_SPONSORED_ORG_USER_APPROVED } from "../mocks/user-mocks";
-import {
-  formatMockAlertResponse,
-  formatMockAlertsResponse,
-} from "../test-utils";
+import { formatMockAlertResponse, formatMockAlertsResponse } from "../utils";
 
 jest.mock("@/database/db");
 const mockedConnectDB = mocked(connectDB);

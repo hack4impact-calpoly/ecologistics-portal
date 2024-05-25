@@ -20,7 +20,7 @@ import {
   createMockNextRequest,
   formatMockReimbursementResponse,
   formatMockReimbursementsResponse,
-} from "../test-utils";
+} from "../utils";
 
 jest.mock("@aws-sdk/client-s3");
 
