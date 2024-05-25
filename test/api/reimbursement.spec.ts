@@ -3,6 +3,7 @@ import { GET as GET_ALL, POST } from "@/app/api/reimbursement/route";
 import Alert from "@/database/alert-schema";
 import connectDB from "@/database/db";
 import Reimbursement from "@/database/reimbursement-schema";
+import Status from "@/lib/enum";
 import { imageUpload } from "@/services/image-upload";
 import { User, clerkClient, currentUser } from "@clerk/nextjs/server";
 import { mocked } from "jest-mock";
@@ -16,11 +17,10 @@ import {
 } from "../mocks/user-mocks";
 import {
   createMockFormDataRequest,
-  createMockNextRequestWithParams,
+  createMockNextRequest,
   formatMockReimbursementResponse,
   formatMockReimbursementsResponse,
 } from "../test-utils";
-import Status from "@/lib/enum";
 
 jest.mock("@aws-sdk/client-s3");
 
@@ -115,13 +115,8 @@ describe("Reimbursement API", () => {
   describe("GET /api/reimbursement/:id", () => {
     it("returns a single reimbursement", async () => {
       const reimbursementId = MOCK_REIMBURSEMENTS[0]._id.toString();
-      const { req, res } = createMockNextRequestWithParams(
-        {},
-        reimbursementId,
-        "GET",
-      );
 
-      const response = await GET_ID(req as unknown as NextRequest, {
+      const response = await GET_ID({} as unknown as NextRequest, {
         params: { id: reimbursementId },
       });
       const data = await response.json();
@@ -137,13 +132,8 @@ describe("Reimbursement API", () => {
         MOCK_ADMIN_USER as unknown as User,
       );
       const reimbursementId = MOCK_REIMBURSEMENTS[0]._id.toString();
-      const { req, res } = createMockNextRequestWithParams(
-        {},
-        reimbursementId,
-        "GET",
-      );
 
-      const response = await GET_ID(req as unknown as NextRequest, {
+      const response = await GET_ID({} as unknown as NextRequest, {
         params: { id: reimbursementId },
       });
       const data = await response.json();
@@ -155,17 +145,11 @@ describe("Reimbursement API", () => {
     });
 
     it("returns an error if reimbursement not found", async () => {
-      const { req, res } = createMockNextRequestWithParams(
-        {},
-        "nonexistentid",
-        "GET",
-      );
-
       mockedReimbursement.findById.mockReturnValueOnce({
         orFail: jest.fn().mockRejectedValue("test-error"),
       } as unknown as Query<any, any>);
 
-      const response = await GET_ID(req as unknown as NextRequest, {
+      const response = await GET_ID({} as unknown as NextRequest, {
         params: { id: "nonexistentid" },
       });
       const data = await response.json();
@@ -176,13 +160,8 @@ describe("Reimbursement API", () => {
     it("returns an error if user is not found", async () => {
       mockedCurrentUser.mockResolvedValueOnce(null);
       const reimbursementId = MOCK_REIMBURSEMENTS[0]._id.toString();
-      const { req, res } = createMockNextRequestWithParams(
-        {},
-        reimbursementId,
-        "GET",
-      );
 
-      const response = await GET_ID(req as unknown as NextRequest, {
+      const response = await GET_ID({} as unknown as NextRequest, {
         params: { id: reimbursementId },
       });
       const data = await response.json();
@@ -254,11 +233,7 @@ describe("Reimbursement API", () => {
     it("updates an existing reimbursement", async () => {
       const updateData = { recipientName: "Updated Name" };
       const reimbursementId = MOCK_REIMBURSEMENTS[0]._id.toString();
-      const { req, res } = createMockNextRequestWithParams(
-        updateData,
-        reimbursementId,
-        "PUT",
-      );
+      const { req } = createMockNextRequest(updateData);
 
       const response = await PUT(req as unknown as NextRequest, {
         params: { id: reimbursementId },
@@ -280,11 +255,7 @@ describe("Reimbursement API", () => {
     it("updates the status and creates an alert", async () => {
       const updateData = { status: Status.Paid };
       const reimbursementId = MOCK_REIMBURSEMENTS[0]._id.toString();
-      const { req, res } = createMockNextRequestWithParams(
-        updateData,
-        reimbursementId,
-        "PUT",
-      );
+      const { req } = createMockNextRequest(updateData);
 
       const response = await PUT(req as unknown as NextRequest, {
         params: { id: reimbursementId },
@@ -307,11 +278,7 @@ describe("Reimbursement API", () => {
     it("returns an error if status is invalid", async () => {
       const updateData = { status: "Invalid Status" };
       const reimbursementId = MOCK_REIMBURSEMENTS[0]._id.toString();
-      const { req, res } = createMockNextRequestWithParams(
-        updateData,
-        reimbursementId,
-        "PUT",
-      );
+      const { req } = createMockNextRequest(updateData);
 
       const response = await PUT(req as unknown as NextRequest, {
         params: { id: reimbursementId },
@@ -324,11 +291,7 @@ describe("Reimbursement API", () => {
 
     it("returns an error if reimbursement not found", async () => {
       const updateData = { recipientName: "Updated Name" };
-      const { req, res } = createMockNextRequestWithParams(
-        updateData,
-        "nonexistentid",
-        "PUT",
-      );
+      const { req } = createMockNextRequest(updateData);
 
       mockedReimbursement.findByIdAndUpdate.mockReturnValueOnce({
         orFail: jest.fn().mockRejectedValue("test-error"),
@@ -346,11 +309,7 @@ describe("Reimbursement API", () => {
       mockedCurrentUser.mockResolvedValueOnce(null);
       const updateData = { recipientName: "Updated Name" };
       const reimbursementId = MOCK_REIMBURSEMENTS[0]._id.toString();
-      const { req, res } = createMockNextRequestWithParams(
-        updateData,
-        reimbursementId,
-        "PUT",
-      );
+      const { req } = createMockNextRequest(updateData);
 
       const response = await PUT(req as unknown as NextRequest, {
         params: { id: reimbursementId },
@@ -365,13 +324,8 @@ describe("Reimbursement API", () => {
   describe("DELETE /api/reimbursement/:id", () => {
     it("deletes a reimbursement successfully", async () => {
       const reimbursementId = MOCK_REIMBURSEMENTS[0]._id.toString();
-      const { req, res } = createMockNextRequestWithParams(
-        {},
-        reimbursementId,
-        "DELETE",
-      );
 
-      const response = await DELETE(req as unknown as NextRequest, {
+      const response = await DELETE({} as unknown as NextRequest, {
         params: { id: reimbursementId },
       });
       const data = await response.json();
@@ -385,18 +339,12 @@ describe("Reimbursement API", () => {
     });
 
     it("returns an error if unable to delete", async () => {
-      const { req, res } = createMockNextRequestWithParams(
-        {},
-        "nonexistentid",
-        "DELETE",
-      );
-
       mockedReimbursement.findByIdAndDelete.mockReturnValueOnce({
         orFail: jest.fn().mockRejectedValue("test-error"),
       } as unknown as Query<any, any>);
 
-      const response = await DELETE(req as unknown as NextRequest, {
-        params: req.params,
+      const response = await DELETE({} as unknown as NextRequest, {
+        params: { id: "nonexistentid" },
       });
       const data = await response.json();
       expect(data.error).toEqual("test-error");

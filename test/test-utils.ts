@@ -1,30 +1,10 @@
 import Reimbursement from "@/database/reimbursement-schema";
-import { ObjectId } from "mongoose";
-import { createMocks, RequestMethod } from "node-mocks-http";
+import { createMocks } from "node-mocks-http";
 
 export const createMockNextRequest = (body: any) =>
   createMocks({
     json: () => Promise.resolve(body),
   });
-
-export const createMockNextRequestWithParams = (
-  body: any,
-  id: string,
-  method: RequestMethod = "GET",
-) => {
-  const { req, res } = createMocks({
-    method: method,
-    json: () => Promise.resolve(body),
-  });
-
-  // Ensure params are directly added in a manner that your handlers expect
-  req.params = { id };
-
-  // Mock req.json to simulate JSON parsing of the body
-  req.json = async () => Promise.resolve(body);
-
-  return { req, res };
-};
 
 export const createMockFormDataRequest = (body: any) => {
   const { req, res } = createMocks({
