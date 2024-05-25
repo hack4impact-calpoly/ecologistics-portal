@@ -82,7 +82,7 @@ describe("Reimbursement API", () => {
         formatMockReimbursementsResponse(MOCK_REIMBURSEMENTS),
       );
       expect(response.status).toBe(200);
-      expect(mockedReimbursement.find).toBeCalledWith();
+      expect(mockedReimbursement.find).toBeCalled();
     });
 
     it("returns an error if the db find fails", async () => {
@@ -145,7 +145,13 @@ describe("Reimbursement API", () => {
         formatMockReimbursementResponse(MOCK_REIMBURSEMENTS[0]),
       );
       expect(response.status).toBe(200);
-      expect(mockedReimbursement.findByIdAndUpdate).toBeCalled();
+      expect(mockedReimbursement.findByIdAndUpdate).toBeCalledWith(
+        reimbursementId,
+        {
+          $set: { ...MOCK_REIMBURSEMENTS[0], ...updateData, _id: undefined },
+        },
+        { new: true },
+      );
     });
 
     it("returns an error if reimbursement not found", async () => {
@@ -186,6 +192,9 @@ describe("Reimbursement API", () => {
         formatMockReimbursementResponse(MOCK_REIMBURSEMENTS[0]),
       );
       expect(response.status).toBe(200);
+      expect(mockedReimbursement.findByIdAndDelete).toBeCalledWith(
+        reimbursementId,
+      );
     });
 
     it("returns an error if unable to delete", async () => {
