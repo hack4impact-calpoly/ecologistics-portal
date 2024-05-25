@@ -1,3 +1,4 @@
+import Alert from "@/database/alert-schema";
 import Reimbursement from "@/database/reimbursement-schema";
 import { createMocks } from "node-mocks-http";
 
@@ -30,3 +31,11 @@ export const formatMockReimbursementResponse = (
 export const formatMockReimbursementsResponse = (
   reimbursements: Reimbursement[],
 ) => reimbursements.map(formatMockReimbursementResponse);
+
+export const formatMockAlertResponse = (alert: Alert) => ({
+  ...alert,
+  date: alert.date.toISOString(), // Standardize date format
+});
+
+export const formatMockAlertsResponse = (alerts: Alert[]) =>
+  alerts.map(formatMockAlertResponse);
