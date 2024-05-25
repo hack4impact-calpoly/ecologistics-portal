@@ -77,9 +77,9 @@ export function DataTable<TData, TValue>({
   React.useEffect(() => {
     if (firstRender.current && row) {
       setPageSize(
-        Math.floor((window.innerHeight - 342) / row.height) <= 0
+        Math.floor((window.innerHeight - 380) / row.height) <= 0
           ? 3
-          : Math.floor((window.innerHeight - 342) / row.height),
+          : Math.floor((window.innerHeight - 380) / row.height),
       );
       firstRender.current = false;
     }
@@ -87,9 +87,9 @@ export function DataTable<TData, TValue>({
       if (row) {
         console.log(row.height);
         setPageSize(
-          Math.floor((window.innerHeight - 342) / row.height) <= 0
+          Math.floor((window.innerHeight - 380) / row.height) <= 0
             ? 3
-            : Math.floor((window.innerHeight - 342) / row.height),
+            : Math.floor((window.innerHeight - 380) / row.height),
         );
       }
     };
@@ -143,7 +143,7 @@ export function DataTable<TData, TValue>({
   };
   return (
     <>
-      <ScrollArea className={` whitespace-nowrap`}>
+      <ScrollArea className={`mt-8 whitespace-nowrap`}>
         <div className="flex justify-between space-x-1 w-full py-4">
           <DebouncedInput
             value={globalFilter ?? ""}
@@ -166,7 +166,7 @@ export function DataTable<TData, TValue>({
             />
           </div>
         </div>
-        <div className="rounded-md border flex max-h-[calc(100dvh-250px)]">
+        <div className="rounded-md border flex max-h-[calc(100dvh-330px)]">
           <Table>
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (

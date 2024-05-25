@@ -36,7 +36,7 @@ export default function SponsoredHomePage() {
   return (
     <main className="px-14 py-12 h-screen overflow-y-auto w-full">
       <div className="flex items-center justify-between">
-        <div className="flex gap-x-6">
+        <div className="flex gap-x-6 items-center">
           <h1 className="font-bold text-4xl">{orgInfo.name}</h1>
           <Popup
             name={orgInfo.name}
