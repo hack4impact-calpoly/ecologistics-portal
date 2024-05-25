@@ -1,19 +1,31 @@
-import { NextRequest, NextResponse } from "next/server";
-import { clerkClient } from "@clerk/nextjs/server";
-import { ErrorResponse } from "@/lib/error";
+import { verifyAdmin } from "@/lib/admin";
+import { createErrorResponse, createSuccessResponse } from "@/lib/response";
+import { User, clerkClient, currentUser } from "@clerk/nextjs/server";
+import { NextRequest } from "next/server";
+
+export type UpdateUserBody = {
+  privateMetadata?: UserPrivateMetadata;
+  publicMetadata?: UserPublicMetadata;
+  unsafeMetadata?: UserUnsafeMetadata;
+};
+export type UpdateUserResponse = User;
 
 export async function PUT(req: NextRequest, { params }: any) {
+  // Verify that the request user is an admin
+  const user = await currentUser();
+  if (!verifyAdmin(user)) {
+    return createErrorResponse(null, "Unauthorized", 401);
+  }
   const { id } = params;
-  const body = await req.json();
+  const body: UpdateUserBody = await req.json();
   try {
-    const response = await clerkClient.users.updateUserMetadata(id, {
-      unsafeMetadata: body,
+    const user = await clerkClient.users.updateUserMetadata(id, {
+      privateMetadata: body.privateMetadata,
+      publicMetadata: body.publicMetadata,
+      unsafeMetadata: body.unsafeMetadata,
     });
-    return NextResponse.json(response, { status: 200 });
+    return createSuccessResponse(user, 200);
   } catch (err) {
-    const errorResponse: ErrorResponse = {
-      message: `Could not update user ${id}`,
-    };
-    return NextResponse.json(errorResponse, { status: 404 });
+    return createErrorResponse(err, "Error updating user", 404);
   }
 }

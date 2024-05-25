@@ -1,15 +1,23 @@
+import { verifyAdmin } from "@/lib/admin";
 import { ErrorResponse } from "@/lib/error";
-import { clerkClient } from "@clerk/nextjs";
-import { NextRequest, NextResponse } from "next/server";
+import { createErrorResponse, createSuccessResponse } from "@/lib/response";
+import { User, clerkClient, currentUser } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
 
-export async function GET() {
+export type GetUsersResponse = User[];
+
+export async function GET(): Promise<
+  NextResponse<GetUsersResponse | ErrorResponse>
+> {
+  // Verify that the request user is an admin
+  const user = await currentUser();
+  if (!verifyAdmin(user)) {
+    return createErrorResponse(null, "Unauthorized", 401);
+  }
   try {
-    const response = await clerkClient.users.getUserList();
-    return NextResponse.json(response);
+    const users = await clerkClient.users.getUserList();
+    return createSuccessResponse(users, 200);
   } catch (error) {
-    const errorResponse: ErrorResponse = {
-      message: "Error fetching reimbursements",
-    };
-    return NextResponse.json(errorResponse, { status: 404 });
+    return createErrorResponse(error, "Error fetching users", 404);
   }
 }
