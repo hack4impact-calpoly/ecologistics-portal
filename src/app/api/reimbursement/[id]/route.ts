@@ -66,7 +66,7 @@ export async function PUT(
     const body: UpdateReimbursementBody = await req.json();
 
     // verify status
-    if (body.status && !(body.status in Status)) {
+    if (body.status && !Object.values(Status).includes(body.status)) {
       return createErrorResponse(null, "Invalid status", 400);
     }
 

@@ -1,23 +1,26 @@
-import { DELETE, PUT } from "@/app/api/reimbursement/[id]/route";
-import { GET, POST } from "@/app/api/reimbursement/route";
+import { DELETE, GET as GET_ID, PUT } from "@/app/api/reimbursement/[id]/route";
+import { GET as GET_ALL, POST } from "@/app/api/reimbursement/route";
+import Alert from "@/database/alert-schema";
 import connectDB from "@/database/db";
 import Reimbursement from "@/database/reimbursement-schema";
+import { imageUpload } from "@/services/image-upload";
+import { User, clerkClient, currentUser } from "@clerk/nextjs/server";
 import { mocked } from "jest-mock";
 import mongoose, { Query } from "mongoose";
 import { NextRequest } from "next/server";
+import { MOCK_ALERT } from "../mocks/alert-mocks";
 import { MOCK_REIMBURSEMENTS } from "../mocks/reimbursement-mocks";
-import { imageUpload } from "@/services/image-upload";
-import { User, clerkClient, currentUser } from "@clerk/nextjs/server";
+import {
+  MOCK_ADMIN_USER,
+  MOCK_SPONSORED_ORG_USER_APPROVED,
+} from "../mocks/user-mocks";
 import {
   createMockFormDataRequest,
   createMockNextRequestWithParams,
   formatMockReimbursementResponse,
   formatMockReimbursementsResponse,
 } from "../test-utils";
-import {
-  MOCK_ADMIN_USER,
-  MOCK_SPONSORED_ORG_USER_APPROVED,
-} from "../mocks/user-mocks";
+import Status from "@/lib/enum";
 
 jest.mock("@aws-sdk/client-s3");
 
@@ -38,6 +41,10 @@ mockedReimbursement.findByIdAndDelete.mockReturnValue({
   orFail: jest.fn().mockResolvedValue(MOCK_REIMBURSEMENTS[0]),
 } as unknown as Query<any, any>);
 mockedReimbursement.prototype.save.mockResolvedValue(MOCK_REIMBURSEMENTS[0]);
+
+jest.mock("@/database/alert-schema");
+const mockedAlert = mocked(Alert);
+mockedAlert.prototype.save.mockResolvedValue(MOCK_ALERT);
 
 jest.mock("@/services/image-upload");
 const mockedImageUpload = mocked(imageUpload);
@@ -60,7 +67,7 @@ describe("Reimbursement API", () => {
 
   describe("GET /api/reimbursement", () => {
     it("returns a list of reimbursements for regular user", async () => {
-      const response = await GET();
+      const response = await GET_ALL();
       const data = await response.json();
       expect(data).toEqual(
         formatMockReimbursementsResponse(MOCK_REIMBURSEMENTS),
@@ -76,7 +83,7 @@ describe("Reimbursement API", () => {
         MOCK_ADMIN_USER as unknown as User,
       );
 
-      const response = await GET();
+      const response = await GET_ALL();
       const data = await response.json();
       expect(data).toEqual(
         formatMockReimbursementsResponse(MOCK_REIMBURSEMENTS),
@@ -88,10 +95,100 @@ describe("Reimbursement API", () => {
     it("returns an error if the db find fails", async () => {
       mockedReimbursement.find.mockRejectedValueOnce("test-error");
 
-      const response = await GET();
+      const response = await GET_ALL();
       const data = await response.json();
       expect(data.error).toEqual("test-error");
       expect(response.status).toBe(404);
+    });
+
+    it("returns an error if user is not found", async () => {
+      mockedCurrentUser.mockResolvedValueOnce(null);
+
+      const response = await GET_ALL();
+      const data = await response.json();
+      expect(data.error).toBeNull();
+      expect(data.message).toEqual("Unauthorized");
+      expect(response.status).toBe(401);
+    });
+  });
+
+  describe("GET /api/reimbursement/:id", () => {
+    it("returns a single reimbursement", async () => {
+      const reimbursementId = MOCK_REIMBURSEMENTS[0]._id.toString();
+      const { req, res } = createMockNextRequestWithParams(
+        {},
+        reimbursementId,
+        "GET",
+      );
+
+      const response = await GET_ID(req as unknown as NextRequest, {
+        params: { id: reimbursementId },
+      });
+      const data = await response.json();
+      expect(data).toEqual(
+        formatMockReimbursementResponse(MOCK_REIMBURSEMENTS[0]),
+      );
+      expect(response.status).toBe(200);
+      expect(mockedReimbursement.findById).toBeCalledWith(reimbursementId);
+    });
+
+    it("returns a single reimbursement for admin user", async () => {
+      mockedCurrentUser.mockResolvedValueOnce(
+        MOCK_ADMIN_USER as unknown as User,
+      );
+      const reimbursementId = MOCK_REIMBURSEMENTS[0]._id.toString();
+      const { req, res } = createMockNextRequestWithParams(
+        {},
+        reimbursementId,
+        "GET",
+      );
+
+      const response = await GET_ID(req as unknown as NextRequest, {
+        params: { id: reimbursementId },
+      });
+      const data = await response.json();
+      expect(data).toEqual(
+        formatMockReimbursementResponse(MOCK_REIMBURSEMENTS[0]),
+      );
+      expect(response.status).toBe(200);
+      expect(mockedReimbursement.findById).toBeCalledWith(reimbursementId);
+    });
+
+    it("returns an error if reimbursement not found", async () => {
+      const { req, res } = createMockNextRequestWithParams(
+        {},
+        "nonexistentid",
+        "GET",
+      );
+
+      mockedReimbursement.findById.mockReturnValueOnce({
+        orFail: jest.fn().mockRejectedValue("test-error"),
+      } as unknown as Query<any, any>);
+
+      const response = await GET_ID(req as unknown as NextRequest, {
+        params: { id: "nonexistentid" },
+      });
+      const data = await response.json();
+      expect(data.error).toEqual("test-error");
+      expect(response.status).toBe(404);
+    });
+
+    it("returns an error if user is not found", async () => {
+      mockedCurrentUser.mockResolvedValueOnce(null);
+      const reimbursementId = MOCK_REIMBURSEMENTS[0]._id.toString();
+      const { req, res } = createMockNextRequestWithParams(
+        {},
+        reimbursementId,
+        "GET",
+      );
+
+      const response = await GET_ID(req as unknown as NextRequest, {
+        params: { id: reimbursementId },
+      });
+      const data = await response.json();
+      expect(data.error).toBeNull();
+      expect(data.message).toEqual("Unauthorized");
+      expect(response.status).toBe(401);
     });
   });
 
@@ -112,6 +209,17 @@ describe("Reimbursement API", () => {
       expect(mockedReimbursement.prototype.save).toBeCalled();
     });
 
+    it("returns an error if no image is provided", async () => {
+      const reqData = formatMockReimbursementResponse(MOCK_REIMBURSEMENTS[0]);
+      const { req } = createMockFormDataRequest(reqData);
+
+      const response = await POST(req as unknown as NextRequest);
+      const data = await response.json();
+      expect(data.error).toBeNull();
+      expect(data.message).toEqual("No image provided");
+      expect(response.status).toBe(400);
+    });
+
     it("returns an error if db save fails", async () => {
       mockedReimbursement.prototype.save.mockRejectedValueOnce("test-error");
       const reqData = formatMockReimbursementResponse(MOCK_REIMBURSEMENTS[0]);
@@ -124,6 +232,21 @@ describe("Reimbursement API", () => {
       const data = await response.json();
       expect(data.error).toEqual("test-error");
       expect(response.status).toBe(500);
+    });
+
+    it("returns an error if user is not found", async () => {
+      mockedCurrentUser.mockResolvedValueOnce(null);
+      const reqData = formatMockReimbursementResponse(MOCK_REIMBURSEMENTS[0]);
+      const { req } = createMockFormDataRequest({
+        ...reqData,
+        file: "test-file",
+      });
+
+      const response = await POST(req as unknown as NextRequest);
+      const data = await response.json();
+      expect(data.error).toBeNull();
+      expect(data.message).toEqual("Unauthorized");
+      expect(response.status).toBe(401);
     });
   });
 
@@ -154,6 +277,51 @@ describe("Reimbursement API", () => {
       );
     });
 
+    it("updates the status and creates an alert", async () => {
+      const updateData = { status: Status.Paid };
+      const reimbursementId = MOCK_REIMBURSEMENTS[0]._id.toString();
+      const { req, res } = createMockNextRequestWithParams(
+        updateData,
+        reimbursementId,
+        "PUT",
+      );
+
+      const response = await PUT(req as unknown as NextRequest, {
+        params: { id: reimbursementId },
+      });
+      const data = await response.json();
+      expect(data).toEqual(
+        formatMockReimbursementResponse(MOCK_REIMBURSEMENTS[0]),
+      );
+      expect(response.status).toBe(200);
+      expect(mockedReimbursement.findByIdAndUpdate).toBeCalledWith(
+        reimbursementId,
+        {
+          $set: { ...MOCK_REIMBURSEMENTS[0], ...updateData, _id: undefined },
+        },
+        { new: true },
+      );
+      expect(mockedAlert.prototype.save).toBeCalled();
+    });
+
+    it("returns an error if status is invalid", async () => {
+      const updateData = { status: "Invalid Status" };
+      const reimbursementId = MOCK_REIMBURSEMENTS[0]._id.toString();
+      const { req, res } = createMockNextRequestWithParams(
+        updateData,
+        reimbursementId,
+        "PUT",
+      );
+
+      const response = await PUT(req as unknown as NextRequest, {
+        params: { id: reimbursementId },
+      });
+      const data = await response.json();
+      expect(data.error).toBeNull();
+      expect(data.message).toEqual("Invalid status");
+      expect(response.status).toBe(400);
+    });
+
     it("returns an error if reimbursement not found", async () => {
       const updateData = { recipientName: "Updated Name" };
       const { req, res } = createMockNextRequestWithParams(
@@ -172,6 +340,25 @@ describe("Reimbursement API", () => {
       const data = await response.json();
       expect(data.error).toEqual("test-error");
       expect(response.status).toBe(500);
+    });
+
+    it("returns an error if user is not found", async () => {
+      mockedCurrentUser.mockResolvedValueOnce(null);
+      const updateData = { recipientName: "Updated Name" };
+      const reimbursementId = MOCK_REIMBURSEMENTS[0]._id.toString();
+      const { req, res } = createMockNextRequestWithParams(
+        updateData,
+        reimbursementId,
+        "PUT",
+      );
+
+      const response = await PUT(req as unknown as NextRequest, {
+        params: { id: reimbursementId },
+      });
+      const data = await response.json();
+      expect(data.error).toBeNull();
+      expect(data.message).toEqual("Unauthorized");
+      expect(response.status).toBe(401);
     });
   });
 
