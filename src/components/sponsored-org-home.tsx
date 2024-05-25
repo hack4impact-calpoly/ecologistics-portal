@@ -36,7 +36,7 @@ export default function SponsoredHomePage() {
   return (
     <main className="px-14 py-12 h-screen overflow-y-auto w-full">
       <div className="flex items-center justify-between">
-        <div className="flex gap-x-6 items-center">
+        <div className="flex gap-x-6">
           <h1 className="font-bold text-4xl">{orgInfo.name}</h1>
           <Popup
             name={orgInfo.name}
@@ -53,9 +53,7 @@ export default function SponsoredHomePage() {
           Request Reimbursement
         </Button>
       </div>
-      <div className="flex flex-col mt-8">
-        <SponsoredOrgTable />
-      </div>
+      <SponsoredOrgTable />
     </main>
   );
 }

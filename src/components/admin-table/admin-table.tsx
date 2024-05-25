@@ -173,7 +173,7 @@ export default function AdminTable() {
   return (
     <>
       <ScrollArea
-        className={`h-[calc(90h-186px)] w-[calc(95vw-81px)] whitespace-nowrap`}
+        className={`h-[calc(90vh-186px)] w-[calc(95vw-81px)] whitespace-nowrap`}
       >
         <div className="flex justify-between space-x-1 w-full mb-5 text-gray-400">
           <div className="flex flex-col w-[25%] min-w-[20rem]">
