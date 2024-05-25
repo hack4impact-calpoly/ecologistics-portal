@@ -1,7 +1,8 @@
 import { verifyAdmin } from "@/lib/admin";
+import { ErrorResponse } from "@/lib/error";
 import { createErrorResponse, createSuccessResponse } from "@/lib/response";
 import { User, clerkClient, currentUser } from "@clerk/nextjs/server";
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export type UpdateUserBody = {
   privateMetadata?: UserPrivateMetadata;
@@ -10,7 +11,10 @@ export type UpdateUserBody = {
 };
 export type UpdateUserResponse = User;
 
-export async function PUT(req: NextRequest, { params }: any) {
+export async function PUT(
+  req: NextRequest,
+  { params }: any,
+): Promise<NextResponse<UpdateUserResponse | ErrorResponse>> {
   // Verify that the request user is an admin
   const user = await currentUser();
   if (!verifyAdmin(user)) {

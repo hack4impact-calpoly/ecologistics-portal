@@ -20,10 +20,7 @@ export async function DELETE(
   const { id } = params;
   await connectDB();
   try {
-    const alert = await Alert.findByIdAndDelete(id);
-    if (!alert) {
-      return createErrorResponse(null, "Alert not found", 404);
-    }
+    const alert = await Alert.findByIdAndDelete(id).orFail();
     return createSuccessResponse(alert, 200);
   } catch (error) {
     return createErrorResponse(error, "Error deleting alert", 404);

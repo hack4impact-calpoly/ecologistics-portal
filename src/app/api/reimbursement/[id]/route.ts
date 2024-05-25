@@ -1,30 +1,17 @@
-import connectDB from "@/database/db";
-import { NextRequest, NextResponse } from "next/server";
-import { ErrorResponse } from "@/lib/error";
-import Reimbursement from "@/database/reimbursement-schema";
-import Status from "@/lib/enum";
-import { CreateAlertResponse } from "../../alert/[id]/route";
 import Alert from "@/database/alert-schema";
-
-export type UpdateReimbursementBody = {
-  organization?: string;
-  reportName?: string;
-  recipientName?: string;
-  recipientEmail?: string;
-  transactionDate?: Date;
-  amount?: number;
-  paymentMethod?: string;
-  purpose?: string;
-  receiptLink?: string;
-  status?: string;
-  comment?: string;
-};
+import connectDB from "@/database/db";
+import Reimbursement from "@/database/reimbursement-schema";
+import { verifyAdmin } from "@/lib/admin";
+import Status from "@/lib/enum";
+import { ErrorResponse } from "@/lib/error";
+import { createErrorResponse, createSuccessResponse } from "@/lib/response";
+import { currentUser } from "@clerk/nextjs/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export type GetReimbursementResponse = Reimbursement;
-export type UpdateReimbursementResponse = Reimbursement | null;
-export type DeleteReimbursementResponse = {
-  message: string;
-};
+export type UpdateReimbursementBody = Partial<Reimbursement>;
+export type UpdateReimbursementResponse = Reimbursement;
+export type DeleteReimbursementResponse = Reimbursement;
 
 export type IParams = {
   params: {
@@ -32,47 +19,65 @@ export type IParams = {
   };
 };
 
-export async function GET(req: NextRequest, { params }: IParams) {
+export async function GET(
+  req: NextRequest,
+  { params }: IParams,
+): Promise<NextResponse<GetReimbursementResponse | ErrorResponse>> {
+  const user = await currentUser();
+  if (!user) {
+    return createErrorResponse(null, "Unauthorized", 401);
+  }
   await connectDB();
-  const { id } = params; // Extract the id from params
-
+  const { id } = params;
   try {
-    const reimburse: GetReimbursementResponse =
+    const reimbursement: GetReimbursementResponse =
       await Reimbursement.findById(id).orFail();
-    return NextResponse.json(reimburse, { status: 200 });
+    // verify that user is admin or creator of reimbursement
+    if (!verifyAdmin(user) && reimbursement.clerkUserId !== user.id) {
+      return createErrorResponse(null, "Unauthorized", 401);
+    }
+    return createSuccessResponse(reimbursement, 200);
   } catch (error) {
-    const errorResponse: ErrorResponse = {
-      message: "Reimbursement Not Found",
-    };
-    return NextResponse.json(errorResponse, { status: 404 });
+    return createErrorResponse(error, "Error fetching reimbursement", 404);
   }
 }
 
-export async function PUT(req: NextRequest, { params }: IParams) {
+const createAlert = (
+  body: UpdateReimbursementBody,
+  currentReimbursement: Reimbursement,
+): Promise<Alert> =>
+  new Alert({
+    userId: body.clerkUserId,
+    title: body.reportName,
+    description: `Status: ${body.status || currentReimbursement.status}\nComment: ${body.comment || currentReimbursement.comment || "N/A"}`,
+  }).save();
+
+export async function PUT(
+  req: NextRequest,
+  { params }: IParams,
+): Promise<NextResponse<UpdateReimbursementResponse | ErrorResponse>> {
+  const user = await currentUser();
+  if (!user) {
+    return createErrorResponse(null, "Unauthorized", 401);
+  }
   await connectDB();
   const { id } = params;
   try {
     const body: UpdateReimbursementBody = await req.json();
-    const currentReimbursement = await Reimbursement.findById(id);
 
+    // verify status
     if (body.status && !(body.status in Status)) {
-      const errorResponse: ErrorResponse = {
-        message: "Status is not valid or undefined",
-      };
-      return NextResponse.json(errorResponse, { status: 404 });
+      return createErrorResponse(null, "Invalid status", 400);
     }
 
+    // create alert if status or comment is updated
+    const currentReimbursement: Reimbursement =
+      await Reimbursement.findById(id).orFail();
     if (
       (body.status && body.status !== currentReimbursement.status) ||
       (body.comment && body.comment !== currentReimbursement.comment)
     ) {
-      const newAlert: CreateAlertResponse = await new Alert({
-        userId: currentReimbursement.clerkUserId,
-        title: currentReimbursement.reportName,
-        description: `Status: ${
-          body.status || currentReimbursement.status
-        }\nComment: ${body.comment || currentReimbursement.comment || "N/A"}`,
-      }).save();
+      await createAlert(body, currentReimbursement);
     }
 
     const reimbursement: UpdateReimbursementResponse =
@@ -80,8 +85,7 @@ export async function PUT(req: NextRequest, { params }: IParams) {
         id,
         {
           $set: {
-            organization:
-              body.organization || currentReimbursement.organization,
+            clerkUserId: body.clerkUserId || currentReimbursement.clerkUserId,
             reportName: body.reportName || currentReimbursement.reportName,
             recipientName:
               body.recipientName || currentReimbursement.recipientName,
@@ -99,34 +103,24 @@ export async function PUT(req: NextRequest, { params }: IParams) {
           },
         },
         { new: true },
-      );
-
-    if (!reimbursement) {
-      throw new Error("Reimbursement Not Found");
-    }
-
-    return NextResponse.json(reimbursement, { status: 200 });
+      ).orFail();
+    return createSuccessResponse(reimbursement, 200);
   } catch (error) {
-    const errorResponse: ErrorResponse = {
-      message: "Unable to update reimbursement",
-    };
-    return NextResponse.json(errorResponse, { status: 500 });
+    return createErrorResponse(error, "Error updating reimbursement", 404);
   }
 }
 
-export async function DELETE(req: NextRequest, { params }: IParams) {
+export async function DELETE(
+  req: NextRequest,
+  { params }: IParams,
+): Promise<NextResponse<DeleteReimbursementResponse | ErrorResponse>> {
   await connectDB();
   const { id } = params;
   try {
-    await Reimbursement.findByIdAndDelete(id);
-    const response: DeleteReimbursementResponse = {
-      message: "Reimbursement successfully deleted",
-    };
-    return NextResponse.json(response, { status: 200 });
+    const reimbursement: DeleteReimbursementResponse =
+      await Reimbursement.findByIdAndDelete(id).orFail();
+    return createSuccessResponse(reimbursement, 200);
   } catch (error) {
-    const errorResponse: ErrorResponse = {
-      message: "Unable to delete reimbursement",
-    };
-    return NextResponse.json(errorResponse, { status: 500 });
+    return createErrorResponse(error, "Error deleting reimbursement", 404);
   }
 }
