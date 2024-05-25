@@ -157,6 +157,21 @@ describe("Reimbursement API", () => {
       expect(response.status).toBe(404);
     });
 
+    it("returns an error if user does not have permission", async () => {
+      mockedReimbursement.findById.mockReturnValueOnce({
+        orFail: jest.fn().mockResolvedValue(MOCK_REIMBURSEMENTS[1]),
+      } as unknown as Query<any, any>);
+      const reimbursementId = MOCK_REIMBURSEMENTS[1]._id.toString();
+
+      const response = await GET_ID({} as unknown as NextRequest, {
+        params: { id: reimbursementId },
+      });
+      const data = await response.json();
+      expect(data.error).toBeNull();
+      expect(data.message).toEqual("Unauthorized");
+      expect(response.status).toBe(401);
+    });
+
     it("returns an error if user is not found", async () => {
       mockedCurrentUser.mockResolvedValueOnce(null);
       const reimbursementId = MOCK_REIMBURSEMENTS[0]._id.toString();
@@ -289,7 +304,7 @@ describe("Reimbursement API", () => {
       expect(response.status).toBe(400);
     });
 
-    it("returns an error if reimbursement not found", async () => {
+    it("returns an error if db update fails", async () => {
       const updateData = { recipientName: "Updated Name" };
       const { req } = createMockNextRequest(updateData);
 
@@ -303,6 +318,23 @@ describe("Reimbursement API", () => {
       const data = await response.json();
       expect(data.error).toEqual("test-error");
       expect(response.status).toBe(500);
+    });
+
+    it("return an error if user does not have permission", async () => {
+      mockedReimbursement.findById.mockReturnValueOnce({
+        orFail: jest.fn().mockResolvedValue(MOCK_REIMBURSEMENTS[1]),
+      } as unknown as Query<any, any>);
+      const updateData = { recipientName: "Updated Name" };
+      const reimbursementId = MOCK_REIMBURSEMENTS[1]._id.toString();
+      const { req } = createMockNextRequest(updateData);
+
+      const response = await PUT(req as unknown as NextRequest, {
+        params: { id: reimbursementId },
+      });
+      const data = await response.json();
+      expect(data.error).toBeNull();
+      expect(data.message).toEqual("Unauthorized");
+      expect(response.status).toBe(401);
     });
 
     it("returns an error if user is not found", async () => {
@@ -338,6 +370,25 @@ describe("Reimbursement API", () => {
       );
     });
 
+    it("deletes a reimbursement for admin user", async () => {
+      mockedCurrentUser.mockResolvedValueOnce(
+        MOCK_ADMIN_USER as unknown as User,
+      );
+      const reimbursementId = MOCK_REIMBURSEMENTS[0]._id.toString();
+
+      const response = await DELETE({} as unknown as NextRequest, {
+        params: { id: reimbursementId },
+      });
+      const data = await response.json();
+      expect(data).toEqual(
+        formatMockReimbursementResponse(MOCK_REIMBURSEMENTS[0]),
+      );
+      expect(response.status).toBe(200);
+      expect(mockedReimbursement.findByIdAndDelete).toBeCalledWith(
+        reimbursementId,
+      );
+    });
+
     it("returns an error if unable to delete", async () => {
       mockedReimbursement.findByIdAndDelete.mockReturnValueOnce({
         orFail: jest.fn().mockRejectedValue("test-error"),
@@ -349,6 +400,34 @@ describe("Reimbursement API", () => {
       const data = await response.json();
       expect(data.error).toEqual("test-error");
       expect(response.status).toBe(404);
+    });
+
+    it("returns an error if user does not have permission", async () => {
+      mockedReimbursement.findById.mockReturnValueOnce({
+        orFail: jest.fn().mockResolvedValue(MOCK_REIMBURSEMENTS[1]),
+      } as unknown as Query<any, any>);
+      const reimbursementId = MOCK_REIMBURSEMENTS[1]._id.toString();
+
+      const response = await DELETE({} as unknown as NextRequest, {
+        params: { id: reimbursementId },
+      });
+      const data = await response.json();
+      expect(data.error).toBeNull();
+      expect(data.message).toEqual("Unauthorized");
+      expect(response.status).toBe(401);
+    });
+
+    it("returns an error if user is not found", async () => {
+      mockedCurrentUser.mockResolvedValueOnce(null);
+      const reimbursementId = MOCK_REIMBURSEMENTS[0]._id.toString();
+
+      const response = await DELETE({} as unknown as NextRequest, {
+        params: { id: reimbursementId },
+      });
+      const data = await response.json();
+      expect(data.error).toBeNull();
+      expect(data.message).toEqual("Unauthorized");
+      expect(response.status).toBe(401);
     });
   });
 });

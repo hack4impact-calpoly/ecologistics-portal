@@ -70,9 +70,14 @@ export async function PUT(
       return createErrorResponse(null, "Invalid status", 400);
     }
 
-    // create alert if status or comment is updated
+    // verify that user is admin or creator of reimbursement
     const currentReimbursement: Reimbursement =
       await Reimbursement.findById(id).orFail();
+    if (!verifyAdmin(user) && currentReimbursement.clerkUserId !== user.id) {
+      return createErrorResponse(null, "Unauthorized", 401);
+    }
+
+    // create alert if status or comment is updated
     if (
       (body.status && body.status !== currentReimbursement.status) ||
       (body.comment && body.comment !== currentReimbursement.comment)
@@ -114,11 +119,20 @@ export async function DELETE(
   req: NextRequest,
   { params }: IParams,
 ): Promise<NextResponse<DeleteReimbursementResponse | ErrorResponse>> {
+  const user = await currentUser();
+  if (!user) {
+    return createErrorResponse(null, "Unauthorized", 401);
+  }
   await connectDB();
   const { id } = params;
   try {
     const reimbursement: DeleteReimbursementResponse =
-      await Reimbursement.findByIdAndDelete(id).orFail();
+      await Reimbursement.findById(id).orFail();
+    // verify that user is admin or creator of reimbursement
+    if (!verifyAdmin(user) && reimbursement.clerkUserId !== user.id) {
+      return createErrorResponse(null, "Unauthorized", 401);
+    }
+    await Reimbursement.findByIdAndDelete(id).orFail();
     return createSuccessResponse(reimbursement, 200);
   } catch (error) {
     return createErrorResponse(error, "Error deleting reimbursement", 404);
