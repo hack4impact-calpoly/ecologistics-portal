@@ -8,7 +8,7 @@ export async function GET() {
     return NextResponse.json(response);
   } catch (error) {
     const errorResponse: ErrorResponse = {
-      error: "Error fetching reimbursements",
+      message: "Error fetching reimbursements",
     };
     return NextResponse.json(errorResponse, { status: 404 });
   }

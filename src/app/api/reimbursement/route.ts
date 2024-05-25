@@ -19,7 +19,7 @@ export async function GET() {
   const user = await currentUser();
   if (!user) {
     const errorResponse: ErrorResponse = {
-      error: "Unauthorized User",
+      message: "Unauthorized User",
     };
     return NextResponse.json(errorResponse, { status: 404 });
   }
@@ -32,7 +32,7 @@ export async function GET() {
     return NextResponse.json(reimbursements);
   } catch (error) {
     const errorResponse: ErrorResponse = {
-      error: "Error fetching reimbursements",
+      message: "Error fetching reimbursements",
     };
     return NextResponse.json(errorResponse, { status: 404 });
   }
@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
     //validate input
     if (!requestData) {
       const errorResponse: ErrorResponse = {
-        error: "No Body in Post Req",
+        message: "No Body in Post Req",
       };
       return NextResponse.json(errorResponse, { status: 400 });
     }
@@ -80,7 +80,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(reimbursement);
   } catch (error) {
     const errorResponse: ErrorResponse = {
-      error: "Post Failed",
+      message: "Post Failed",
     };
     console.log(error);
     return NextResponse.json(errorResponse, { status: 400 });

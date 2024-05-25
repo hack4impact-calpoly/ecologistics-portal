@@ -1,12 +1,10 @@
-import connectDB from "@/database/db";
-import { NextRequest, NextResponse } from "next/server";
-import { ErrorResponse } from "@/lib/error";
-// import { NextApiRequest, NextApiResponse } from "next";
 import Alert from "@/database/alert-schema";
+import connectDB from "@/database/db";
+import { ErrorResponse } from "@/lib/error";
+import { createErrorResponse, createSuccessResponse } from "@/lib/response";
+import { NextRequest, NextResponse } from "next/server";
 
-export type CreateAlertBody = Alert;
-export type GetAlertResponse = Alert[]; // There might me multiple responses
-export type CreateAlertResponse = Alert;
+export type DeleteAlertResponse = Alert;
 
 export type IParams = {
   params: {
@@ -14,53 +12,20 @@ export type IParams = {
   };
 };
 
-//Get all Reimbursements
-export async function GET(req: NextRequest, { params }: IParams) {
-  await connectDB();
+// Delete an alert
+export async function DELETE(
+  req: NextRequest,
+  { params }: IParams,
+): Promise<NextResponse<DeleteAlertResponse | ErrorResponse>> {
   const { id } = params;
-  try {
-    const alerts: GetAlertResponse = await Alert.find({ userId: id });
-    return NextResponse.json(alerts);
-  } catch (error) {
-    const errorResponse: ErrorResponse = {
-      error: "Error fetching alerts",
-    };
-    return NextResponse.json(errorResponse, { status: 404 });
-  }
-}
-
-//Post Reimbursement
-export async function POST(req: NextRequest) {
   await connectDB();
   try {
-    const alert: CreateAlertBody = await req.json();
-    //validate input
+    const alert = await Alert.findByIdAndDelete(id);
     if (!alert) {
-      const errorResponse: ErrorResponse = {
-        error: "No Body in Post Req",
-      };
-      return NextResponse.json(errorResponse, { status: 400 });
+      return createErrorResponse(null, "Alert not found", 404);
     }
-    const alerted: CreateAlertResponse = await new Alert(alert).save();
-    return NextResponse.json(alert);
+    return createSuccessResponse(alert, 200);
   } catch (error) {
-    const errorResponse: ErrorResponse = {
-      error: "Post Failed",
-    };
-    return NextResponse.json(errorResponse, { status: 400 });
-  }
-}
-
-export async function DELETE(req: NextRequest) {
-  await connectDB();
-  const id = req.nextUrl.searchParams.get("id");
-  try {
-    await Alert.findByIdAndDelete(id); // not the clerk id but the actual id of the document
-    return NextResponse.json("Succesfully Deleted Alert", { status: 200 });
-  } catch (error) {
-    const errorResponse: ErrorResponse = {
-      error: "Error Deleteing Alert",
-    };
-    return NextResponse.json(errorResponse, { status: 404 });
+    return createErrorResponse(error, "Error deleting alert", 404);
   }
 }

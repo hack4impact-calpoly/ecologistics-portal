@@ -12,7 +12,7 @@ export async function PUT(req: NextRequest, { params }: any) {
     return NextResponse.json(response, { status: 200 });
   } catch (err) {
     const errorResponse: ErrorResponse = {
-      error: `Could not update user ${id}`,
+      message: `Could not update user ${id}`,
     };
     return NextResponse.json(errorResponse, { status: 404 });
   }

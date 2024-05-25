@@ -42,7 +42,7 @@ export async function GET(req: NextRequest, { params }: IParams) {
     return NextResponse.json(reimburse, { status: 200 });
   } catch (error) {
     const errorResponse: ErrorResponse = {
-      error: "Reimbursement Not Found",
+      message: "Reimbursement Not Found",
     };
     return NextResponse.json(errorResponse, { status: 404 });
   }
@@ -57,7 +57,7 @@ export async function PUT(req: NextRequest, { params }: IParams) {
 
     if (body.status && !(body.status in Status)) {
       const errorResponse: ErrorResponse = {
-        error: "Status is not valid or undefined",
+        message: "Status is not valid or undefined",
       };
       return NextResponse.json(errorResponse, { status: 404 });
     }
@@ -108,7 +108,7 @@ export async function PUT(req: NextRequest, { params }: IParams) {
     return NextResponse.json(reimbursement, { status: 200 });
   } catch (error) {
     const errorResponse: ErrorResponse = {
-      error: "Unable to update reimbursement",
+      message: "Unable to update reimbursement",
     };
     return NextResponse.json(errorResponse, { status: 500 });
   }
@@ -125,7 +125,7 @@ export async function DELETE(req: NextRequest, { params }: IParams) {
     return NextResponse.json(response, { status: 200 });
   } catch (error) {
     const errorResponse: ErrorResponse = {
-      error: "Unable to delete reimbursement",
+      message: "Unable to delete reimbursement",
     };
     return NextResponse.json(errorResponse, { status: 500 });
   }

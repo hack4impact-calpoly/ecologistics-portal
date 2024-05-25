@@ -8,7 +8,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(organizations);
   } catch (error: any) {
     const errorResponse: ErrorResponse = {
-      error: `Error fetching organizations: ${error.message}`,
+      message: `Error fetching organizations: ${error.message}`,
     };
     return NextResponse.json(errorResponse, { status: 404 });
   }
