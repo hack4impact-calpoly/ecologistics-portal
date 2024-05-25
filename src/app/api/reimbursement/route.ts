@@ -83,6 +83,6 @@ export async function POST(
     }).save();
     return createSuccessResponse(reimbursement, 200);
   } catch (error) {
-    return createErrorResponse(error, "Error creating reimbursement", 404);
+    return createErrorResponse(error, "Error creating reimbursement", 500);
   }
 }

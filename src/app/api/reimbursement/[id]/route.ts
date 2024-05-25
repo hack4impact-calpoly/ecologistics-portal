@@ -106,7 +106,7 @@ export async function PUT(
       ).orFail();
     return createSuccessResponse(reimbursement, 200);
   } catch (error) {
-    return createErrorResponse(error, "Error updating reimbursement", 404);
+    return createErrorResponse(error, "Error updating reimbursement", 500);
   }
 }
 
