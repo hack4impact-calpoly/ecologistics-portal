@@ -6,7 +6,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Image from "next/image";
-import Reimbursement from "@/database/reimbursement-schema";
+import Reimbursement from "@/models/reimbursement";
 import StatusBadge from "./status-badge";
 import Status from "@/lib/enum";
 

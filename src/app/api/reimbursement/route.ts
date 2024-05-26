@@ -1,88 +1,88 @@
 import connectDB from "@/database/db";
-import { ErrorResponse } from "@/lib/error";
-import { NextRequest, NextResponse } from "next/server";
-// import { NextApiRequest, NextApiResponse } from "next";
-import Reimbursement from "@/database/reimbursement-schema";
+import { Organization } from "@/models/organization";
+import Reimbursement from "@/models/reimbursement";
+import { verifyAdmin } from "@/lib/admin";
 import Status from "@/lib/enum";
-import { imageUpload } from "@/services/image-upload";
-import { clerkClient } from "@clerk/nextjs/server";
-import { Organization } from "@/database/organization-schema";
-import { currentUser } from "@clerk/nextjs/server";
-
-export type CreateReimbursementBody = Reimbursement;
+import { ErrorResponse } from "@/lib/error";
+import { createErrorResponse, createSuccessResponse } from "@/lib/response";
+import { imageUpload } from "@/services/s3-service";
+import { User, currentUser } from "@clerk/nextjs/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export type GetReimbursementsResponse = Reimbursement[];
+export type CreateReimbursementBody = Reimbursement;
 export type CreateReimbursementResponse = Reimbursement;
 
-//Get all Reimbursements
-export async function GET() {
+// Get all Reimbursements
+export async function GET(): Promise<
+  NextResponse<GetReimbursementsResponse | ErrorResponse>
+> {
   const user = await currentUser();
   if (!user) {
-    const errorResponse: ErrorResponse = {
-      error: "Unauthorized User",
-    };
-    return NextResponse.json(errorResponse, { status: 404 });
+    return createErrorResponse(null, "Unauthorized", 401);
   }
-
   await connectDB();
   try {
-    const reimbursements: GetReimbursementsResponse = user.publicMetadata.admin
-      ? await Reimbursement.find()
-      : await Reimbursement.find({ clerkUserId: user.id });
-    return NextResponse.json(reimbursements);
+    // return all reimbursements if user is admin
+    if (verifyAdmin(user)) {
+      const reimbursements: GetReimbursementsResponse =
+        await Reimbursement.find();
+      return createSuccessResponse(reimbursements, 200);
+    }
+    // return only the reimbursements of the logged in user
+    const reimbursements: GetReimbursementsResponse = await Reimbursement.find({
+      clerkUserId: user.id,
+    });
+    return createSuccessResponse(reimbursements, 200);
   } catch (error) {
-    const errorResponse: ErrorResponse = {
-      error: "Error fetching reimbursements",
-    };
-    return NextResponse.json(errorResponse, { status: 404 });
+    return createErrorResponse(error, "Error fetching reimbursements", 404);
   }
 }
 
-//Post Reimbursement
-export async function POST(req: NextRequest) {
+const createReportName = (user: User): string => {
+  const organizationName = (user.unsafeMetadata.organization as Organization)
+    ?.name;
+  return `${organizationName || "Unknown Organization"} - ${new Date().toDateString()}`;
+};
+
+// Create a Reimbursement
+export async function POST(
+  req: NextRequest,
+): Promise<NextResponse<CreateReimbursementResponse | ErrorResponse>> {
+  const user = await currentUser();
+  if (!user) {
+    return createErrorResponse(null, "Unauthorized", 401);
+  }
   await connectDB();
   try {
-    const requestData = await req.formData();
-    //validate input
-    if (!requestData) {
-      const errorResponse: ErrorResponse = {
-        error: "No Body in Post Req",
-      };
-      return NextResponse.json(errorResponse, { status: 400 });
-    }
+    // get multipart form data
+    const formData = await req.formData();
 
     // upload image to S3
-    const receiptLink = await imageUpload(
-      requestData.get("file"),
-      "reimbursment",
-    );
+    const image = formData.get("file");
+    if (!image) {
+      return createErrorResponse(null, "No image provided", 400);
+    }
+    const receiptLink = await imageUpload(image as Blob, "reimbursment");
 
     // create report name
-    const clerkUserId = requestData.get("clerkUserId") as string;
-    const clerkUser = await clerkClient.users.getUser(clerkUserId);
-    const organizationName = (
-      clerkUser.unsafeMetadata.organization as Organization
-    ).name;
-    const reportName = `${organizationName} - ${new Date().toDateString()}`;
+    const reportName = createReportName(user);
 
+    // create reimbursement
     const reimbursement: CreateReimbursementResponse = await new Reimbursement({
-      clerkUserId,
+      clerkUserId: user.id,
       reportName,
-      recipientName: requestData.get("recipientName") as string,
-      recipientEmail: requestData.get("recipientEmail") as string,
-      transactionDate: Date.parse(requestData.get("transactionDate") as string),
-      amount: parseFloat(requestData.get("amount") as string),
-      paymentMethod: requestData.get("paymentMethod") as string,
-      purpose: requestData.get("purpose") as string,
+      recipientName: String(formData.get("recipientName")),
+      recipientEmail: String(formData.get("recipientEmail")),
+      transactionDate: Date.parse(String(formData.get("transactionDate"))),
+      amount: parseFloat(String(formData.get("amount"))),
+      paymentMethod: String(formData.get("paymentMethod")),
+      purpose: String(formData.get("purpose")),
       receiptLink: receiptLink,
       status: Status.Pending,
     }).save();
-    return NextResponse.json(reimbursement);
+    return createSuccessResponse(reimbursement, 200);
   } catch (error) {
-    const errorResponse: ErrorResponse = {
-      error: "Post Failed",
-    };
-    console.log(error);
-    return NextResponse.json(errorResponse, { status: 400 });
+    return createErrorResponse(error, "Error creating reimbursement", 500);
   }
 }

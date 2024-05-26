@@ -1,9 +1,9 @@
-import Reimbursement from "@/database/reimbursement-schema";
+import Reimbursement from "@/models/reimbursement";
 import { Types } from "mongoose";
 
 export const MOCK_REIMBURSEMENTS: Reimbursement[] = [
   {
-    clerkUserId: "6",
+    clerkUserId: "test",
     reportName: "examplename",
     recipientName: "Steve Jones",
     recipientEmail: "steve@yahoo.com",

@@ -11,8 +11,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Organization } from "@/database/organization-schema";
-import Reimbursement from "@/database/reimbursement-schema";
+import { Organization } from "@/models/organization";
+import Reimbursement from "@/models/reimbursement";
 import { dateFilterFn, fuzzyFilter } from "@/lib/utils";
 import { User } from "@clerk/nextjs/server";
 import {
@@ -187,10 +187,16 @@ export default function AdminTable() {
     return Array.from(values) as string[];
   };
 
-  const handleDateRangeChange = (range: DateRange) => {
-    table.getColumn("transactionDate")?.setFilterValue(() => {
-      return [range.from, range.to];
-    });
+  const handleDateRangeChange = (range?: DateRange) => {
+    if (range) {
+      table.getColumn("transactionDate")?.setFilterValue(() => {
+        return [range.from, range.to];
+      });
+    } else {
+      table.getColumn("transactionDate")?.setFilterValue(() => {
+        return undefined;
+      });
+    }
   };
 
   if (isLoading) {
