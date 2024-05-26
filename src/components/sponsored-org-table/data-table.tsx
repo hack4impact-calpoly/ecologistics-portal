@@ -125,14 +125,13 @@ export function DataTable<TData, TValue>({
           />
         </div>
         <div className="flex pl-3">
-          <div>
+          <div className="w-40">
             <TableColumnFilterDropdown
-              className=""
               table={table}
               identifier="status"
               title="Status"
               values={["Pending", "Declined", "On Hold", "Paid"]}
-              placeholder=""
+              placeholder="All"
             />
           </div>
           <div>
