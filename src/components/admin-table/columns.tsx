@@ -1,5 +1,5 @@
 import { formatAmount } from "@/lib/format";
-import { ColumnDef, FilterFnOption } from "@tanstack/react-table";
+import { ColumnDef, FilterFnOption, Row } from "@tanstack/react-table";
 import StatusBadge from "@/components/status-badge";
 import { Button } from "@/components/ui/button";
 import { DownloadIcon } from "@radix-ui/react-icons";
@@ -18,14 +18,14 @@ import {
   HoverCardTrigger,
 } from "@radix-ui/react-hover-card";
 import HelpMenu from "../help-menu";
+import {
+  ReimbursementWithOrganization,
+  fetchOrganizationName,
+} from "./admin-table";
 
 const OrganizationCell = ({ row }: { row: any }) => {
   const [selectedReimbursement, setSelectedReimbursement] =
-    useState<Reimbursement | null>(null);
-
-  useEffect(() => {
-    console.log(row.original);
-  }, []);
+    useState<ReimbursementWithOrganization | null>(null);
 
   const fetchReimbursementInfo = () => {
     const reimbursementId = row.original._id;
@@ -39,6 +39,10 @@ const OrganizationCell = ({ row }: { row: any }) => {
           });
         }
       })
+      .then(async (data) => ({
+        ...data,
+        organization: await fetchOrganizationName(data.clerkUserId),
+      }))
       .then((data) => {
         if (data) {
           setSelectedReimbursement(data);
@@ -46,7 +50,7 @@ const OrganizationCell = ({ row }: { row: any }) => {
       });
   };
 
-  const updateComment = (comment: String) => {
+  const updateComment = (comment: string) => {
     const reimbursementId = row.original._id;
     fetch(`/api/reimbursement/${reimbursementId}`, {
       method: "PUT",
@@ -75,7 +79,7 @@ const OrganizationCell = ({ row }: { row: any }) => {
         {selectedReimbursement ? (
           <>
             <ManageRequestCard
-              {...selectedReimbursement}
+              reimbursement={selectedReimbursement}
               updateComment={updateComment}
             />
           </>
@@ -87,7 +91,7 @@ const OrganizationCell = ({ row }: { row: any }) => {
   );
 };
 
-export const columns: ColumnDef<Reimbursement>[] = [
+export const columns: ColumnDef<ReimbursementWithOrganization>[] = [
   {
     accessorKey: "recipientEmail",
   },
@@ -113,7 +117,7 @@ export const columns: ColumnDef<Reimbursement>[] = [
   {
     accessorKey: "transactionDate",
     header: "Expense Date",
-    filterFn: "dateFilterFn" as FilterFnOption<Reimbursement>,
+    filterFn: "dateFilterFn" as FilterFnOption<ReimbursementWithOrganization>,
     cell: ({ row }) => (
       <div className="capitalize">
         {(() => {
@@ -151,7 +155,7 @@ export const columns: ColumnDef<Reimbursement>[] = [
     ),
   },
   {
-    accessorKey: "documents",
+    accessorKey: "receiptLink",
     header: "Documents",
     cell: ({ row }) => (
       <div className="w-full flex items-center justify-center">

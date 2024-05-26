@@ -11,6 +11,19 @@ export type UpdateUserBody = {
 };
 export type UpdateUserResponse = User;
 
+export async function GET(req: NextRequest, { params }: any) {
+  const { id } = params;
+  try {
+    const response = await clerkClient.users.getUser(id);
+    return NextResponse.json(response, { status: 200 });
+  } catch (err) {
+    const errorResponse: ErrorResponse = {
+      error: `Could not find user ${id}`,
+    };
+    return NextResponse.json(errorResponse, { status: 404 });
+  }
+}
+
 export async function PUT(
   req: NextRequest,
   { params }: any,
