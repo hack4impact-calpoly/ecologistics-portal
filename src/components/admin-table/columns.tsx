@@ -40,9 +40,30 @@ const OrganizationCell = ({ row }: { row: any }) => {
         }
       });
   };
+  const updateStatus = (status: string) => {
+    console.log("we are attempting to update status");
+    console.log("status is now " + status);
+    const reimbursementId = row.original._id;
+    fetch(`/api/reimbursement/${reimbursementId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ status: status }),
+    })
+      .then((response) => response.json())
+      .then(() => {
+        window.location.reload();
+        fetchReimbursementInfo();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   const updateComment = (comment: string) => {
     const reimbursementId = row.original._id;
+    console.log("we are attempting to update comment");
     fetch(`/api/reimbursement/${reimbursementId}`, {
       method: "PUT",
       headers: {
@@ -72,6 +93,7 @@ const OrganizationCell = ({ row }: { row: any }) => {
             <ManageRequestCard
               reimbursement={selectedReimbursement}
               updateComment={updateComment}
+              updateStatus={updateStatus}
             />
           </>
         ) : (

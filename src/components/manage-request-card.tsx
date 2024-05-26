@@ -22,14 +22,16 @@ import {
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { Pencil1Icon } from "@radix-ui/react-icons";
 import { ReimbursementWithOrganization } from "./admin-table/admin-table";
+import Status from "@/lib/enum";
 
 interface ManageRequestCardProps {
   reimbursement: ReimbursementWithOrganization;
   updateComment: (input: string) => void;
+  updateStatus: (input: string) => void;
 }
 
 export default function ManageRequestCard(props: ManageRequestCardProps) {
-  const { reimbursement, updateComment } = props;
+  const { reimbursement, updateComment, updateStatus } = props;
   const [comment, setComment] = useState(reimbursement.comment ?? "");
   const [savedComment, setSavedComment] = useState(reimbursement.comment ?? "");
 
@@ -52,7 +54,10 @@ export default function ManageRequestCard(props: ManageRequestCardProps) {
           </CardDescription>
         </div>
         <div className="flex flex-col w-[9rem]">
-          <StatusDropdown Status={reimbursement.status.toString()} />
+          <StatusDropdown
+            currentStatus={reimbursement.status as Status}
+            onChange={updateStatus}
+          />
           <div className="text-center text-wrap text-ellipsis overflow-hidden">
             {reimbursement.comment}
           </div>

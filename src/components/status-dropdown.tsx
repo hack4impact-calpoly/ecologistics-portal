@@ -12,10 +12,17 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import Status from "@/lib/enum";
 
-export function StatusDropdown({ Status }: { Status: string }) {
+export function StatusDropdown({
+  currentStatus,
+  onChange,
+}: {
+  currentStatus: Status;
+  onChange: (input: string) => void;
+}) {
   // Note this component will need to update the status in the database
-  const [status, setStatus] = useState<string>(Status || "");
+  const [status, setStatus] = useState<string>(currentStatus || "");
 
   // prettier-ignore
   const statusColors: { [key: string]: string } = {
@@ -35,11 +42,26 @@ export function StatusDropdown({ Status }: { Status: string }) {
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
         <DropdownMenuSeparator />
-        <DropdownMenuRadioGroup value={status} onValueChange={setStatus}>
-          <DropdownMenuRadioItem value="Paid">Paid</DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value="Pending">Pending</DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value="On Hold">On Hold</DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value="Declined">
+        <DropdownMenuRadioGroup
+          value={status}
+          onValueChange={(value) => {
+            setStatus(value);
+            onChange(value);
+          }}
+        >
+          <DropdownMenuRadioItem value={Status.Pending}>
+            Pending
+          </DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value={Status.NeedsReview}>
+            Needs Review
+          </DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value={Status.Paid}>
+            Paid
+          </DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value={Status.OnHold}>
+            On Hold
+          </DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value={Status.Declined}>
             Declined
           </DropdownMenuRadioItem>
         </DropdownMenuRadioGroup>
