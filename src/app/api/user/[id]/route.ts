@@ -4,6 +4,7 @@ import { createErrorResponse, createSuccessResponse } from "@/lib/response";
 import { User, clerkClient, currentUser } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 
+export type GetUserResponse = User;
 export type UpdateUserBody = {
   privateMetadata?: UserPrivateMetadata;
   publicMetadata?: UserPublicMetadata;
@@ -11,16 +12,23 @@ export type UpdateUserBody = {
 };
 export type UpdateUserResponse = User;
 
-export async function GET(req: NextRequest, { params }: any) {
+export type IParams = {
+  params: {
+    id: string;
+  };
+};
+
+export async function GET(req: NextRequest, { params }: IParams) {
+  const user = await currentUser();
+  if (!verifyAdmin(user)) {
+    return createErrorResponse(null, "Unauthorized", 401);
+  }
   const { id } = params;
   try {
-    const response = await clerkClient.users.getUser(id);
-    return NextResponse.json(response, { status: 200 });
+    const user = await clerkClient.users.getUser(id);
+    return createSuccessResponse(user, 200);
   } catch (err) {
-    const errorResponse: ErrorResponse = {
-      error: `Could not find user ${id}`,
-    };
-    return NextResponse.json(errorResponse, { status: 404 });
+    return createErrorResponse(err, "Error fetching user", 404);
   }
 }
 
