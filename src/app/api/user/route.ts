@@ -4,8 +4,17 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    const response = await clerkClient.users.getUserList({ limit: 500 });
-    return NextResponse.json(response);
+    const allUsers = [];
+    let users;
+    while (
+      (users = await clerkClient.users.getUserList({
+        limit: 500,
+        offset: allUsers.length,
+      })).length > 0
+    ) {
+      allUsers.push(...users);
+    }
+    return NextResponse.json(allUsers);
   } catch (error) {
     const errorResponse: ErrorResponse = {
       error: "Error fetching reimbursements",

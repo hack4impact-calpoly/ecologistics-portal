@@ -41,7 +41,7 @@ const OrganizationCell = ({ row }: { row: any }) => {
       })
       .then(async (data) => ({
         ...data,
-        organization: await fetchOrganizationName(data.clerkUserId),
+        organization: row.original.name,
       }))
       .then((data) => {
         if (data) {

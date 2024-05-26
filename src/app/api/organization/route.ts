@@ -4,8 +4,17 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
   try {
-    const organizations = await clerkClient.users.getUserList();
-    return NextResponse.json(organizations);
+    const allOrganizations = [];
+    let organization;
+    while (
+      (organization = await clerkClient.users.getUserList({
+        limit: 500,
+        offset: allOrganizations.length,
+      })).length > 0
+    ) {
+      allOrganizations.push(...organization);
+    }
+    return NextResponse.json(allOrganizations);
   } catch (error: any) {
     const errorResponse: ErrorResponse = {
       error: `Error fetching organizations: ${error.message}`,

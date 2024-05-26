@@ -42,6 +42,8 @@ import {
   WidthIcon,
 } from "@radix-ui/react-icons";
 import { handleClientScriptLoad } from "next/script";
+import { User } from "@clerk/nextjs/server";
+import { Organization } from "@/database/organization-schema";
 
 export type ReimbursementWithOrganization = Reimbursement & {
   organization: string;
@@ -60,18 +62,16 @@ async function fetchReimbursements(): Promise<Reimbursement[]> {
   }
 }
 
-export const fetchOrganizationName = async (
-  clerkUserId: string,
-): Promise<string> => {
+export const fetchUsers = async (): Promise<User[]> => {
   try {
-    const response = await fetch(`/api/user/${clerkUserId}`);
+    const response = await fetch(`/api/user`);
     if (!response.ok) {
       throw new Error("Network response was not ok");
     }
-    return (await response.json()).unsafeMetadata.organization.name;
+    return await response.json();
   } catch (error) {
     console.error("Error fetching data:", error);
-    return "";
+    return [];
   }
 };
 
@@ -102,16 +102,21 @@ export default function AdminTable() {
 
   React.useEffect(() => {
     fetchReimbursements()
-      .then(async (data) =>
-        Promise.all(
-          data.map(async (reimbursement) => ({
+      .then(async (data) => {
+        const users = await fetchUsers();
+        console.log(users);
+        return data.map((reimbursement) => {
+          const user = users.find(
+            (user) => user.id === reimbursement.clerkUserId,
+          );
+          return {
             ...reimbursement,
-            organization: await fetchOrganizationName(
-              reimbursement.clerkUserId,
-            ),
-          })),
-        ),
-      )
+            organization:
+              (user?.unsafeMetadata?.organization as Organization)?.name ||
+              "Unknown",
+          };
+        });
+      })
       .then((reimbursements) => {
         setReimbursements(reimbursements);
         setIsLoading(false);
