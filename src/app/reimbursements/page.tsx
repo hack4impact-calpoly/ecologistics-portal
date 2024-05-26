@@ -59,7 +59,7 @@ export default function Page() {
     },
   });
 
-  // submisson handler
+  // submission handler
   function onSubmit(values: z.infer<typeof formSchema>) {
     if (!isConfirmed) return;
     // initialize multipart form data
@@ -170,10 +170,8 @@ Thank you!`;
               Step 1: Please upload a receipt for this expense
             </label>
             <ImageUpload
-              handleChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                if (e.target.files) {
-                  form.setValue("file", e.target.files[0]);
-                }
+              handleChange={(file: File) => {
+                form.setValue("file", file);
               }}
             />
           </div>
