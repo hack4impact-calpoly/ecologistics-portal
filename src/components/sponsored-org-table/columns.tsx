@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { ColumnDef, FilterFnOption } from "@tanstack/react-table";
 import { DownloadIcon } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
-import Reimbursement from "@/database/reimbursement-schema";
+import Reimbursement from "@/models/reimbursement";
 import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
 import RequestInfoCard from "@/components/request-info-card";
 import StatusBadge from "@/components/status-badge";

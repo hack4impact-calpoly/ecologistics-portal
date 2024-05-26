@@ -1,5 +1,5 @@
-import Alert from "@/database/alert-schema";
-import Reimbursement from "@/database/reimbursement-schema";
+import Alert from "@/models/alert";
+import Reimbursement from "@/models/reimbursement";
 import { createMocks } from "node-mocks-http";
 
 export const createMockNextRequest = (body: any) =>

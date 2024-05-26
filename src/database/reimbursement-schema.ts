@@ -1,20 +1,7 @@
 import { Schema, model, models, Types } from "mongoose";
+import { Reimbursement } from "@/models/reimbursement";
 
-interface Reimbursement {
-  clerkUserId: string;
-  reportName: string;
-  recipientName: string;
-  recipientEmail: string;
-  transactionDate: Date;
-  amount: number;
-  paymentMethod: string;
-  purpose: string;
-  receiptLink: string;
-  status: string;
-  comment?: string;
-}
-
-const ReimbursementSchema = new Schema({
+const ReimbursementSchema = new Schema<Reimbursement>({
   clerkUserId: {
     type: String,
     required: [true, "Clerk User Id is required"],
@@ -61,7 +48,7 @@ const ReimbursementSchema = new Schema({
   },
 });
 
-const Reimbursement =
+const ReimbursementModel =
   models.Reimbursement || model("Reimbursement", ReimbursementSchema);
 
-export default Reimbursement;
+export default ReimbursementModel;

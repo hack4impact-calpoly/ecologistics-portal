@@ -1,4 +1,4 @@
-import Alert from "@/database/alert-schema";
+import Alert from "@/models/alert";
 
 export const MOCK_ALERT: Alert = {
   userId: "test",

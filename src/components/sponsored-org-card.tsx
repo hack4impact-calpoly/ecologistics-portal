@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
 import { Button } from "./ui/button";
 import { CheckIcon, Cross2Icon } from "@radix-ui/react-icons";
-import { Organization } from "@/database/organization-schema";
+import { Organization } from "@/models/organization";
 import { OrganizationWithUser } from "@/app/sponsored-organizations/page";
 
 export interface SponsoredOrgCardProps {

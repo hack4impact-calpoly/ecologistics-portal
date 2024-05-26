@@ -1,8 +1,8 @@
 import { DELETE, GET as GET_ID, PUT } from "@/app/api/reimbursement/[id]/route";
 import { GET as GET_ALL, POST } from "@/app/api/reimbursement/route";
-import Alert from "@/database/alert-schema";
+import Alert from "@/models/alert";
 import connectDB from "@/database/db";
-import Reimbursement from "@/database/reimbursement-schema";
+import Reimbursement from "@/models/reimbursement";
 import Status from "@/lib/enum";
 import { imageUpload } from "@/services/s3-service";
 import { User, clerkClient, currentUser } from "@clerk/nextjs/server";
