@@ -143,27 +143,33 @@ export function DataTable<TData, TValue>({
   };
   return (
     <>
-      <ScrollArea className={`mt-8 whitespace-nowrap`}>
-        <div className="flex justify-between space-x-1 w-full py-4">
-          <DebouncedInput
-            value={globalFilter ?? ""}
-            onChange={(value) => setGlobalFilter(String(value))}
-            className="px-2 text-sm flex-grow w-100 mt-4 border rounded"
-            placeholder="Search all columns..."
-          />
-          <TableColumnFilterDropdown
-            table={table}
-            identifier="status"
-            title="Status"
-            values={["Pending", "Declined", "On Hold", "Paid"]}
-            placeholder=""
-          />
-          <div className="flex flex-col">
-            <Label className="text-xs pl-1 min-w-[16rem]">Date Range</Label>
-            <DatePickerWithRange
-              handleChange={handleDateRangeChange}
-              className="ml-2 self-end"
+      <ScrollArea className="mt-8 whitespace-nowrap">
+        <div className="flex justify-between w-full py-4">
+          <div className="flex">
+            <DebouncedInput
+              value={globalFilter ?? ""}
+              onChange={(value) => setGlobalFilter(String(value))}
+              className="px-2 text-sm flex-grow w-100 mt-4 border rounded"
+              placeholder="Search all columns..."
             />
+          </div>
+          <div className="flex space-x-2 pl-3">
+            <div className="w-40">
+              <TableColumnFilterDropdown
+                table={table}
+                identifier="status"
+                title="Status"
+                values={["Pending", "Declined", "On Hold", "Paid"]}
+                placeholder="All"
+              />
+            </div>
+            <div>
+              <Label className="text-xs">Date Range</Label>
+              <DatePickerWithRange
+                handleChange={handleDateRangeChange}
+                className=""
+              />
+            </div>
           </div>
         </div>
         <div className="rounded-md border flex max-h-[calc(100dvh-330px)]">
