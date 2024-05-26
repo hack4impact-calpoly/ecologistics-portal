@@ -144,7 +144,7 @@ export function DataTable<TData, TValue>({
   return (
     <>
       <ScrollArea className="mt-8 whitespace-nowrap">
-        <div className="flex justify-between space-x-1 w-full py-4 ">
+        <div className="flex justify-between w-full py-4">
           <div className="flex">
             <DebouncedInput
               value={globalFilter ?? ""}
@@ -153,7 +153,7 @@ export function DataTable<TData, TValue>({
               placeholder="Search all columns..."
             />
           </div>
-          <div className="flex pl-3">
+          <div className="flex space-x-2 pl-3">
             <div className="w-40">
               <TableColumnFilterDropdown
                 table={table}
@@ -164,10 +164,10 @@ export function DataTable<TData, TValue>({
               />
             </div>
             <div>
-              <Label className="text-xs pl-3">Date Range</Label>
+              <Label className="text-xs">Date Range</Label>
               <DatePickerWithRange
                 handleChange={handleDateRangeChange}
-                className="ml-2 self-end"
+                className=""
               />
             </div>
           </div>
