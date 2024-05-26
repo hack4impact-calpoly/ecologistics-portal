@@ -55,7 +55,7 @@ async function filterOrganizationsWithPendingReimbursements(
 // Fetch list of organizations
 async function getOrganizations() {
   try {
-    const res = await fetch("/api/organization/");
+    const res = await fetch("/api/user");
     if (!res.ok) {
       throw new Error("Failed to fetch organizations");
     }

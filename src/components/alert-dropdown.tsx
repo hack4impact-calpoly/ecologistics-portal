@@ -18,23 +18,22 @@ import {
   DropdownMenuSeparator,
 } from "components/ui/dropdown-menu";
 import NewUserButton from "./user-button";
-import { useAuth, useUser } from "@clerk/nextjs";
+import { useUser } from "@clerk/nextjs";
 import { Button } from "./ui/button";
 
 // Alert component on header
 export default function AlertIcon() {
   const { isSignedIn } = useUser();
-  const { userId } = useAuth();
   const [hasNewUpdates, setHasNewUpdates] = useState(true); // Assume there are new updates initially
 
   const { data, error, mutate } = useSWR(
-    isSignedIn ? `/api/alert/${userId}` : null,
+    isSignedIn ? `/api/alert` : null,
     (...args) => fetch(...args).then((res) => res.json()),
   );
 
   const handleDeleteAlert = async (alertId: string) => {
     try {
-      const res = await fetch(`api/alert/${userId}?id=${alertId}`, {
+      const res = await fetch(`/api/alert/${alertId}`, {
         method: "DELETE",
       });
       if (!res.ok) {
