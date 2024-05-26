@@ -11,13 +11,18 @@ import { Types } from "mongoose";
 import { useEffect, useState } from "react";
 import CenteredSpinner from "@/components/centered-spinner";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
+import { User } from "@clerk/nextjs/server";
 
 //clerk user as key and num of updates as value
 type UpdateCounts = {
   [key: string]: number;
 };
 
-export type OrganizationWithUser = Organization & { clerkUser: string };
+export type OrganizationWithUser = Organization & {
+  clerkUserId: string;
+  clerkUserName: string;
+  clerkUserEmail: string;
+};
 
 // Helper function to retrieve a list of organizations with pending reimbursements
 async function filterOrganizationsWithPendingReimbursements(
@@ -44,7 +49,7 @@ async function filterOrganizationsWithPendingReimbursements(
           }
         }
       }
-      updateCount[org.clerkUser] = numOfUpdates;
+      updateCount[org.clerkUserId] = numOfUpdates;
       // Add organization to list if it had a pending reimbursement
       if (pending) {
         filteredOrgs.push(org);
@@ -61,11 +66,16 @@ async function getOrganizations() {
     if (!res.ok) {
       throw new Error("Failed to fetch organizations");
     }
-    const users = await res.json();
+    const users: User[] = await res.json();
     const organizations: OrganizationWithUser[] = [];
-    users.forEach((user: any) => {
+    users.forEach((user) => {
       if (user?.unsafeMetadata?.organization) {
-        let org = { clerkUser: user.id, ...user.unsafeMetadata.organization };
+        let org = {
+          ...(user.unsafeMetadata.organization as Organization),
+          clerkUserId: user.id,
+          clerkUserName: `${user.firstName} ${user.lastName}`,
+          clerkUserEmail: user.emailAddresses[0].emailAddress,
+        };
         organizations.push(org);
       }
     });
@@ -164,10 +174,12 @@ export default function Page() {
   useEffect(() => {
     if (search) {
       const filteredOrgs = allOrgs.filter(
-        (org) => org.name.includes(search) || org.clerkUser?.includes(search),
+        (org) =>
+          org.name.includes(search) || org.clerkUserName?.includes(search),
       );
       const filteredUpdatedOrgs = updatedOrgs.filter(
-        (org) => org.name.includes(search) || org.clerkUser?.includes(search),
+        (org) =>
+          org.name.includes(search) || org.clerkUserName?.includes(search),
       );
       setOrgs(filteredOrgs);
       setUpdatedOrgs(filteredUpdatedOrgs);
@@ -279,9 +291,8 @@ export default function Page() {
             <div key={index}>
               <SponsorCard
                 organizationData={organization}
-                email="temp@domain.com"
                 toApprove={organization.approved === false}
-                updates={updateCount[organization.clerkUser] || 0}
+                updates={updateCount[organization.clerkUserId] || 0}
               />
             </div>
           ))}
