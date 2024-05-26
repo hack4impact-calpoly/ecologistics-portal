@@ -32,6 +32,14 @@ describe("User API", () => {
 
   describe("GET /api/user", () => {
     it("returns all users for admin user", async () => {
+      mockedClerkClient.users.getUserList
+        .mockResolvedValueOnce([
+          MOCK_SPONSORED_ORG_USER_APPROVED as unknown as User,
+        ])
+        .mockResolvedValueOnce([
+          MOCK_SPONSORED_ORG_USER_UNAPPROVED as unknown as User,
+        ])
+        .mockResolvedValueOnce([]);
       const response = await GET_ALL();
       const data = await response.json();
       expect(response.status).toBe(200);
