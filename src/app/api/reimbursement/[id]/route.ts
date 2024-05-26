@@ -47,8 +47,8 @@ const createAlert = (
   currentReimbursement: Reimbursement,
 ): Promise<Alert> =>
   new Alert({
-    userId: body.clerkUserId,
-    title: body.reportName,
+    userId: currentReimbursement.clerkUserId,
+    title: currentReimbursement.reportName,
     description: `Status: ${body.status || currentReimbursement.status}\nComment: ${body.comment || currentReimbursement.comment || "N/A"}`,
   }).save();
 
