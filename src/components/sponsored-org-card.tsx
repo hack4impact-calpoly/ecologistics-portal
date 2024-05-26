@@ -3,42 +3,44 @@ import Image from "next/image";
 import { Button } from "./ui/button";
 import { CheckIcon, Cross2Icon } from "@radix-ui/react-icons";
 import { Organization } from "@/database/organization-schema";
+import { OrganizationWithUser } from "@/app/sponsored-organizations/page";
 
 export interface SponsoredOrgCardProps {
-  organizationData: Organization;
-  email: string;
+  organizationData: OrganizationWithUser;
   updates?: number;
   toApprove: boolean;
 }
 
-const updateOrg = (orgData: Organization, approve: Boolean) => {
-  let updatedOrg = orgData as any;
-
+const updateOrg = (orgData: OrganizationWithUser, approve: Boolean) => {
   if (approve) {
-    updatedOrg.approved = true;
-    if (updatedOrg.hasOwnProperty("clerkUser")) {
-      delete updatedOrg["clerkUser"];
-    }
-    fetch(`/api/user/${orgData.clerkUser}`, {
+    fetch(`/api/user/${orgData.clerkUserId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ organization: updatedOrg }),
+      body: JSON.stringify({
+        unsafeMetadata: { organization: { approved: true } },
+      }),
     })
-      .then((response) => response.json())
+      .then((response) => {
+        window.location.reload();
+        return response.json();
+      })
       .catch((error) => {
         console.log(error);
       });
   } else {
-    fetch(`/api/user/${orgData.clerkUser}`, {
+    fetch(`/api/user/${orgData.clerkUserId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ organization: null }),
+      body: JSON.stringify({ unsafeMetadata: { organization: null } }),
     })
-      .then((response) => response.json())
+      .then((response) => {
+        window.location.reload();
+        return response.json();
+      })
       .catch((error) => {
         console.log(error);
       });
@@ -47,7 +49,6 @@ const updateOrg = (orgData: Organization, approve: Boolean) => {
 
 export default function SponsoredOrgCard({
   organizationData,
-  email,
   toApprove,
   updates,
 }: SponsoredOrgCardProps) {
@@ -78,7 +79,10 @@ export default function SponsoredOrgCard({
         <div className="w-20 h-20 relative">
           <Image
             className="object-cover rounded-full"
-            src={organizationData?.logo || ""}
+            src={
+              organizationData?.logo ||
+              "/images/sponsored_org_profile_picture_placeholder.png"
+            }
             layout="fill"
             alt="sponsored org logo"
           />
@@ -103,7 +107,7 @@ export default function SponsoredOrgCard({
             alt="mail"
           />
           <p className="col-span-5 font-semibold text-sm self-center whitespace-normal break-words">
-            {organizationData?.clerkUser}
+            {organizationData?.clerkUserName}
           </p>
         </div>
         <div className="grid grid-cols-6 h-7 ">
@@ -115,7 +119,7 @@ export default function SponsoredOrgCard({
             alt="mail"
           />
           <p className="col-span-5 font-semibold text-sm self-center whitespace-normal break-words">
-            {email}
+            {organizationData?.clerkUserEmail}
           </p>
         </div>
       </CardContent>

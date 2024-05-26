@@ -11,17 +11,24 @@ import { Types } from "mongoose";
 import { useEffect, useState } from "react";
 import CenteredSpinner from "@/components/centered-spinner";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
+import { User } from "@clerk/nextjs/server";
 
 //clerk user as key and num of updates as value
 type UpdateCounts = {
   [key: string]: number;
 };
 
+export type OrganizationWithUser = Organization & {
+  clerkUserId: string;
+  clerkUserName: string;
+  clerkUserEmail: string;
+};
+
 // Helper function to retrieve a list of organizations with pending reimbursements
 async function filterOrganizationsWithPendingReimbursements(
-  organizations: Organization[],
+  organizations: OrganizationWithUser[],
 ) {
-  const filteredOrgs: Organization[] = [];
+  const filteredOrgs: OrganizationWithUser[] = [];
   let updateCount: UpdateCounts = {};
   // Check each organization
   for (const org of organizations) {
@@ -42,7 +49,7 @@ async function filterOrganizationsWithPendingReimbursements(
           }
         }
       }
-      updateCount[org.clerkUser] = numOfUpdates;
+      updateCount[org.clerkUserId] = numOfUpdates;
       // Add organization to list if it had a pending reimbursement
       if (pending) {
         filteredOrgs.push(org);
@@ -59,18 +66,23 @@ async function getOrganizations() {
     if (!res.ok) {
       throw new Error("Failed to fetch organizations");
     }
-    const data = await res.json();
-    const organizations: Organization[] = [];
-    data.forEach((obj: any) => {
-      if (obj.unsafeMetadata.organization) {
-        let org = { clerkUser: obj.id, ...obj.unsafeMetadata.organization };
+    const users: User[] = await res.json();
+    const organizations: OrganizationWithUser[] = [];
+    users.forEach((user) => {
+      if (user?.unsafeMetadata?.organization) {
+        let org = {
+          ...(user.unsafeMetadata.organization as Organization),
+          clerkUserId: user.id,
+          clerkUserName: `${user.firstName} ${user.lastName}`,
+          clerkUserEmail: user.emailAddresses[0].emailAddress,
+        };
         organizations.push(org);
       }
     });
     return organizations;
   } catch (err: unknown) {
     console.log(`error: ${err}`);
-    return null;
+    return [];
   }
 }
 
@@ -95,11 +107,13 @@ export default function Page() {
   const router = useRouter();
   const { isLoaded, isSignedIn, user } = useUser();
   const [viewTab, setViewTab] = useState(""); // State for tab toggle
-  const [orgs, setOrgs] = useState<Organization[]>([]); // State for currently displayed organizations based on view settings
-  const [updatedOrgs, setUpdatedOrgs] = useState<Organization[]>([]); // State for organizations with pending updates (filtered)
-  const [pendingOrgs, setPendingOrgs] = useState<Organization[]>([]); // State for organizations pending approval
-  const [allOrgs, setAllOrgs] = useState<Organization[]>([]); // State for all organizations (unfiltered)
-  const [allUpdatedOrgs, setAllUpdatedOrgs] = useState<Organization[]>([]); // State for all organizations with pending updates (filtered)
+  const [orgs, setOrgs] = useState<OrganizationWithUser[]>([]); // State for currently displayed organizations based on view settings
+  const [updatedOrgs, setUpdatedOrgs] = useState<OrganizationWithUser[]>([]); // State for organizations with pending updates (filtered)
+  const [pendingOrgs, setPendingOrgs] = useState<OrganizationWithUser[]>([]); // State for organizations pending approval
+  const [allOrgs, setAllOrgs] = useState<OrganizationWithUser[]>([]); // State for all organizations (unfiltered)
+  const [allUpdatedOrgs, setAllUpdatedOrgs] = useState<OrganizationWithUser[]>(
+    [],
+  ); // State for all organizations with pending updates (filtered)
   const [search, setSearch] = useState("");
   const [updateCount, setUpdateCount] = useState<UpdateCounts>({});
   // Turn off viewUpdates when View All is toggled
@@ -160,10 +174,12 @@ export default function Page() {
   useEffect(() => {
     if (search) {
       const filteredOrgs = allOrgs.filter(
-        (org) => org.name.includes(search) || org.clerkUser?.includes(search),
+        (org) =>
+          org.name.includes(search) || org.clerkUserName?.includes(search),
       );
       const filteredUpdatedOrgs = updatedOrgs.filter(
-        (org) => org.name.includes(search) || org.clerkUser?.includes(search),
+        (org) =>
+          org.name.includes(search) || org.clerkUserName?.includes(search),
       );
       setOrgs(filteredOrgs);
       setUpdatedOrgs(filteredUpdatedOrgs);
@@ -188,7 +204,7 @@ export default function Page() {
       <h1>
         {/* Page header */}
         <div className="font-sans text-2xl mb-10 font-semibold">
-          SPONSORED ORGANZATIONS/PROJECTS
+          Sponsored Organizations
         </div>
       </h1>
       {/* Row of buttons */}
@@ -203,14 +219,14 @@ export default function Page() {
                 data-state={viewTab === "" ? "on" : "off"}
                 onClick={handleViewAllToggle}
               >
-                VIEW ALL
+                View All
               </Toggle>
               <Toggle
                 className="text-lg h-11 rounded-none border px-8 border-[#335543] text-[#335543] data-[state=on]:bg-[#335543] data-[state=on]:text-white"
                 data-state={viewTab === "updates" ? "on" : "off"}
                 onClick={handleViewUpdatesToggle}
               >
-                VIEW UPDATES
+                View Updates
                 <div className="relative w-7 h-7 ml-3 bg-[#335543] rounded-full flex items-center justify-center text-white text-sm">
                   <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                     {/* Number of updated orgs */}
@@ -223,7 +239,7 @@ export default function Page() {
                 data-state={viewTab === "pending" ? "on" : "off"}
                 onClick={handleViewPendingToggle}
               >
-                VIEW PENDING
+                View Pending
               </Toggle>
             </div>
           </div>
@@ -275,9 +291,8 @@ export default function Page() {
             <div key={index}>
               <SponsorCard
                 organizationData={organization}
-                email="temp@domain.com"
                 toApprove={organization.approved === false}
-                updates={updateCount[organization.clerkUser] || 0}
+                updates={updateCount[organization.clerkUserId] || 0}
               />
             </div>
           ))}
