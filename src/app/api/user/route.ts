@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    const response = await clerkClient.users.getUserList();
+    const response = await clerkClient.users.getUserList({ limit: 500 });
     return NextResponse.json(response);
   } catch (error) {
     const errorResponse: ErrorResponse = {
