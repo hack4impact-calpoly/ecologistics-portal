@@ -127,11 +127,7 @@ export default function Page() {
   }
 
   if (!isLoaded) {
-    return (
-      <div>
-        <CenteredSpinner />
-      </div>
-    );
+    return <CenteredSpinner />;
   }
   if (!isSignedIn) {
     return router.push("/sign-in");
@@ -351,11 +347,14 @@ Thank you!`;
       </Form>
       <ImagePopup ref={popupRef} success={uploadSuccess} />
 
-      <div className="flex flex-col bg-gray-200 items-center space-y-2">
+      <div className="flex flex-col bg-gray-200 items-center space-y-2 px-4">
         <h4 className="p-3 pb-0 text-2xl font-bold ">
-          Did you email your W9 form to Stacey?
+          Did you email the W9 form to Ecologistics?
         </h4>
-        <p className="text-lg pb-2">Click yes or no</p>
+        <p className="text-lg pb-2">
+          {`*This only applies to third-party payments. If this is a
+          reimbursement, click "Yes" to continue.`}
+        </p>
         <div className="w-[90%] flex justify-between pb-4">
           <Button
             onClick={handleConfirm}

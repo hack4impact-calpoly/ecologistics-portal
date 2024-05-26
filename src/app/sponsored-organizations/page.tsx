@@ -173,11 +173,7 @@ export default function Page() {
   }, [search, allOrgs, allUpdatedOrgs, updatedOrgs]);
 
   if (!isLoaded) {
-    return (
-      <div>
-        <CenteredSpinner />
-      </div>
-    );
+    return <CenteredSpinner />;
   }
   if (!isSignedIn) {
     return router.push("/sign-in");

@@ -20,11 +20,7 @@ export default function SponsoredHomePage() {
   const { isLoaded, isSignedIn, user } = useUser();
 
   if (!isLoaded) {
-    return (
-      <div>
-        <CenteredSpinner />
-      </div>
-    );
+    return <CenteredSpinner />;
   }
   if (!isSignedIn) {
     router.push("/sign-in");
@@ -57,9 +53,7 @@ export default function SponsoredHomePage() {
           Request Reimbursement
         </Button>
       </div>
-      <div className="flex flex-col mt-8">
-        <SponsoredOrgTable />
-      </div>
+      <SponsoredOrgTable />
     </main>
   );
 }

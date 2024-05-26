@@ -7,6 +7,7 @@ import Status from "@/lib/enum";
 import { imageUpload } from "@/services/image-upload";
 import { clerkClient } from "@clerk/nextjs/server";
 import { Organization } from "@/database/organization-schema";
+import { currentUser } from "@clerk/nextjs/server";
 
 export type CreateReimbursementBody = Reimbursement;
 
@@ -15,10 +16,19 @@ export type CreateReimbursementResponse = Reimbursement;
 
 //Get all Reimbursements
 export async function GET() {
+  const user = await currentUser();
+  if (!user) {
+    const errorResponse: ErrorResponse = {
+      error: "Unauthorized User",
+    };
+    return NextResponse.json(errorResponse, { status: 404 });
+  }
+
   await connectDB();
   try {
-    const reimbursements: GetReimbursementsResponse =
-      await Reimbursement.find();
+    const reimbursements: GetReimbursementsResponse = user.publicMetadata.admin
+      ? await Reimbursement.find()
+      : await Reimbursement.find({ clerkUserId: user.id });
     return NextResponse.json(reimbursements);
   } catch (error) {
     const errorResponse: ErrorResponse = {
