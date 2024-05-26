@@ -45,6 +45,8 @@ export default function Page() {
   const { isLoaded, isSignedIn, user } = useUser();
   const [isConfirmed, setIsConfirmed] = useState(false);
   const router = useRouter();
+  const [uploadSuccess, setUploadSuccess] = useState(false);
+  const [submitDisabled, setSubmitDisabled] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -311,12 +313,21 @@ Thank you!`;
         </div>
 
         <div className="flex justify-center mt-6">
-          <Button
-            onClick={constructEmail}
-            className="bg-blue-600 text-white px-6 py-2 rounded-md"
-          >
-            Generate Email Template
-          </Button>
+          {!isConfirmed ? (
+            <Button
+              onClick={constructEmail}
+              className="bg-blue-600 text-white px-6 py-2 rounded-md"
+            >
+              Generate Email Template
+            </Button>
+          ) : (
+            <Button
+              onClick={() => onSubmit(form.getValues())} // Call onSubmit when the user confirms
+              className="bg-blue-600 text-white px-6 py-2 rounded-md"
+            >
+              Submit
+            </Button>
+          )}
         </div>
       </div>
     </div>
