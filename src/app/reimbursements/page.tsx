@@ -170,7 +170,11 @@ Thank you!`;
               Step 1: Please upload a receipt for this expense
             </label>
             <ImageUpload
-              handleChange={(e) => form.setValue("file", e.target.files[0])}
+              handleChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                if (e.target.files) {
+                  form.setValue("file", e.target.files[0]);
+                }
+              }}
             />
           </div>
 
