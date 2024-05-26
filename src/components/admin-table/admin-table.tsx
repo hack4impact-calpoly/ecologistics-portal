@@ -1,7 +1,26 @@
 "use client";
 
-import * as React from "react";
+import CenteredSpinner from "@/components/centered-spinner";
 import { Button } from "@/components/ui/button";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Organization } from "@/database/organization-schema";
+import Reimbursement from "@/database/reimbursement-schema";
+import { dateFilterFn, fuzzyFilter } from "@/lib/utils";
+import { User } from "@clerk/nextjs/server";
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  DoubleArrowLeftIcon,
+  DoubleArrowRightIcon,
+} from "@radix-ui/react-icons";
 import {
   ColumnFiltersState,
   ExpandedState,
@@ -15,35 +34,13 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import * as React from "react";
+import { DateRange } from "react-day-picker";
 import { DatePickerWithRange } from "../ui/custom/date-range-picker";
 import { DebouncedInput } from "../ui/custom/debounced-input";
-import { Label } from "../ui/label";
 import TableColumnFilterDropdown from "../ui/custom/table-column-filter-dropdown";
+import { Label } from "../ui/label";
 import { columns } from "./columns";
-import Reimbursement from "@/database/reimbursement-schema";
-import { DateRange } from "react-day-picker";
-import { dateFilterFn } from "@/lib/utils";
-import { fuzzyFilter } from "@/lib/utils";
-import CenteredSpinner from "@/components/centered-spinner";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import {
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  DoubleArrowLeftIcon,
-  DoubleArrowRightIcon,
-  WidthIcon,
-} from "@radix-ui/react-icons";
-import { handleClientScriptLoad } from "next/script";
-import { User } from "@clerk/nextjs/server";
-import { Organization } from "@/database/organization-schema";
 
 export type ReimbursementWithOrganization = Reimbursement & {
   organization: string;
