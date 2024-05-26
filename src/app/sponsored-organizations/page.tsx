@@ -17,7 +17,7 @@ type UpdateCounts = {
   [key: string]: number;
 };
 
-type OrganizationWithUser = Organization & { clerkUser: string };
+export type OrganizationWithUser = Organization & { clerkUser: string };
 
 // Helper function to retrieve a list of organizations with pending reimbursements
 async function filterOrganizationsWithPendingReimbursements(

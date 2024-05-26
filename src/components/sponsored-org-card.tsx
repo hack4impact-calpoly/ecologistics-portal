@@ -3,15 +3,16 @@ import Image from "next/image";
 import { Button } from "./ui/button";
 import { CheckIcon, Cross2Icon } from "@radix-ui/react-icons";
 import { Organization } from "@/database/organization-schema";
+import { OrganizationWithUser } from "@/app/sponsored-organizations/page";
 
 export interface SponsoredOrgCardProps {
-  organizationData: Organization;
+  organizationData: OrganizationWithUser;
   email: string;
   updates?: number;
   toApprove: boolean;
 }
 
-const updateOrg = (orgData: Organization, approve: Boolean) => {
+const updateOrg = (orgData: OrganizationWithUser, approve: Boolean) => {
   let updatedOrg = orgData as any;
 
   if (approve) {
@@ -24,7 +25,7 @@ const updateOrg = (orgData: Organization, approve: Boolean) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ organization: updatedOrg }),
+      body: JSON.stringify({ unsafeMetadata: { organization: updatedOrg } }),
     })
       .then((response) => response.json())
       .catch((error) => {
@@ -36,7 +37,7 @@ const updateOrg = (orgData: Organization, approve: Boolean) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ organization: null }),
+      body: JSON.stringify({ unsafeMetadata: { organization: undefined } }),
     })
       .then((response) => response.json())
       .catch((error) => {
