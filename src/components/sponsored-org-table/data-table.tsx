@@ -41,6 +41,7 @@ import { dateFilterFn } from "@/lib/utils";
 import { DateRange } from "react-day-picker";
 import { rankItem } from "@tanstack/match-sorter-utils";
 import React from "react";
+import { setDate } from "date-fns";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -136,10 +137,16 @@ export function DataTable<TData, TValue>({
     return pages;
   };
 
-  const handleDateRangeChange = (range: DateRange) => {
-    table.getColumn("transactionDate")?.setFilterValue(() => {
-      return [range.from, range.to];
-    });
+  const handleDateRangeChange = (range?: DateRange) => {
+    if (range) {
+      table.getColumn("transactionDate")?.setFilterValue(() => {
+        return [range.from, range.to];
+      });
+    } else {
+      table.getColumn("transactionDate")?.setFilterValue(() => {
+        return undefined;
+      });
+    }
   };
   return (
     <>

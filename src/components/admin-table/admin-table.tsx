@@ -187,10 +187,16 @@ export default function AdminTable() {
     return Array.from(values) as string[];
   };
 
-  const handleDateRangeChange = (range: DateRange) => {
-    table.getColumn("transactionDate")?.setFilterValue(() => {
-      return [range.from, range.to];
-    });
+  const handleDateRangeChange = (range?: DateRange) => {
+    if (range) {
+      table.getColumn("transactionDate")?.setFilterValue(() => {
+        return [range.from, range.to];
+      });
+    } else {
+      table.getColumn("transactionDate")?.setFilterValue(() => {
+        return undefined;
+      });
+    }
   };
 
   if (isLoading) {
