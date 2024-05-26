@@ -1,4 +1,4 @@
-import Alert from "@/models/alert";
+import Alert from "@/database/alert-schema";
 import connectDB from "@/database/db";
 import { ErrorResponse } from "@/lib/error";
 import { createErrorResponse, createSuccessResponse } from "@/lib/response";

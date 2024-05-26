@@ -1,6 +1,6 @@
 import { DELETE } from "@/app/api/alert/[id]/route";
 import { GET } from "@/app/api/alert/route";
-import Alert from "@/models/alert";
+import Alert from "@/database/alert-schema";
 import connectDB from "@/database/db";
 import { User, currentUser } from "@clerk/nextjs/server";
 import { mocked } from "jest-mock";

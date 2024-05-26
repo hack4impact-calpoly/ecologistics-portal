@@ -1,6 +1,6 @@
 import connectDB from "@/database/db";
-import { Organization } from "@/models/organization";
-import Reimbursement from "@/models/reimbursement";
+import { Organization } from "@/database/organization-schema";
+import Reimbursement from "@/database/reimbursement-schema";
 import { verifyAdmin } from "@/lib/admin";
 import Status from "@/lib/enum";
 import { ErrorResponse } from "@/lib/error";

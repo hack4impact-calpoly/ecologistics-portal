@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Toggle } from "@/components/ui/toggle";
 import { Input } from "@/components/ui/input";
 import SponsorCard from "@/components/sponsored-org-card";
-import { Organization } from "@/models/organization";
+import { Organization } from "@/database/organization-schema";
 import { Types } from "mongoose";
 import { useEffect, useState } from "react";
 import CenteredSpinner from "@/components/centered-spinner";

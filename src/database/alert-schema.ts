@@ -1,7 +1,13 @@
 import { Schema, model, models, Types } from "mongoose";
-import { Alert } from "@/models/alert";
 
-const AlertSchema = new Schema<Alert>({
+interface Alert {
+  userId: String; // cleark id
+  title: String; // request was approved / denied
+  description: String;
+  date: Date; // date.now default when making schema
+}
+
+const AlertSchema = new Schema({
   userId: { type: String, required: [true, "UserId (Clerk Id) is required."] },
   title: { type: String, required: [true, "Title is required"] },
   description: {
@@ -11,6 +17,6 @@ const AlertSchema = new Schema<Alert>({
   date: { type: Date, required: true, default: Date.now },
 });
 
-const AlertModel = models.Alert || model("Alert", AlertSchema);
+const Alert = models.Alert || model("Alert", AlertSchema);
 
-export default AlertModel;
+export default Alert;
