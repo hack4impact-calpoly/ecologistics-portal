@@ -53,7 +53,7 @@ export default function SponsoredOrgCard({
 }: SponsoredOrgCardProps) {
   // console.log(organization, " Updates:" + updates);
   return (
-    <Card className="w-full h-72 relative">
+    <Card className="w-full h-72 relative min-w-[300px] max-w-[300px] shadow-md rounded-2xl">
       {toApprove && (
         <div className="flex flex-row absolute top-2 right-2">
           <CheckIcon
@@ -75,14 +75,15 @@ export default function SponsoredOrgCard({
         </div>
       )}
       <CardHeader className="pt-8 pl-4 pr-4 flex flex-row">
-        <Image
-          className="object-cover rounded-full col-span-3"
-          src={organizationData?.logo || ""}
-          width={80}
-          height={80}
-          alt="sponsored org logo"
-        />
-        <CardTitle className="col-span-5 ml-3 mt-0 font-medium text-base">
+        <div className="w-20 h-20 relative">
+          <Image
+            className="object-cover rounded-full"
+            src={organizationData?.logo || ""}
+            layout="fill"
+            alt="sponsored org logo"
+          />
+        </div>
+        <CardTitle className="ml-3 mt-0 font-medium text-base whitespace-normal break-words">
           {organizationData?.name}
         </CardTitle>
       </CardHeader>
@@ -92,7 +93,7 @@ export default function SponsoredOrgCard({
           <span className="p-[8px_12px_8px_12px] bg-[#335543] rounded-[20px] text-white">
             {updates === 1 ? `${updates} UPDATE` : `${updates} UPDATES`}
           </span>
-        )}{" "}
+        )}
         <div className="grid grid-cols-6 h-7 content-center">
           <Image
             className="col-span-1 self-center"
@@ -101,7 +102,7 @@ export default function SponsoredOrgCard({
             height={18}
             alt="mail"
           />
-          <p className="col-span-5 font-semibold text-sm self-center">
+          <p className="col-span-5 font-semibold text-sm self-center whitespace-normal break-words">
             {organizationData?.clerkUser}
           </p>
         </div>
@@ -113,7 +114,7 @@ export default function SponsoredOrgCard({
             height={18}
             alt="mail"
           />
-          <p className="col-span-5 font-semibold text-sm self-center">
+          <p className="col-span-5 font-semibold text-sm self-center whitespace-normal break-words">
             {email}
           </p>
         </div>

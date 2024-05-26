@@ -10,6 +10,7 @@ import { Organization } from "@/database/organization-schema";
 import { Types } from "mongoose";
 import { useEffect, useState } from "react";
 import CenteredSpinner from "@/components/centered-spinner";
+import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 
 //clerk user as key and num of updates as value
 type UpdateCounts = {
@@ -190,66 +191,101 @@ export default function Page() {
     <main className="p-10 w-full">
       <h1>
         {/* Page header */}
-        <div className="font-sans text-3xl mb-10">
+        <div className="font-sans text-2xl mb-10 font-semibold">
           SPONSORED ORGANZATIONS/PROJECTS
         </div>
       </h1>
       {/* Row of buttons */}
       <div className="w-full flex items-center justify-between mb-10">
         {/* View All / View Updates toggles */}
-        <div>
-          <Toggle
-            className="text-lg h-11 rounded-none border px-8 border-[#335543] text-[#335543] data-[state=on]:bg-[#335543] data-[state=on]:text-white"
-            data-state={viewTab === "" ? "on" : "off"}
-            onClick={handleViewAllToggle}
-          >
-            VIEW ALL
-          </Toggle>
-          <Toggle
-            className="text-lg h-11 rounded-none border px-8 border-[#335543] text-[#335543] data-[state=on]:bg-[#335543] data-[state=on]:text-white"
-            data-state={viewTab === "updates" ? "on" : "off"}
-            onClick={handleViewUpdatesToggle}
-          >
-            VIEW UPDATES
-            <div className="relative w-7 h-7 ml-3 bg-[#335543] rounded-full flex items-center justify-center text-white text-sm">
-              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                {/* Number of updated orgs */}
-                {updatedOrgs.length}
-              </div>
+        <div className="w-full flex items-center justify-between mb-10 relative">
+          {/* View All / View Updates toggles */}
+          <div className="flex justify-center items-center w-full">
+            <div className="flex space-x-4">
+              <Toggle
+                className="text-lg h-11 rounded-none border px-8 border-[#335543] text-[#335543] data-[state=on]:bg-[#335543] data-[state=on]:text-white"
+                data-state={viewTab === "" ? "on" : "off"}
+                onClick={handleViewAllToggle}
+              >
+                VIEW ALL
+              </Toggle>
+              <Toggle
+                className="text-lg h-11 rounded-none border px-8 border-[#335543] text-[#335543] data-[state=on]:bg-[#335543] data-[state=on]:text-white"
+                data-state={viewTab === "updates" ? "on" : "off"}
+                onClick={handleViewUpdatesToggle}
+              >
+                VIEW UPDATES
+                <div className="relative w-7 h-7 ml-3 bg-[#335543] rounded-full flex items-center justify-center text-white text-sm">
+                  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                    {/* Number of updated orgs */}
+                    {updatedOrgs.length}
+                  </div>
+                </div>
+              </Toggle>
+              <Toggle
+                className="text-lg h-11 rounded-none border px-8 border-[#335543] text-[#335543] data-[state=on]:bg-[#335543] data-[state=on]:text-white"
+                data-state={viewTab === "pending" ? "on" : "off"}
+                onClick={handleViewPendingToggle}
+              >
+                VIEW PENDING
+              </Toggle>
             </div>
-          </Toggle>
-          <Toggle
-            className="text-lg h-11 rounded-none border px-8 border-[#335543] text-[#335543] data-[state=on]:bg-[#335543] data-[state=on]:text-white"
-            data-state={viewTab === "pending" ? "on" : "off"}
-            onClick={handleViewPendingToggle}
-          >
-            VIEW PENDING
-          </Toggle>
-          {/* Search bar */}
-        </div>
-        <div className="w-72 h-11">
-          {/* Add magnifying glass here */}
-          <Input
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search"
-            className="p-4"
-          />
-        </div>
-      </div>
-      {/* Modify mr and ml to align cards to horizontal edge of flex box */}
-      <div className="flex flex-wrap justify-start mr-[-8px] ml-[-8px]">
-        {orgs.map((organization, index) => (
-          // Modify w to fit desired amount of cards in one row
-          <div key={index} className="w-1/5 p-2">
-            <SponsorCard
-              organizationData={organization}
-              email="temp@domain.com"
-              toApprove={organization.approved == false}
-              updates={updateCount[organization.clerkUser] || 0}
+          </div>
+          <div className="relative w-72 h-11">
+            <div className="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none">
+              <MagnifyingGlassIcon className="w-5 h-5 text-gray-400" />
+            </div>
+            <Input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search"
+              className="pl-12 pr-4 py-2 rounded-full w-full h-full"
             />
           </div>
-        ))}
+        </div>
+      </div>
+
+      <style jsx>{`
+        .custom-grid {
+          display: grid;
+          gap: 1.5rem; /* Adjust gap as needed */
+          justify-content: center; /* Center the grid horizontally */
+          justify-items: center; /* Center the content within each grid item */
+          grid-template-columns: repeat(1, minmax(0, 1fr));
+        }
+
+        @media (min-width: 875px) {
+          .custom-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+          }
+        }
+
+        @media (min-width: 1175px) {
+          .custom-grid {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+          }
+        }
+
+        @media (min-width: 1475px) {
+          .custom-grid {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+          }
+        }
+      `}</style>
+
+      <div className="px-8 max-w-[1300px] mx-auto flex justify-center">
+        <div className="custom-grid">
+          {orgs.map((organization, index) => (
+            <div key={index}>
+              <SponsorCard
+                organizationData={organization}
+                email="temp@domain.com"
+                toApprove={organization.approved === false}
+                updates={updateCount[organization.clerkUser] || 0}
+              />
+            </div>
+          ))}
+        </div>
       </div>
     </main>
   );
