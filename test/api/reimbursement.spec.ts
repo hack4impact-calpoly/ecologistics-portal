@@ -4,7 +4,7 @@ import Alert from "@/database/alert-schema";
 import connectDB from "@/database/db";
 import Reimbursement from "@/database/reimbursement-schema";
 import Status from "@/lib/enum";
-import { imageUpload } from "@/services/image-upload";
+import { imageUpload } from "@/services/s3-service";
 import { User, clerkClient, currentUser } from "@clerk/nextjs/server";
 import { mocked } from "jest-mock";
 import mongoose, { Query } from "mongoose";
@@ -46,7 +46,7 @@ jest.mock("@/database/alert-schema");
 const mockedAlert = mocked(Alert);
 mockedAlert.prototype.save.mockResolvedValue(MOCK_ALERT);
 
-jest.mock("@/services/image-upload");
+jest.mock("@/services/s3-service");
 const mockedImageUpload = mocked(imageUpload);
 mockedImageUpload.mockResolvedValue(MOCK_REIMBURSEMENTS[0].receiptLink);
 

@@ -5,7 +5,7 @@ import { verifyAdmin } from "@/lib/admin";
 import Status from "@/lib/enum";
 import { ErrorResponse } from "@/lib/error";
 import { createErrorResponse, createSuccessResponse } from "@/lib/response";
-import { imageUpload } from "@/services/image-upload";
+import { imageUpload } from "@/services/s3-service";
 import { User, currentUser } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -63,7 +63,7 @@ export async function POST(
     if (!image) {
       return createErrorResponse(null, "No image provided", 400);
     }
-    const receiptLink = await imageUpload(image, "reimbursment");
+    const receiptLink = await imageUpload(image as Blob, "reimbursment");
 
     // create report name
     const reportName = createReportName(user);
