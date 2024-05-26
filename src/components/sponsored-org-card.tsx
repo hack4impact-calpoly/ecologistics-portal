@@ -1,4 +1,10 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import Image from "next/image";
 import { Button } from "./ui/button";
 import { CheckIcon, Cross2Icon } from "@radix-ui/react-icons";
@@ -87,17 +93,19 @@ export default function SponsoredOrgCard({
             alt="sponsored org logo"
           />
         </div>
-        <CardTitle className="ml-3 mt-0 font-medium text-base whitespace-normal break-words">
-          {organizationData?.name}
-        </CardTitle>
+        <div className="flex flex-col ml-3 ">
+          <CardTitle className="mt-0 font-medium text-base whitespace-normal break-words">
+            {organizationData?.name}
+          </CardTitle>
+          {updates! > 0 && (
+            <CardDescription className="mt-1 px-3 py-1 bg-[#335543] rounded-[20px] text-white">
+              {updates === 1 ? `${updates} Update` : `${updates} Updates`}
+            </CardDescription>
+          )}
+        </div>
       </CardHeader>
 
       <CardContent className="pt-4 pl-9 pr-3 space-y-3">
-        {updates! > 0 && (
-          <span className="p-[8px_12px_8px_12px] bg-[#335543] rounded-[20px] text-white">
-            {updates === 1 ? `${updates} UPDATE` : `${updates} UPDATES`}
-          </span>
-        )}
         <div className="grid grid-cols-6 h-7 content-center">
           <Image
             className="col-span-1 self-center"

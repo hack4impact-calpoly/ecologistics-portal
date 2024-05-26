@@ -6,7 +6,7 @@ import Status from "@/lib/enum";
 import { ErrorResponse } from "@/lib/error";
 import { createErrorResponse, createSuccessResponse } from "@/lib/response";
 import { imageUpload } from "@/services/s3-service";
-import { User, currentUser } from "@clerk/nextjs/server";
+import { User, currentUser, clerkClient } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 
 export type GetReimbursementsResponse = Reimbursement[];
@@ -69,7 +69,7 @@ export async function POST(
     const reportName = createReportName(user);
 
     // create reimbursement
-    const reimbursement: CreateReimbursementResponse = await new Reimbursement({
+    const reimbursement = await new Reimbursement({
       clerkUserId: user.id,
       reportName,
       recipientName: String(formData.get("recipientName")),
@@ -81,6 +81,21 @@ export async function POST(
       receiptLink: receiptLink,
       status: Status.Pending,
     }).save();
+
+    // add reimbursement id to user's organization
+    const updatedOrg: Partial<Organization> = {
+      reimbursements: [
+        ...((user.unsafeMetadata?.organization as Organization)
+          ?.reimbursements || []),
+        reimbursement.id,
+      ],
+    };
+    await clerkClient.users.updateUserMetadata(user.id, {
+      unsafeMetadata: {
+        organization: updatedOrg,
+      },
+    });
+
     return createSuccessResponse(reimbursement, 200);
   } catch (error) {
     return createErrorResponse(error, "Error creating reimbursement", 500);

@@ -55,6 +55,9 @@ const mockedClerkClient = mocked(clerkClient);
 mockedClerkClient.users.getUser.mockResolvedValue(
   MOCK_SPONSORED_ORG_USER_APPROVED as unknown as User,
 );
+mockedClerkClient.users.updateUserMetadata.mockResolvedValue(
+  MOCK_SPONSORED_ORG_USER_APPROVED as unknown as User,
+);
 const mockedCurrentUser = mocked(currentUser);
 mockedCurrentUser.mockResolvedValue(
   MOCK_SPONSORED_ORG_USER_APPROVED as unknown as User,
@@ -201,6 +204,7 @@ describe("Reimbursement API", () => {
       expect(mockedImageUpload).toBeCalledWith("test-file", "reimbursment");
       expect(mockedCurrentUser).toBeCalled();
       expect(mockedReimbursement.prototype.save).toBeCalled();
+      expect(mockedClerkClient.users.updateUserMetadata).toBeCalled();
     });
 
     it("returns an error if no image is provided", async () => {
