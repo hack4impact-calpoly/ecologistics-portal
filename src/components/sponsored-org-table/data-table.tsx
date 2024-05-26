@@ -147,6 +147,7 @@ export function DataTable<TData, TValue>({
         return undefined;
       });
     }
+    setPageIndex(0);
   };
   return (
     <>
@@ -155,7 +156,10 @@ export function DataTable<TData, TValue>({
           <div className="flex">
             <DebouncedInput
               value={globalFilter ?? ""}
-              onChange={(value) => setGlobalFilter(String(value))}
+              onChange={(value) => {
+                setGlobalFilter(String(value));
+                setPageIndex(0);
+              }}
               className="px-2 text-sm flex-grow w-100 mt-4 border rounded"
               placeholder="Search all columns..."
             />
@@ -168,6 +172,7 @@ export function DataTable<TData, TValue>({
                 title="Status"
                 values={["Pending", "Declined", "On Hold", "Paid"]}
                 placeholder="All"
+                onFilterChange={() => setPageIndex(0)}
               />
             </div>
             <div>

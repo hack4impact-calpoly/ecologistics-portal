@@ -16,6 +16,7 @@ type TableColumnFilterDropdownProps = {
   identifier: string;
   values: string[];
   placeholder: string;
+  onFilterChange: () => void;
 };
 
 const TableColumnFilterDropdown: React.FC<TableColumnFilterDropdownProps> = ({
@@ -24,6 +25,7 @@ const TableColumnFilterDropdown: React.FC<TableColumnFilterDropdownProps> = ({
   identifier,
   values,
   placeholder,
+  onFilterChange,
 }) => {
   return (
     <div className="flex flex-col w-full">
@@ -39,7 +41,10 @@ const TableColumnFilterDropdown: React.FC<TableColumnFilterDropdownProps> = ({
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuItem
-            onClick={() => table.getColumn(identifier)?.setFilterValue("")}
+            onClick={() => {
+              onFilterChange();
+              table.getColumn(identifier)?.setFilterValue("");
+            }}
           >
             All
           </DropdownMenuItem>
@@ -48,6 +53,7 @@ const TableColumnFilterDropdown: React.FC<TableColumnFilterDropdownProps> = ({
               <DropdownMenuItem
                 key={v}
                 onClick={() => {
+                  onFilterChange();
                   table?.getColumn(identifier)?.setFilterValue(v);
                 }}
                 className="capitalize"

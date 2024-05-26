@@ -197,6 +197,7 @@ export default function AdminTable() {
         return undefined;
       });
     }
+    setPageIndex(0);
   };
 
   if (isLoading) {
@@ -217,7 +218,10 @@ export default function AdminTable() {
             <Label className="text-xs pl-1 flex-2">Search</Label>
             <DebouncedInput
               value={globalFilter ?? ""}
-              onChange={(value) => setGlobalFilter(String(value))}
+              onChange={(value) => {
+                setGlobalFilter(String(value));
+                setPageIndex(0);
+              }}
               className="p-2 rounded flex-grow w-100 text-sm border border-block"
               placeholder="Search all columns..."
             />
@@ -229,6 +233,7 @@ export default function AdminTable() {
               title="Organization"
               values={getUniqueValues(reimbursements, "organization")}
               placeholder="All"
+              onFilterChange={() => setPageIndex(0)}
             />
           </div>
           <div className="flex flex-col w-[17%] min-w-[12rem]">
@@ -238,6 +243,7 @@ export default function AdminTable() {
               title="Preferred Payment"
               values={getUniqueValues(reimbursements, "paymentMethod")}
               placeholder="Select Payment Type"
+              onFilterChange={() => setPageIndex(0)}
             />
           </div>
           <div className="flex flex-col w-[17%] min-w-[12rem]">
@@ -247,6 +253,7 @@ export default function AdminTable() {
               title="Status"
               values={getUniqueValues(reimbursements, "status")}
               placeholder="Select Status"
+              onFilterChange={() => setPageIndex(0)}
             />
           </div>
           <div className="flex flex-col">
