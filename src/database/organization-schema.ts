@@ -4,7 +4,6 @@ export interface Organization {
   name: string;
   description: string;
   website?: string;
-  clerkUser: string;
   logo?: string;
   reimbursements: string[];
   status: string;
@@ -18,10 +17,6 @@ const OrganizationSchema = new Schema({
     required: [true, "Organization description is necessary."],
   },
   website: { type: String, required: false },
-  clerkUser: {
-    type: String,
-    required: [true, "Organization clerk ID required."],
-  },
   logo: { type: String, required: false },
   reimbursements: {
     type: [{ type: Schema.Types.ObjectId, ref: "Reimbursement" }],

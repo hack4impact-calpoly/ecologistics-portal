@@ -78,7 +78,10 @@ export default function SponsoredOrgCard({
         <div className="w-20 h-20 relative">
           <Image
             className="object-cover rounded-full"
-            src={organizationData?.logo || ""}
+            src={
+              organizationData?.logo ||
+              "/images/sponsored_org_profile_picture_placeholder.png"
+            }
             layout="fill"
             alt="sponsored org logo"
           />

@@ -17,11 +17,13 @@ type UpdateCounts = {
   [key: string]: number;
 };
 
+type OrganizationWithUser = Organization & { clerkUser: string };
+
 // Helper function to retrieve a list of organizations with pending reimbursements
 async function filterOrganizationsWithPendingReimbursements(
-  organizations: Organization[],
+  organizations: OrganizationWithUser[],
 ) {
-  const filteredOrgs: Organization[] = [];
+  const filteredOrgs: OrganizationWithUser[] = [];
   let updateCount: UpdateCounts = {};
   // Check each organization
   for (const org of organizations) {
@@ -55,22 +57,22 @@ async function filterOrganizationsWithPendingReimbursements(
 // Fetch list of organizations
 async function getOrganizations() {
   try {
-    const res = await fetch("/api/organization/");
+    const res = await fetch("/api/user");
     if (!res.ok) {
       throw new Error("Failed to fetch organizations");
     }
-    const data = await res.json();
-    const organizations: Organization[] = [];
-    data.forEach((obj: any) => {
-      if (obj.unsafeMetadata.organization) {
-        let org = { clerkUser: obj.id, ...obj.unsafeMetadata.organization };
+    const users = await res.json();
+    const organizations: OrganizationWithUser[] = [];
+    users.forEach((user: any) => {
+      if (user?.unsafeMetadata?.organization) {
+        let org = { clerkUser: user.id, ...user.unsafeMetadata.organization };
         organizations.push(org);
       }
     });
     return organizations;
   } catch (err: unknown) {
     console.log(`error: ${err}`);
-    return null;
+    return [];
   }
 }
 
@@ -95,11 +97,13 @@ export default function Page() {
   const router = useRouter();
   const { isLoaded, isSignedIn, user } = useUser();
   const [viewTab, setViewTab] = useState(""); // State for tab toggle
-  const [orgs, setOrgs] = useState<Organization[]>([]); // State for currently displayed organizations based on view settings
-  const [updatedOrgs, setUpdatedOrgs] = useState<Organization[]>([]); // State for organizations with pending updates (filtered)
-  const [pendingOrgs, setPendingOrgs] = useState<Organization[]>([]); // State for organizations pending approval
-  const [allOrgs, setAllOrgs] = useState<Organization[]>([]); // State for all organizations (unfiltered)
-  const [allUpdatedOrgs, setAllUpdatedOrgs] = useState<Organization[]>([]); // State for all organizations with pending updates (filtered)
+  const [orgs, setOrgs] = useState<OrganizationWithUser[]>([]); // State for currently displayed organizations based on view settings
+  const [updatedOrgs, setUpdatedOrgs] = useState<OrganizationWithUser[]>([]); // State for organizations with pending updates (filtered)
+  const [pendingOrgs, setPendingOrgs] = useState<OrganizationWithUser[]>([]); // State for organizations pending approval
+  const [allOrgs, setAllOrgs] = useState<OrganizationWithUser[]>([]); // State for all organizations (unfiltered)
+  const [allUpdatedOrgs, setAllUpdatedOrgs] = useState<OrganizationWithUser[]>(
+    [],
+  ); // State for all organizations with pending updates (filtered)
   const [search, setSearch] = useState("");
   const [updateCount, setUpdateCount] = useState<UpdateCounts>({});
   // Turn off viewUpdates when View All is toggled
@@ -188,7 +192,7 @@ export default function Page() {
       <h1>
         {/* Page header */}
         <div className="font-sans text-2xl mb-10 font-semibold">
-          SPONSORED ORGANZATIONS/PROJECTS
+          Sponsored Organizations
         </div>
       </h1>
       {/* Row of buttons */}
@@ -203,14 +207,14 @@ export default function Page() {
                 data-state={viewTab === "" ? "on" : "off"}
                 onClick={handleViewAllToggle}
               >
-                VIEW ALL
+                View All
               </Toggle>
               <Toggle
                 className="text-lg h-11 rounded-none border px-8 border-[#335543] text-[#335543] data-[state=on]:bg-[#335543] data-[state=on]:text-white"
                 data-state={viewTab === "updates" ? "on" : "off"}
                 onClick={handleViewUpdatesToggle}
               >
-                VIEW UPDATES
+                View Updates
                 <div className="relative w-7 h-7 ml-3 bg-[#335543] rounded-full flex items-center justify-center text-white text-sm">
                   <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                     {/* Number of updated orgs */}
@@ -223,7 +227,7 @@ export default function Page() {
                 data-state={viewTab === "pending" ? "on" : "off"}
                 onClick={handleViewPendingToggle}
               >
-                VIEW PENDING
+                View Pending
               </Toggle>
             </div>
           </div>
