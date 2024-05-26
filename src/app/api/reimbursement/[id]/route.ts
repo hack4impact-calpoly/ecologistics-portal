@@ -1,6 +1,6 @@
-import Alert from "@/models/alert";
+import Alert from "@/database/alert-schema";
 import connectDB from "@/database/db";
-import Reimbursement from "@/models/reimbursement";
+import Reimbursement from "@/database/reimbursement-schema";
 import { verifyAdmin } from "@/lib/admin";
 import Status from "@/lib/enum";
 import { ErrorResponse } from "@/lib/error";

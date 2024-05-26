@@ -11,8 +11,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Organization } from "@/models/organization";
-import Reimbursement from "@/models/reimbursement";
+import { Organization } from "@/database/organization-schema";
+import Reimbursement from "@/database/reimbursement-schema";
 import { dateFilterFn, fuzzyFilter } from "@/lib/utils";
 import { User } from "@clerk/nextjs/server";
 import {

@@ -1,4 +1,4 @@
-import Reimbursement from "@/models/reimbursement";
+import Reimbursement from "@/database/reimbursement-schema";
 import { Types } from "mongoose";
 
 export const MOCK_REIMBURSEMENTS: Reimbursement[] = [
