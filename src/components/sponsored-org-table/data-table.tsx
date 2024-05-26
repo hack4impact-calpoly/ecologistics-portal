@@ -132,12 +132,7 @@ export function DataTable<TData, TValue>({
               identifier="status"
               title="Status"
               values={["Pending", "Declined", "On Hold", "Paid"]}
-              placeholder={
-                <span>
-                  <span style={{ color: "black" }}>All</span>
-                  <span style={{ color: "white" }}>__</span>
-                </span>
-              }
+              placeholder=""
             />
           </div>
           <div>
