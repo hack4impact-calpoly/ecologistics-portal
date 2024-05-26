@@ -49,7 +49,7 @@ const Sidebar = () => {
   }
   if (!isLoaded) {
     return (
-      <div className={`flex flex-col min-w-[81px] h-screen bg-[#335543]`}>
+      <div className={`flex flex-col min-w-[81px] bg-[#335543]`}>
         {isCollapsed ? (
           <PinRightIcon
             className="h-[45px] w-[45px] text-white mx-auto my-2 hover:bg-gray-200 hover:bg-opacity-50 p-2 rounded-full cursor-pointer"
@@ -66,7 +66,7 @@ const Sidebar = () => {
   }
 
   return (
-    <div className="flex flex-col h-screen bg-[#335543]">
+    <div className="flex flex-col bg-[#335543]">
       {isCollapsed ? (
         <PinRightIcon
           className="h-[45px] w-[45px] text-white mx-auto my-2 hover:bg-gray-200 hover:bg-opacity-50 p-2 rounded-full cursor-pointer"

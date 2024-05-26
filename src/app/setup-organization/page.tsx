@@ -31,7 +31,7 @@ export default function Page() {
     defaultValues: {
       name: "",
       description: "",
-      website: "",
+      website: "https://",
     },
   });
   const { isLoaded, isSignedIn, user } = useUser();
@@ -51,6 +51,15 @@ export default function Page() {
       },
     });
     router.push("/");
+  };
+
+  const autofillUrl = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const url = e.target.value;
+    if (!url.startsWith("http")) {
+      form.setValue("website", `https://${url}`);
+      return;
+    }
+    form.setValue("website", url);
   };
 
   return (
@@ -95,7 +104,11 @@ export default function Page() {
                   Website
                 </FormLabel>
                 <FormControl>
-                  <Input placeholder="website" {...field} />
+                  <Input
+                    placeholder="website"
+                    {...field}
+                    onChange={autofillUrl}
+                  />
                 </FormControl>
                 <FormDescription>
                   Enter your organization website link.

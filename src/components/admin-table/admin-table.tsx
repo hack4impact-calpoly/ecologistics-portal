@@ -1,7 +1,26 @@
 "use client";
 
-import * as React from "react";
+import CenteredSpinner from "@/components/centered-spinner";
 import { Button } from "@/components/ui/button";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Organization } from "@/database/organization-schema";
+import Reimbursement from "@/database/reimbursement-schema";
+import { dateFilterFn, fuzzyFilter } from "@/lib/utils";
+import { User } from "@clerk/nextjs/server";
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  DoubleArrowLeftIcon,
+  DoubleArrowRightIcon,
+} from "@radix-ui/react-icons";
 import {
   ColumnFiltersState,
   ExpandedState,
@@ -15,33 +34,13 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import * as React from "react";
+import { DateRange } from "react-day-picker";
 import { DatePickerWithRange } from "../ui/custom/date-range-picker";
 import { DebouncedInput } from "../ui/custom/debounced-input";
-import { Label } from "../ui/label";
 import TableColumnFilterDropdown from "../ui/custom/table-column-filter-dropdown";
+import { Label } from "../ui/label";
 import { columns } from "./columns";
-import Reimbursement from "@/database/reimbursement-schema";
-import { DateRange } from "react-day-picker";
-import { dateFilterFn } from "@/lib/utils";
-import { fuzzyFilter } from "@/lib/utils";
-import CenteredSpinner from "@/components/centered-spinner";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import {
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  DoubleArrowLeftIcon,
-  DoubleArrowRightIcon,
-  WidthIcon,
-} from "@radix-ui/react-icons";
-import { handleClientScriptLoad } from "next/script";
 
 export type ReimbursementWithOrganization = Reimbursement & {
   organization: string;
@@ -60,18 +59,16 @@ async function fetchReimbursements(): Promise<Reimbursement[]> {
   }
 }
 
-export const fetchOrganizationName = async (
-  clerkUserId: string,
-): Promise<string> => {
+export const fetchUsers = async (): Promise<User[]> => {
   try {
-    const response = await fetch(`/api/user/${clerkUserId}`);
+    const response = await fetch(`/api/user`);
     if (!response.ok) {
       throw new Error("Network response was not ok");
     }
-    return (await response.json()).unsafeMetadata.organization.name;
+    return await response.json();
   } catch (error) {
     console.error("Error fetching data:", error);
-    return "";
+    return [];
   }
 };
 
@@ -102,16 +99,21 @@ export default function AdminTable() {
 
   React.useEffect(() => {
     fetchReimbursements()
-      .then(async (data) =>
-        Promise.all(
-          data.map(async (reimbursement) => ({
+      .then(async (data) => {
+        const users = await fetchUsers();
+        console.log(users);
+        return data.map((reimbursement) => {
+          const user = users.find(
+            (user) => user.id === reimbursement.clerkUserId,
+          );
+          return {
             ...reimbursement,
-            organization: await fetchOrganizationName(
-              reimbursement.clerkUserId,
-            ),
-          })),
-        ),
-      )
+            organization:
+              (user?.unsafeMetadata?.organization as Organization)?.name ||
+              "Unknown",
+          };
+        });
+      })
       .then((reimbursements) => {
         setReimbursements(reimbursements);
         setIsLoading(false);
@@ -202,7 +204,7 @@ export default function AdminTable() {
   return (
     <>
       <ScrollArea
-        className={`h-[calc(90h-186px)] w-[calc(95vw-81px)] whitespace-nowrap`}
+        className={`h-[calc(90vh-186px)] w-[calc(95vw-81px)] whitespace-nowrap`}
       >
         <div className="flex justify-between space-x-1 w-full mb-5 text-gray-400">
           <div className="flex flex-col w-[25%] min-w-[20rem]">

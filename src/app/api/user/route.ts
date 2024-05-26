@@ -15,8 +15,17 @@ export async function GET(): Promise<
     return createErrorResponse(null, "Unauthorized", 401);
   }
   try {
-    const users = await clerkClient.users.getUserList();
-    return createSuccessResponse(users, 200);
+    const allUsers = [];
+    let users;
+    while (
+      (users = await clerkClient.users.getUserList({
+        limit: 500,
+        offset: allUsers.length,
+      })).length > 0
+    ) {
+      allUsers.push(...users);
+    }
+    return createSuccessResponse(allUsers, 200);
   } catch (error) {
     return createErrorResponse(error, "Error fetching users", 404);
   }

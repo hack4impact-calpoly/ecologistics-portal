@@ -28,12 +28,13 @@ export default function RootLayout({
       <ClerkProvider>
         <body
           className={cn(
-            "min-h-screen bg-background font-sans antialiased",
+            "flex flex-col min-h-screen bg-background font-sans antialiased",
             fontSans.variable,
           )}
         >
           <Header />
-          <div className="flex">
+          {/* fill remaining vertical space */}
+          <div className="flex grow">
             <Sidebar />
             {children}
           </div>

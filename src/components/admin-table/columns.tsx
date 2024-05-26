@@ -1,27 +1,18 @@
-import { formatAmount } from "@/lib/format";
-import { ColumnDef, FilterFnOption, Row } from "@tanstack/react-table";
 import StatusBadge from "@/components/status-badge";
 import { Button } from "@/components/ui/button";
-import { DownloadIcon } from "@radix-ui/react-icons";
-import React, { useEffect, useState } from "react";
-import {
-  Dialog,
-  DialogTrigger,
-  DialogContent,
-  DialogClose,
-} from "@/components/ui/dialog";
-import Reimbursement from "@/database/reimbursement-schema";
-import ManageRequestCard from "../manage-request-card";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { formatAmount } from "@/lib/format";
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
 } from "@radix-ui/react-hover-card";
+import { DownloadIcon } from "@radix-ui/react-icons";
+import { ColumnDef, FilterFnOption } from "@tanstack/react-table";
+import { useState } from "react";
 import HelpMenu from "../help-menu";
-import {
-  ReimbursementWithOrganization,
-  fetchOrganizationName,
-} from "./admin-table";
+import ManageRequestCard from "../manage-request-card";
+import { ReimbursementWithOrganization } from "./admin-table";
 
 const OrganizationCell = ({ row }: { row: any }) => {
   const [selectedReimbursement, setSelectedReimbursement] =
@@ -41,7 +32,7 @@ const OrganizationCell = ({ row }: { row: any }) => {
       })
       .then(async (data) => ({
         ...data,
-        organization: await fetchOrganizationName(data.clerkUserId),
+        organization: row.original.name,
       }))
       .then((data) => {
         if (data) {
