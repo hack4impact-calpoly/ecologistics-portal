@@ -51,7 +51,9 @@ export default function RequestInfoCard(props: Reimbursement) {
       {/* Description, recipient info, and image */}
       <CardContent className="space-y-1">
         <p className="text-sm pb-5 text-wrap text-ellipsis overflow-hidden">
-          Request Description: {props.comment}
+          Request Description: {props.purpose}
+          <br></br>
+          {props.comment}
         </p>
         <p className="text-base">
           Request For:<br></br>
@@ -65,11 +67,14 @@ export default function RequestInfoCard(props: Reimbursement) {
         </p>
         <div className="flex justify-center mt-[10px] max-w-[564px] max-h-[340px]">
           <Image
-            src={reimbursement.receiptLink}
+            src={props.receiptLink}
             width={564}
             height={340}
             alt="Receipt Picture"
-            className="border border-gray-100 w-full object-cover object-center"
+            className="border border-gray-100 w-full object-scale-down object-center hover:cursor-pointer"
+            onClick={() => {
+              window.open(props.receiptLink, "_blank");
+            }}
           />
         </div>
       </CardContent>

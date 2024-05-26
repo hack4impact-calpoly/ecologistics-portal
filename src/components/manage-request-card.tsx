@@ -73,29 +73,18 @@ export default function ManageRequestCard(props: ManageRequestCardProps) {
           {reimbursement.paymentMethod ?? "No Input"}
         </p>
 
-        <Dialog>
-          <DialogTrigger asChild>
-            <div className="flex justify-center mt-[10px] max-w-[564px] max-h-[340px]">
-              <Image
-                src={reimbursement.receiptLink}
-                width={564}
-                height={340}
-                alt="Receipt Picture"
-                className="border border-gray-100 w-full object-cover object-center"
-              />
-            </div>
-          </DialogTrigger>
-          <DialogContent className="w-[100%]">
-            <Image
-              src={reimbursement.receiptLink}
-              width={564}
-              height={340}
-              alt="Receipt Picture"
-              objectFit=""
-              className="border border-gray-100 w-full"
-            />
-          </DialogContent>
-        </Dialog>
+        <div className="flex justify-center mt-[10px] max-w-[564px] max-h-[340px]">
+          <Image
+            src={reimbursement.receiptLink}
+            width={564}
+            height={340}
+            alt="Receipt Picture"
+            className="border border-gray-100 w-full object-scale-down object-center hover:cursor-pointer"
+            onClick={() => {
+              window.open(reimbursement.receiptLink, "_blank");
+            }}
+          />
+        </div>
         <div className="flex justify-end">
           <Dialog>
             <DialogTrigger asChild>
