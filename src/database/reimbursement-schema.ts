@@ -14,16 +14,6 @@ interface Reimbursement {
   comment?: string;
 }
 
-interface GetReimbursementResponse extends Reimbursement {}
-interface GetReimbursementListResponse {
-  reimbursements: Reimbursement[];
-}
-interface UpdateReimbursementResponse extends Reimbursement {}
-interface DeleteReimbursementResponse {
-  message: string;
-  status: number;
-}
-
 const ReimbursementSchema = new Schema({
   clerkUserId: {
     type: String,
