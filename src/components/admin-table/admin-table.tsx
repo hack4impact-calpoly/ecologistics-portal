@@ -43,6 +43,10 @@ import {
 } from "@radix-ui/react-icons";
 import { handleClientScriptLoad } from "next/script";
 
+export type ReimbursementWithOrganization = Reimbursement & {
+  organization: string;
+};
+
 async function fetchReimbursements(): Promise<Reimbursement[]> {
   try {
     const response = await fetch("/api/reimbursement"); // Adjust endpoint as necessary
@@ -56,6 +60,21 @@ async function fetchReimbursements(): Promise<Reimbursement[]> {
   }
 }
 
+export const fetchOrganizationName = async (
+  clerkUserId: string,
+): Promise<string> => {
+  try {
+    const response = await fetch(`/api/user/${clerkUserId}`);
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    return (await response.json()).unsafeMetadata.organization.name;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    return "";
+  }
+};
+
 export default function AdminTable() {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -66,9 +85,9 @@ export default function AdminTable() {
     React.useState<VisibilityState>({ recipientEmail: false });
   const [expanded, setExpanded] = React.useState<ExpandedState>({});
 
-  const [reimbursements, setReimbursements] = React.useState<Reimbursement[]>(
-    [],
-  );
+  const [reimbursements, setReimbursements] = React.useState<
+    ReimbursementWithOrganization[]
+  >([]);
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
   const [error, setError] = React.useState<Error | null>(null);
   const [pageIndex, setPageIndex] = React.useState(0);
@@ -83,8 +102,18 @@ export default function AdminTable() {
 
   React.useEffect(() => {
     fetchReimbursements()
-      .then((data) => {
-        setReimbursements(data);
+      .then(async (data) =>
+        Promise.all(
+          data.map(async (reimbursement) => ({
+            ...reimbursement,
+            organization: await fetchOrganizationName(
+              reimbursement.clerkUserId,
+            ),
+          })),
+        ),
+      )
+      .then((reimbursements) => {
+        setReimbursements(reimbursements);
         setIsLoading(false);
       })
       .catch((err) => {

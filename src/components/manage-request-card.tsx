@@ -21,12 +21,17 @@ import {
 } from "@/components/ui/dialog";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { Pencil1Icon } from "@radix-ui/react-icons";
+import { ReimbursementWithOrganization } from "./admin-table/admin-table";
 
-export default function ManageRequestCard(
-  props: Reimbursement & { updateComment: (input: string) => void },
-) {
-  const [comment, setComment] = useState(props.comment ?? "");
-  const [savedComment, setSavedComment] = useState(props.comment ?? "");
+interface ManageRequestCardProps {
+  reimbursement: ReimbursementWithOrganization;
+  updateComment: (input: string) => void;
+}
+
+export default function ManageRequestCard(props: ManageRequestCardProps) {
+  const { reimbursement, updateComment } = props;
+  const [comment, setComment] = useState(reimbursement.comment ?? "");
+  const [savedComment, setSavedComment] = useState(reimbursement.comment ?? "");
 
   return (
     <Card className="w-full rounded-2xl border-none">
@@ -34,43 +39,45 @@ export default function ManageRequestCard(
         <div className="flex flex-col items-left">
           <CardTitle className="text-xxl font-bold pb-3">
             <p className="text-wrap text-ellipsis overflow-hidden max-w-[16rem]">
-              {props.reportName}
+              {reimbursement.reportName}
             </p>
           </CardTitle>
           <CardDescription className="flex space-x-4 items-center text-black">
             <div className="border border-black rounded-full py-1 px-3">
-              ${props.amount}
+              ${reimbursement.amount}
             </div>
-            <div>{new Date(props.transactionDate).toLocaleDateString()}</div>
+            <div>
+              {new Date(reimbursement.transactionDate).toLocaleDateString()}
+            </div>
           </CardDescription>
         </div>
         <div className="flex flex-col w-[9rem]">
-          <StatusDropdown Status={props.status.toString()} />
+          <StatusDropdown Status={reimbursement.status.toString()} />
           <div className="text-center text-wrap text-ellipsis overflow-hidden">
-            {props.comment}
+            {reimbursement.comment}
           </div>
         </div>
       </CardHeader>
       <CardContent className="space-y-1">
         <p className="text-sm pb-5 text-wrap text-ellipsis overflow-hidden">
-          Request Description: {props.purpose}
+          Request Description: {reimbursement.purpose}
         </p>
         <p className="text-base">
           Request For:<br></br>
         </p>
         <p className="text-sm pb-4 text-wrap text-ellipsis overflow-hidden">
-          {props.recipientName}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          {props.recipientEmail}
+          {reimbursement.recipientName}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          {reimbursement.recipientEmail}
           <br></br>
           Payment Type Info:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          {props.paymentMethod ? props.paymentMethod : "No Input"}
+          {reimbursement.paymentMethod ?? "No Input"}
         </p>
 
         <Dialog>
           <DialogTrigger asChild>
             <div className="flex justify-center mt-[10px] max-w-[564px] max-h-[340px]">
               <Image
-                src={props.receiptLink}
+                src={reimbursement.receiptLink}
                 width={564}
                 height={340}
                 alt="Receipt Picture"
@@ -80,7 +87,7 @@ export default function ManageRequestCard(
           </DialogTrigger>
           <DialogContent className="w-[100%]">
             <Image
-              src={props.receiptLink}
+              src={reimbursement.receiptLink}
               width={564}
               height={340}
               alt="Receipt Picture"
@@ -109,7 +116,7 @@ export default function ManageRequestCard(
                   type="submit"
                   className="border-black h-7 px-2"
                   onClick={() => {
-                    props.updateComment(comment);
+                    updateComment(comment);
                     setSavedComment(comment);
                   }}
                 >
