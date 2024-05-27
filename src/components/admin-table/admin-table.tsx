@@ -41,6 +41,7 @@ import { DebouncedInput } from "../ui/custom/debounced-input";
 import TableColumnFilterDropdown from "../ui/custom/table-column-filter-dropdown";
 import { Label } from "../ui/label";
 import { columns } from "./columns";
+import Status from "@/lib/enum";
 
 export type ReimbursementWithOrganization = Reimbursement & {
   organization: string;
@@ -251,7 +252,7 @@ export default function AdminTable() {
               table={table}
               identifier="status"
               title="Status"
-              values={getUniqueValues(reimbursements, "status")}
+              values={Object.values(Status)}
               placeholder="Select Status"
               onFilterChange={() => setPageIndex(0)}
             />

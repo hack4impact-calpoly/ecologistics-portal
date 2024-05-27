@@ -42,7 +42,6 @@ async function filterUpdatedOrgs(organizations: OrganizationWithUser[]) {
           if (reimbursement && reimbursement.status === Status.Pending) {
             pending = true;
             numOfUpdates++; // increment number of updates
-            break; // If it has at least one pending reimbursement, no need to keep checking the same organization
           }
         }
       }

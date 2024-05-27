@@ -42,6 +42,7 @@ import { DateRange } from "react-day-picker";
 import { rankItem } from "@tanstack/match-sorter-utils";
 import React from "react";
 import { setDate } from "date-fns";
+import Status from "@/lib/enum";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -170,7 +171,7 @@ export function DataTable<TData, TValue>({
                 table={table}
                 identifier="status"
                 title="Status"
-                values={["Pending", "Declined", "On Hold", "Paid"]}
+                values={Object.values(Status)}
                 placeholder="All"
                 onFilterChange={() => setPageIndex(0)}
               />
