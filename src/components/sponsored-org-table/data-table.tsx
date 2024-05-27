@@ -3,14 +3,13 @@
 import {
   ColumnDef,
   ColumnFiltersState,
+  FilterFn,
   flexRender,
   getCoreRowModel,
-  getPaginationRowModel,
   getFilteredRowModel,
+  getPaginationRowModel,
   useReactTable,
-  FilterFn,
 } from "@tanstack/react-table";
-
 import {
   Table,
   TableBody,
@@ -19,30 +18,18 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
+import { PaginationItem, PaginationLink } from "@/components/ui/pagination";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-
-import { Button } from "@/components/ui/button";
-import { DebouncedInput } from "../ui/custom/debounced-input";
-import { useState } from "react";
-import { DatePickerWithRange } from "../ui/custom/date-range-picker";
-import { Label } from "@radix-ui/react-dropdown-menu";
-import TableColumnFilterDropdown from "../ui/custom/table-column-filter-dropdown";
-import { dateFilterFn } from "@/lib/utils";
-import { DateRange } from "react-day-picker";
-import { rankItem } from "@tanstack/match-sorter-utils";
-import React from "react";
-import { setDate } from "date-fns";
 import Status from "@/lib/enum";
+import { dateFilterFn } from "@/lib/utils";
+import { Label } from "@radix-ui/react-dropdown-menu";
+import { rankItem } from "@tanstack/match-sorter-utils";
+import React, { useState } from "react";
+import { DateRange } from "react-day-picker";
+import { TablePagination } from "../table-pagination";
+import { DatePickerWithRange } from "../ui/custom/date-range-picker";
+import { DebouncedInput } from "../ui/custom/debounced-input";
+import TableColumnFilterDropdown from "../ui/custom/table-column-filter-dropdown";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -238,9 +225,11 @@ export function DataTable<TData, TValue>({
         </div>
         <ScrollBar orientation="horizontal" />
       </ScrollArea>
-      <Pagination>
-        <PaginationContent>{renderPagination()}</PaginationContent>
-      </Pagination>
+      <TablePagination
+        table={table}
+        pageIndex={pageIndex}
+        setPageIndex={setPageIndex}
+      />
     </>
   );
 }
