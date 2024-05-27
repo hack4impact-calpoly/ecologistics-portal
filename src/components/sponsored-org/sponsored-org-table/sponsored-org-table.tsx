@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { columns } from "./columns";
-import { DataTable } from "@/components/sponsored-org-table/data-table";
+import { DataTable } from "@/components/sponsored-org/sponsored-org-table/data-table";
 
 export default function SponsoredOrgTable() {
   const getReimbursementsUrl = "/api/reimbursement";
@@ -14,9 +14,7 @@ export default function SponsoredOrgTable() {
         const response = await fetch(getReimbursementsUrl);
         const data = await response.json();
         if (!response.ok) {
-          throw new Error(
-            `HTTP error. Status: ${response.status}. Error: ${data.error}.`,
-          );
+          throw new Error(`HTTP error. Status: ${response.status}. Error: ${data.error}.`);
         }
         setReimbursements(data);
       } catch (error) {

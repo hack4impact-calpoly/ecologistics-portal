@@ -2,7 +2,7 @@
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import CenteredSpinner from "@/components/centered-spinner";
-import SponsoredHomePage from "../components/sponsored-org-home";
+import SponsoredHomePage from "../components/sponsored-org/sponsored-org-home";
 import AdminHomePage from "../components/admin-home-page";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
@@ -36,12 +36,9 @@ export default function Home() {
         return (
           <div className="flex items-center justify-center mx-auto">
             <Alert className="text-center p-8 text-lg">
-              <AlertTitle className="text-2xl mb-4">
-                Pending Approval
-              </AlertTitle>
+              <AlertTitle className="text-2xl mb-4">Pending Approval</AlertTitle>
               <AlertDescription className="text-xl">
-                Your organization is pending review from an Ecologistics
-                administrator.
+                Your organization is pending review from an Ecologistics administrator.
               </AlertDescription>
             </Alert>
           </div>

@@ -19,10 +19,10 @@ import { Label } from "@radix-ui/react-dropdown-menu";
 import { rankItem } from "@tanstack/match-sorter-utils";
 import React, { useState } from "react";
 import { DateRange } from "react-day-picker";
-import { TablePagination } from "../table-pagination";
-import { DatePickerWithRange } from "../ui/custom/date-range-picker";
-import { DebouncedInput } from "../ui/custom/debounced-input";
-import TableColumnFilterDropdown from "../ui/custom/table-column-filter-dropdown";
+import { TablePagination } from "../../table-pagination";
+import { DatePickerWithRange } from "../../ui/custom/date-range-picker";
+import { DebouncedInput } from "../../ui/custom/debounced-input";
+import TableColumnFilterDropdown from "../../ui/custom/table-column-filter-dropdown";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];

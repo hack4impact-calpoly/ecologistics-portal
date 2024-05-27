@@ -1,7 +1,7 @@
 "use client";
 
 import CenteredSpinner from "@/components/centered-spinner";
-import SponsoredOrgTable from "@/components/sponsored-org-table/sponsored-org-table";
+import SponsoredOrgTable from "@/components/sponsored-org/sponsored-org-table/sponsored-org-table";
 import Popup from "@/components/user-info-popup";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
@@ -46,10 +46,7 @@ export default function SponsoredHomePage() {
             user={(user?.fullName as string) || ""}
           />
         </div>
-        <Button
-          onClick={() => router.push("/reimbursements")}
-          className="bg-orange-500 text-sm place-self-end"
-        >
+        <Button onClick={() => router.push("/reimbursements")} className="bg-orange-500 text-sm place-self-end">
           Request Reimbursement
         </Button>
       </div>

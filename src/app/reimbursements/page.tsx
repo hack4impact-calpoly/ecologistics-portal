@@ -2,12 +2,11 @@
 
 import CenteredSpinner from "@/components/centered-spinner";
 import ImageUpload from "@/components/image-upload";
+import { W9Verification } from "@/components/sponsored-org/w9-verification";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import ImagePopup from "../../components/upload-popup";
-import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,13 +14,16 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { useUser } from "@clerk/nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
 import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -38,10 +40,7 @@ const formSchema = z.object({
 
 export default function Page() {
   const { isLoaded, isSignedIn, user } = useUser();
-  const [isConfirmed, setIsConfirmed] = useState(false);
-  const [uploadSuccess, setUploadSuccess] = useState(false);
   const [submitDisabled, setSubmitDisabled] = useState(false);
-  const popupRef = useRef<{ openDialog: () => void } | null>(null);
 
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
@@ -61,7 +60,6 @@ export default function Page() {
   // submisson handler
   function onSubmit(values: z.infer<typeof formSchema>) {
     setSubmitDisabled(true);
-    if (!isConfirmed) return;
     // initialize multipart form data
     const formData = new FormData();
     // append all form values to form data
@@ -76,18 +74,13 @@ export default function Page() {
     })
       .then((response) => {
         if (response.ok) {
-          setUploadSuccess(true);
-          popupRef.current?.openDialog();
           return response.json();
         }
-        setUploadSuccess(false);
-        popupRef.current?.openDialog();
         setSubmitDisabled(false);
         throw new Error("Failed to submit reimbursement");
       })
       .then(() => {
         // Reset the form fields
-        setIsConfirmed(false);
         form.reset({
           recipientName: "",
           recipientEmail: "",
@@ -103,14 +96,6 @@ export default function Page() {
         setSubmitDisabled(false);
         console.error(error);
       });
-  }
-
-  function handleConfirm() {
-    setIsConfirmed(true);
-  }
-
-  function handleDeny() {
-    setIsConfirmed(false);
   }
 
   if (!isLoaded) {
@@ -154,181 +139,174 @@ Thank you!`;
   };
 
   return (
-    <main>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 m-5">
-          <FormField
-            control={form.control}
-            name="recipientName"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel> Recipient Name </FormLabel>
-                <FormControl>
-                  <Input placeholder="recipientName" {...field} />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="recipientEmail"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel> Recipient Email </FormLabel>
-                <FormControl>
-                  <Input placeholder="recipientEmail" {...field} />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="transactionDate"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="block mb-2"> Transaction Date </FormLabel>
-                <FormControl>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant={"outline"}
-                          className={cn(
-                            "w-[240px] pl-3 text-left font-normal",
-                            !field.value && "text-muted-foreground",
-                          )}
-                        >
-                          {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
-                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={field.value}
-                        onSelect={field.onChange}
-                        disabled={(date) => date > new Date() || date < new Date("1900-01-01")}
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
-                </FormControl>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="amount"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel> Transaction Amount </FormLabel>
-                <FormControl>
-                  <Input type="number" placeholder="$ amount" {...field} />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="paymentMethod"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel> Payment Method </FormLabel>
-                <br />
-                <FormControl>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="outline" className="w-64">
-                        {field.value || "Select payment method"}
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className="w-64">
-                      <DropdownMenuGroup>
-                        <DropdownMenuItem onClick={() => field.onChange("ACH")}>ACH</DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => field.onChange("Check")}>Check</DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => field.onChange("PayPal")}>PayPal</DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => field.onChange("Venmo")}>Venmo</DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => field.onChange("Zelle")}>Zelle</DropdownMenuItem>
-                      </DropdownMenuGroup>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </FormControl>
-                {field.value && (
-                  <>
-                    <div>
-                      Please submit your account information in the comment field. If the information is sensitive,
-                      please send it via email instead.
-                    </div>
-                  </>
+    <main className="flex flex-col items-center p-10 w-full">
+      <Card className="w-1/2 min-w-96 max-w-2xl">
+        <CardHeader>
+          <CardTitle>Request Reimbursement</CardTitle>
+          <CardDescription>Submit a reimbursement request to Ecologistics.</CardDescription>
+        </CardHeader>
+        <Form {...form}>
+          <form id="request-reimbursement-form" onSubmit={form.handleSubmit(onSubmit)}>
+            <CardContent className="space-y-4 mt-4">
+              <FormField
+                control={form.control}
+                name="recipientName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel> Recipient Name </FormLabel>
+                    <FormControl>
+                      <Input placeholder="Recipient name" {...field} />
+                    </FormControl>
+                  </FormItem>
                 )}
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="comment"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel> Comment </FormLabel>
-                <FormControl>
-                  <Input placeholder="comment (optional)" {...field} />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="purpose"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel> Transaction Purpose </FormLabel>
-                <FormControl>
-                  <Input placeholder="purpose" {...field} />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="file" // where did this come from?
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel> File Upload </FormLabel>
-                <FormControl>
-                  <ImageUpload handleChange={field.onChange}></ImageUpload>
-                </FormControl>
-              </FormItem>
-            )}
-          />
-          <Button type="submit" disabled={submitDisabled}>
-            Submit
-          </Button>
-        </form>
-      </Form>
-      <ImagePopup ref={popupRef} success={uploadSuccess} />
-
-      <div className="flex flex-col bg-gray-200 items-center space-y-2 px-4">
-        <h4 className="p-3 pb-0 text-2xl font-bold ">Did you email the W9 form to Ecologistics?</h4>
-        <p className="text-lg pb-2">
-          {`*This only applies to third-party payments. If this is a
-          reimbursement, click "Yes" to continue.`}
-        </p>
-        <div className="w-[90%] flex justify-between pb-4">
-          <Button
-            onClick={handleConfirm}
-            className="w-[30%] bg-green-300 bg-opacity-80 text-green-800 hover:bg-green-300"
-          >
-            Yes
-          </Button>
-          <Button onClick={handleDeny} className="w-[30%] bg-red-400 bg-opacity-80 text-red-800 hover:bg-red-400">
-            No
-          </Button>
-        </div>
-      </div>
-      <div className="flex justify-center">
-        <Button onClick={constructEmail}>Generate Email Template</Button>
-      </div>
+              />
+              <FormField
+                control={form.control}
+                name="recipientEmail"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel> Recipient Email </FormLabel>
+                    <FormControl>
+                      <Input placeholder="Receipient email" {...field} />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="transactionDate"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="block mb-2"> Transaction Date </FormLabel>
+                    <FormControl>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant={"outline"}
+                              className={cn(
+                                "w-[240px] pl-3 text-left font-normal",
+                                !field.value && "text-muted-foreground",
+                              )}
+                            >
+                              {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
+                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={field.value}
+                            onSelect={field.onChange}
+                            disabled={(date) => date > new Date() || date < new Date("1900-01-01")}
+                            initialFocus
+                          />
+                        </PopoverContent>
+                      </Popover>
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="amount"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel> Transaction Amount </FormLabel>
+                    <FormControl>
+                      <Input type="number" placeholder="Amount ($)" {...field} />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="purpose"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel> Transaction Purpose </FormLabel>
+                    <FormControl>
+                      <Input placeholder="Purpose" {...field} />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="paymentMethod"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel> Payment Method </FormLabel>
+                    <br />
+                    <FormControl>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="outline" className="w-64">
+                            {field.value || "Select payment method"}
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="w-64">
+                          <DropdownMenuGroup>
+                            <DropdownMenuItem onClick={() => field.onChange("ACH")}>ACH</DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => field.onChange("Check")}>Check</DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => field.onChange("PayPal")}>PayPal</DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => field.onChange("Venmo")}>Venmo</DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => field.onChange("Zelle")}>Zelle</DropdownMenuItem>
+                          </DropdownMenuGroup>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </FormControl>
+                    {field.value && (
+                      <FormMessage className="text-sm text-muted-foreground">
+                        Please submit your account information in the comment field. If the information is sensitive,
+                        please send it via email instead.
+                      </FormMessage>
+                    )}
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="comment"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel> Comment </FormLabel>
+                    <FormControl>
+                      <Input placeholder="Comment (optional)" {...field} />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="file" // where did this come from?
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel> Receipt Upload </FormLabel>
+                    <FormControl>
+                      <ImageUpload handleChange={field.onChange}></ImageUpload>
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+            </CardContent>
+            <CardFooter className="flex justify-end space-x-4 mt-4">
+              <Button variant="secondary" type="button" onClick={() => router.push("/")}>
+                Cancel
+              </Button>
+              <Dialog>
+                <DialogTrigger>
+                  <Button className="bg-orange-500" type="button" disabled={submitDisabled}>
+                    Submit
+                  </Button>
+                </DialogTrigger>
+                <W9Verification constructEmail={constructEmail} />
+              </Dialog>
+            </CardFooter>
+          </form>
+        </Form>
+      </Card>
     </main>
   );
 }
