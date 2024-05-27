@@ -264,12 +264,7 @@ export default function AdminTable() {
                     }}
                   >
                     {row.getVisibleCells().map((cell) => (
-                      <TableCell
-                        className="text-left [&_button_svg]:mx-5 [&_div]:items-left [&_div]:justify-start"
-                        key={cell.id}
-                      >
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                      </TableCell>
+                      <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
                     ))}
                   </TableRow>
                 ))

@@ -6,6 +6,8 @@ import Reimbursement from "@/database/reimbursement-schema";
 import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
 import RequestInfoCard from "@/components/sponsored-org/request-info-card";
 import StatusBadge from "@/components/status-badge";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@radix-ui/react-hover-card";
+import HelpMenu from "@/components/help-menu";
 
 const ReportNameCell = ({ row }: { row: any }) => {
   const [selectedReimbursement, setSelectedReimbursement] = useState<Reimbursement | null>(null);
@@ -76,9 +78,16 @@ export const columns: ColumnDef<Reimbursement>[] = [
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => (
-      <div className="capitalize">
-        <StatusBadge reimbursementStatus={row.getValue("status")} />
-      </div>
+      <HoverCard>
+        <HoverCardTrigger asChild>
+          <Button variant="link" className="p-0">
+            <StatusBadge reimbursementStatus={row.getValue("status")} />
+          </Button>
+        </HoverCardTrigger>
+        <HoverCardContent>
+          <HelpMenu />
+        </HoverCardContent>
+      </HoverCard>
     ),
   },
   {
@@ -96,12 +105,12 @@ export const columns: ColumnDef<Reimbursement>[] = [
     accessorKey: "receiptLink",
     header: "Receipt",
     cell: ({ row }) => (
-      <div className="w-full flex items-center justify-center">
+      <div className="flex items-center justify-start">
         <Button
           onClick={() => {
             window.open(row.getValue("receiptLink"), "_blank");
           }}
-          className="p-0 px-3"
+          className="p-0 px-4"
           variant={"ghost"}
         >
           <DownloadIcon />
