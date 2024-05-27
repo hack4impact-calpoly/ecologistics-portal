@@ -26,9 +26,11 @@ export default function AdminHomePage() {
   }
 
   return (
-    <main className="flex flex-col w-full items-center">
-      <div className="w-[calc(95vw-81px)] text-[1.5rem] font-bold mt-10 mb-6">
-        Reimbursement/Payment Requests
+    <main className="px-14 py-12 overflow-y-auto w-full">
+      <div className="flex items-center justify-between">
+        <div className="flex gap-x-6 items-center mb-4">
+          <h1 className="font-bold text-2xl">Reimbursement/Payment Requests</h1>
+        </div>
       </div>
       <AdminTable />
     </main>
