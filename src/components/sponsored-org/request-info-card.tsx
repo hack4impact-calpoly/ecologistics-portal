@@ -1,7 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
 import Reimbursement from "@/database/reimbursement-schema";
-import StatusBadge from "./status-badge";
+import StatusBadge from "../status-badge";
 import Status from "@/lib/enum";
 
 export default function RequestInfoCard(props: Reimbursement) {

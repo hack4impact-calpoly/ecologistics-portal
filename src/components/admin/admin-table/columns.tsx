@@ -6,7 +6,7 @@ import { HoverCard, HoverCardContent, HoverCardTrigger } from "@radix-ui/react-h
 import { DownloadIcon } from "@radix-ui/react-icons";
 import { ColumnDef, FilterFnOption } from "@tanstack/react-table";
 import { useState } from "react";
-import HelpMenu from "../help-menu";
+import HelpMenu from "../../help-menu";
 import ManageRequestCard from "../manage-request-card";
 import { ReimbursementWithOrganization } from "./admin-table";
 

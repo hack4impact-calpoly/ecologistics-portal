@@ -1,5 +1,5 @@
 import { OrganizationWithUser } from "@/app/sponsored-organizations/page";
-import SponsorCard from "@/components/sponsored-org-card";
+import SponsorCard from "@/components/admin/sponsored-org-card";
 
 interface SponsoredOrgListProps {
   organizations: OrganizationWithUser[];

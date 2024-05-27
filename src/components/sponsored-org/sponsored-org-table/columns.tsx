@@ -4,7 +4,7 @@ import { DownloadIcon } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
 import Reimbursement from "@/database/reimbursement-schema";
 import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
-import RequestInfoCard from "@/components/request-info-card";
+import RequestInfoCard from "@/components/sponsored-org/request-info-card";
 import StatusBadge from "@/components/status-badge";
 
 const ReportNameCell = ({ row }: { row: any }) => {

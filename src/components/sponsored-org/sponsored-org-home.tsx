@@ -2,12 +2,12 @@
 
 import CenteredSpinner from "@/components/centered-spinner";
 import SponsoredOrgTable from "@/components/sponsored-org/sponsored-org-table/sponsored-org-table";
-import Popup from "@/components/user-info-popup";
+import Popup from "@/components/sponsored-org/user-info-popup";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import * as Tabs from "@radix-ui/react-tabs";
 import { Button } from "@/components/ui/button";
-import FullscreenSpinner from "../fullscreen-spinner";
+import FullscreenSpinner from "@/components/fullscreen-spinner";
 
 type organizationInfo = {
   name: string;

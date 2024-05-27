@@ -3,7 +3,7 @@ import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import CenteredSpinner from "@/components/centered-spinner";
 import SponsoredHomePage from "../components/sponsored-org/sponsored-org-home";
-import AdminHomePage from "../components/admin-home-page";
+import AdminHomePage from "../components/admin/admin-home-page";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import FullscreenSpinner from "@/components/fullscreen-spinner";
 

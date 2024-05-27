@@ -1,5 +1,5 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { StatusDropdown } from "./status-dropdown";
+import { StatusDropdown } from "../status-dropdown";
 import Image from "next/image";
 import Reimbursement from "@/database/reimbursement-schema";
 import { Textarea } from "@/components/ui/textarea";

@@ -1,10 +1,10 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { CheckIcon, Cross2Icon } from "@radix-ui/react-icons";
 import { Organization } from "@/database/organization-schema";
 import { OrganizationWithUser } from "@/app/sponsored-organizations/page";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 
 export interface SponsoredOrgCardProps {
   organizationData: OrganizationWithUser;

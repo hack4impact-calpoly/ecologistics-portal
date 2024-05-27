@@ -23,13 +23,13 @@ import {
 } from "@tanstack/react-table";
 import * as React from "react";
 import { DateRange } from "react-day-picker";
-import { TablePagination } from "../table-pagination";
-import { DatePickerWithRange } from "../ui/custom/date-range-picker";
-import { DebouncedInput } from "../ui/custom/debounced-input";
-import TableColumnFilterDropdown from "../ui/custom/table-column-filter-dropdown";
-import { Label } from "../ui/label";
+import { TablePagination } from "../../table-pagination";
+import { DatePickerWithRange } from "../../ui/custom/date-range-picker";
+import { DebouncedInput } from "../../ui/custom/debounced-input";
+import TableColumnFilterDropdown from "../../ui/custom/table-column-filter-dropdown";
+import { Label } from "../../ui/label";
 import { columns } from "./columns";
-import FullscreenSpinner from "../fullscreen-spinner";
+import FullscreenSpinner from "../../fullscreen-spinner";
 
 export type ReimbursementWithOrganization = Reimbursement & {
   organization: string;

@@ -1,7 +1,7 @@
 "use client";
 
 import FullscreenSpinner from "@/components/fullscreen-spinner";
-import { SponsoredOrgList } from "@/components/sponsored-org-list";
+import { SponsoredOrgList } from "@/components/admin/sponsored-org-list";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Organization } from "@/database/organization-schema";

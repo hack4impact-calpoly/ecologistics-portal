@@ -1,7 +1,7 @@
 "use client";
 
 import CenteredSpinner from "@/components/centered-spinner";
-import AdminTable from "@/components/admin-table/admin-table";
+import AdminTable from "@/components/admin/admin-table/admin-table";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 
