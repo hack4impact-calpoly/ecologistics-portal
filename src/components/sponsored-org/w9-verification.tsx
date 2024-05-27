@@ -3,11 +3,11 @@ import { Button } from "../ui/button";
 import { DialogContent, DialogDescription, DialogHeader, DialogTitle } from "../ui/dialog";
 
 interface W9VerificationProps {
+  submitDisabled: boolean;
   constructEmail: () => void;
 }
 
-export const W9Verification: React.FunctionComponent<W9VerificationProps> = ({ constructEmail }) => {
-  const [submitDisabled, setSubmitDisabled] = useState(false);
+export const W9Verification: React.FunctionComponent<W9VerificationProps> = ({ submitDisabled, constructEmail }) => {
   const [isDenied, setIsDenied] = useState(false);
 
   return (
@@ -42,7 +42,6 @@ export const W9Verification: React.FunctionComponent<W9VerificationProps> = ({ c
             <Button
               type="submit"
               form="request-reimbursement-form"
-              onClick={() => setSubmitDisabled(true)}
               disabled={submitDisabled}
               className="w-[30%] bg-green-300 bg-opacity-80 text-green-800 hover:bg-green-300"
             >

@@ -302,7 +302,7 @@ Thank you!`;
                     Submit
                   </Button>
                 </DialogTrigger>
-                <W9Verification constructEmail={constructEmail} />
+                <W9Verification submitDisabled={submitDisabled} constructEmail={constructEmail} />
               </Dialog>
             </CardFooter>
           </form>
