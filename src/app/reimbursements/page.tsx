@@ -5,19 +5,9 @@ import ImageUpload from "@/components/image-upload";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import ImagePopup from "../../components/upload-popup";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -39,10 +29,7 @@ const formSchema = z.object({
   recipientName: z.string().min(1).max(50),
   recipientEmail: z.string().min(1).max(50),
   transactionDate: z.date(),
-  amount: z.union([
-    z.number(),
-    z.string().transform((value) => parseFloat(value)),
-  ]),
+  amount: z.union([z.number(), z.string().transform((value) => parseFloat(value))]),
   paymentMethod: z.string().min(1).max(100),
   purpose: z.string().max(1000),
   file: z.any(),
@@ -146,8 +133,7 @@ export default function Page() {
   }
 
   const constructEmail = () => {
-    const { recipientName, recipientEmail, transactionDate, amount, purpose } =
-      form.getValues();
+    const { recipientName, recipientEmail, transactionDate, amount, purpose } = form.getValues();
     const emailBody = `Hi there,
 
 I would like to submit the following transaction details:
@@ -212,11 +198,7 @@ Thank you!`;
                             !field.value && "text-muted-foreground",
                           )}
                         >
-                          {field.value ? (
-                            format(field.value, "PPP")
-                          ) : (
-                            <span>Pick a date</span>
-                          )}
+                          {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
                           <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                         </Button>
                       </FormControl>
@@ -226,9 +208,7 @@ Thank you!`;
                         mode="single"
                         selected={field.value}
                         onSelect={field.onChange}
-                        disabled={(date) =>
-                          date > new Date() || date < new Date("1900-01-01")
-                        }
+                        disabled={(date) => date > new Date() || date < new Date("1900-01-01")}
                         initialFocus
                       />
                     </PopoverContent>
@@ -265,29 +245,11 @@ Thank you!`;
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="w-64">
                       <DropdownMenuGroup>
-                        <DropdownMenuItem onClick={() => field.onChange("ACH")}>
-                          ACH
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={() => field.onChange("Check")}
-                        >
-                          Check
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={() => field.onChange("PayPal")}
-                        >
-                          PayPal
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={() => field.onChange("Venmo")}
-                        >
-                          Venmo
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={() => field.onChange("Zelle")}
-                        >
-                          Zelle
-                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => field.onChange("ACH")}>ACH</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => field.onChange("Check")}>Check</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => field.onChange("PayPal")}>PayPal</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => field.onChange("Venmo")}>Venmo</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => field.onChange("Zelle")}>Zelle</DropdownMenuItem>
                       </DropdownMenuGroup>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -295,9 +257,8 @@ Thank you!`;
                 {field.value && (
                   <>
                     <div>
-                      Please submit your account information in the comment
-                      field. If the information is sensitive, please send it via
-                      email instead.
+                      Please submit your account information in the comment field. If the information is sensitive,
+                      please send it via email instead.
                     </div>
                   </>
                 )}
@@ -348,9 +309,7 @@ Thank you!`;
       <ImagePopup ref={popupRef} success={uploadSuccess} />
 
       <div className="flex flex-col bg-gray-200 items-center space-y-2 px-4">
-        <h4 className="p-3 pb-0 text-2xl font-bold ">
-          Did you email the W9 form to Ecologistics?
-        </h4>
+        <h4 className="p-3 pb-0 text-2xl font-bold ">Did you email the W9 form to Ecologistics?</h4>
         <p className="text-lg pb-2">
           {`*This only applies to third-party payments. If this is a
           reimbursement, click "Yes" to continue.`}
@@ -362,10 +321,7 @@ Thank you!`;
           >
             Yes
           </Button>
-          <Button
-            onClick={handleDeny}
-            className="w-[30%] bg-red-400 bg-opacity-80 text-red-800 hover:bg-red-400"
-          >
+          <Button onClick={handleDeny} className="w-[30%] bg-red-400 bg-opacity-80 text-red-800 hover:bg-red-400">
             No
           </Button>
         </div>

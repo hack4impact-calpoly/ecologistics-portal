@@ -10,14 +10,7 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { PaginationItem, PaginationLink } from "@/components/ui/pagination";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import Status from "@/lib/enum";
@@ -49,19 +42,14 @@ const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   return itemRank.passed;
 };
 
-export function DataTable<TData, TValue>({
-  columns,
-  data,
-}: DataTableProps<TData, TValue>) {
+export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
 
   const [pageIndex, setPageIndex] = React.useState(0);
   const [pageSize, setPageSize] = React.useState(6);
   const firstRender = React.useRef(true);
-  const row = document
-    .getElementById("sponsored-org-table-row")
-    ?.getBoundingClientRect();
+  const row = document.getElementById("sponsored-org-table-row")?.getBoundingClientRect();
 
   React.useEffect(() => {
     if (firstRender.current && row) {
@@ -116,9 +104,7 @@ export function DataTable<TData, TValue>({
     for (let i = 0; i < pageCount; i++) {
       pages.push(
         <PaginationItem key={i}>
-          <PaginationLink onClick={() => setPageIndex(i)}>
-            {i + 1}
-          </PaginationLink>
+          <PaginationLink onClick={() => setPageIndex(i)}>{i + 1}</PaginationLink>
         </PaginationItem>,
       );
     }
@@ -165,10 +151,7 @@ export function DataTable<TData, TValue>({
             </div>
             <div>
               <Label className="text-xs">Date Range</Label>
-              <DatePickerWithRange
-                handleChange={handleDateRangeChange}
-                className=""
-              />
+              <DatePickerWithRange handleChange={handleDateRangeChange} className="" />
             </div>
           </div>
         </div>
@@ -180,12 +163,7 @@ export function DataTable<TData, TValue>({
                   {headerGroup.headers.map((header) => {
                     return (
                       <TableHead key={header.id}>
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext(),
-                            )}
+                        {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                       </TableHead>
                     );
                   })}
@@ -195,27 +173,15 @@ export function DataTable<TData, TValue>({
             <TableBody>
               {table.getRowModel().rows?.length ? (
                 table.getRowModel().rows.map((row) => (
-                  <TableRow
-                    id="sponsored-org-table-row"
-                    key={row.id}
-                    data-state={row.getIsSelected() && "selected"}
-                  >
+                  <TableRow id="sponsored-org-table-row" key={row.id} data-state={row.getIsSelected() && "selected"}>
                     {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext(),
-                        )}
-                      </TableCell>
+                      <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
                     ))}
                   </TableRow>
                 ))
               ) : (
                 <TableRow>
-                  <TableCell
-                    colSpan={columns.length}
-                    className="h-24 text-center"
-                  >
+                  <TableCell colSpan={columns.length} className="h-24 text-center">
                     No results.
                   </TableCell>
                 </TableRow>
@@ -225,11 +191,7 @@ export function DataTable<TData, TValue>({
         </div>
         <ScrollBar orientation="horizontal" />
       </ScrollArea>
-      <TablePagination
-        table={table}
-        pageIndex={pageIndex}
-        setPageIndex={setPageIndex}
-      />
+      <TablePagination table={table} pageIndex={pageIndex} setPageIndex={setPageIndex} />
     </>
   );
 }

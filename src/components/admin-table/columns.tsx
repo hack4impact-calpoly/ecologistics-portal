@@ -2,11 +2,7 @@ import StatusBadge from "@/components/status-badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { formatAmount } from "@/lib/format";
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@radix-ui/react-hover-card";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@radix-ui/react-hover-card";
 import { DownloadIcon } from "@radix-ui/react-icons";
 import { ColumnDef, FilterFnOption } from "@tanstack/react-table";
 import { useState } from "react";
@@ -15,8 +11,7 @@ import ManageRequestCard from "../manage-request-card";
 import { ReimbursementWithOrganization } from "./admin-table";
 
 const OrganizationCell = ({ row }: { row: any }) => {
-  const [selectedReimbursement, setSelectedReimbursement] =
-    useState<ReimbursementWithOrganization | null>(null);
+  const [selectedReimbursement, setSelectedReimbursement] = useState<ReimbursementWithOrganization | null>(null);
 
   const fetchReimbursementInfo = () => {
     const reimbursementId = row.original._id;
@@ -116,16 +111,12 @@ export const columns: ColumnDef<ReimbursementWithOrganization>[] = [
   {
     accessorKey: "recipientName",
     header: "Recipient",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("recipientName")}</div>
-    ),
+    cell: ({ row }) => <div className="capitalize">{row.getValue("recipientName")}</div>,
   },
   {
     accessorKey: "amount",
     header: "Amount",
-    cell: ({ row }) => (
-      <div className="capitalize">{formatAmount(row.getValue("amount"))}</div>
-    ),
+    cell: ({ row }) => <div className="capitalize">{formatAmount(row.getValue("amount"))}</div>,
   },
   {
     accessorKey: "transactionDate",
@@ -134,10 +125,7 @@ export const columns: ColumnDef<ReimbursementWithOrganization>[] = [
     cell: ({ row }) => (
       <div className="capitalize">
         {(() => {
-          const datePart = (row.getValue("transactionDate") as string)?.slice(
-            0,
-            10,
-          );
+          const datePart = (row.getValue("transactionDate") as string)?.slice(0, 10);
           const date = new Date(datePart);
           return date.toLocaleDateString();
         })()}
@@ -147,9 +135,7 @@ export const columns: ColumnDef<ReimbursementWithOrganization>[] = [
   {
     accessorKey: "paymentMethod",
     header: "Payment Type",
-    cell: ({ row }) => (
-      <div className="capitalize ">{row.getValue("paymentMethod")}</div>
-    ),
+    cell: ({ row }) => <div className="capitalize ">{row.getValue("paymentMethod")}</div>,
   },
   {
     accessorKey: "status",

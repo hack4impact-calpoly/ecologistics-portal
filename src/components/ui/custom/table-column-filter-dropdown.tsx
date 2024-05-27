@@ -33,9 +33,7 @@ const TableColumnFilterDropdown: React.FC<TableColumnFilterDropdownProps> = ({
       <DropdownMenu>
         <DropdownMenuTrigger asChild className="w-full self-start">
           <Button variant="outline" className="flex justify-between">
-            {(table?.getColumn(identifier)?.getFilterValue() as string) ??
-              placeholder ??
-              "All"}
+            {(table?.getColumn(identifier)?.getFilterValue() as string) ?? placeholder ?? "All"}
             <ChevronDownIcon className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>

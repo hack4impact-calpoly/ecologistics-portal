@@ -1,10 +1,4 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
 import Reimbursement from "@/database/reimbursement-schema";
 import StatusBadge from "./status-badge";
@@ -35,16 +29,12 @@ export default function RequestInfoCard(props: Reimbursement) {
       <CardHeader className="flex flex-row justify-between items-top pb-3">
         <div className="flex flex-col items-left">
           <CardTitle className="text-xxl font-bold pb-3">
-            <p className="text-wrap text-ellipsis overflow-hidden max-w-[16rem]">
-              {props.reportName}
-            </p>
+            <p className="text-wrap text-ellipsis overflow-hidden max-w-[16rem]">{props.reportName}</p>
           </CardTitle>
           <StatusBadge reimbursementStatus={getStatus(props.status)} />
         </div>
         <CardDescription className="flex space-x-4 items-center text-black">
-          <div className="border border-black rounded-full py-1 px-3">
-            ${props.amount}
-          </div>
+          <div className="border border-black rounded-full py-1 px-3">${props.amount}</div>
           <div>{new Date(props.transactionDate).toLocaleDateString()}</div>
         </CardDescription>
       </CardHeader>

@@ -18,20 +18,11 @@ export const metadata: Metadata = {
   description: "Ecologistics Web Portal",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <ClerkProvider>
-        <body
-          className={cn(
-            "flex flex-col min-h-screen bg-background font-sans antialiased",
-            fontSans.variable,
-          )}
-        >
+        <body className={cn("flex flex-col min-h-screen bg-background font-sans antialiased", fontSans.variable)}>
           <Header />
           {/* fill remaining vertical space */}
           <div className="flex grow">

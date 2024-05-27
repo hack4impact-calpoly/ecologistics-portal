@@ -6,9 +6,7 @@ import { NextResponse } from "next/server";
 
 export type GetUsersResponse = User[];
 
-export async function GET(): Promise<
-  NextResponse<GetUsersResponse | ErrorResponse>
-> {
+export async function GET(): Promise<NextResponse<GetUsersResponse | ErrorResponse>> {
   // Verify that the request user is an admin
   const user = await currentUser();
   if (!verifyAdmin(user)) {

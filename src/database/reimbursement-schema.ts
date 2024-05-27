@@ -61,7 +61,6 @@ const ReimbursementSchema = new Schema({
   },
 });
 
-const Reimbursement =
-  models.Reimbursement || model("Reimbursement", ReimbursementSchema);
+const Reimbursement = models.Reimbursement || model("Reimbursement", ReimbursementSchema);
 
 export default Reimbursement;

@@ -42,24 +42,16 @@ export default function NewUserButton() {
                 className="rounded-full max-w-8 max-h-8"
               />
               <div className="flex flex-col max-h-8 mx-3">
-                <div className="text-sm leading-4 font-semibold text-start">
-                  {user.fullName}
-                </div>
-                <div className="text-xs leading-4 font-light text-start">
-                  {user.primaryEmailAddress?.emailAddress}
-                </div>
+                <div className="text-sm leading-4 font-semibold text-start">{user.fullName}</div>
+                <div className="text-xs leading-4 font-light text-start">{user.primaryEmailAddress?.emailAddress}</div>
               </div>
               <ChevronDownIcon className="w-auto h-5 ml-2" />
             </div>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-60">
-            <DropdownMenuItem onClick={handleManageAccountClick}>
-              Manage account
-            </DropdownMenuItem>
+            <DropdownMenuItem onClick={handleManageAccountClick}>Manage account</DropdownMenuItem>
             {/* Routes Sign Out to '/' */}
-            <DropdownMenuItem onClick={() => signOut(() => router.push("/"))}>
-              Sign out
-            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => signOut(() => router.push("/"))}>Sign out</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
         {/* Show profile similar to Clerk's deafult UserButton */}

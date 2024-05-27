@@ -1,10 +1,5 @@
 import { Button } from "@/components/ui/button";
-import {
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  DoubleArrowLeftIcon,
-  DoubleArrowRightIcon,
-} from "@radix-ui/react-icons";
+import { ChevronLeftIcon, ChevronRightIcon, DoubleArrowLeftIcon, DoubleArrowRightIcon } from "@radix-ui/react-icons";
 import { Table } from "@tanstack/react-table";
 
 interface TablePaginationProps {
@@ -13,11 +8,7 @@ interface TablePaginationProps {
   setPageIndex: (index: number) => void;
 }
 
-export const TablePagination: React.FunctionComponent<TablePaginationProps> = ({
-  table,
-  pageIndex,
-  setPageIndex,
-}) => (
+export const TablePagination: React.FunctionComponent<TablePaginationProps> = ({ table, pageIndex, setPageIndex }) => (
   <div className="flex justify-center">
     <div className="flex  space-x-6 lg:space-x-8 pt-2 content-center">
       <div className="flex items-center space-x-2">

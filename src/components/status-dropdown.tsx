@@ -49,21 +49,11 @@ export function StatusDropdown({
             onChange(value);
           }}
         >
-          <DropdownMenuRadioItem value={Status.Pending}>
-            Pending
-          </DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value={Status.NeedsReview}>
-            Needs Review
-          </DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value={Status.Paid}>
-            Paid
-          </DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value={Status.OnHold}>
-            On Hold
-          </DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value={Status.Declined}>
-            Declined
-          </DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value={Status.Pending}>Pending</DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value={Status.NeedsReview}>Needs Review</DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value={Status.Paid}>Paid</DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value={Status.OnHold}>On Hold</DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value={Status.Declined}>Declined</DropdownMenuRadioItem>
         </DropdownMenuRadioGroup>
       </DropdownMenuContent>
     </DropdownMenu>

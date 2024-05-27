@@ -1,10 +1,4 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { StatusDropdown } from "./status-dropdown";
 import Image from "next/image";
 import Reimbursement from "@/database/reimbursement-schema";
@@ -40,27 +34,16 @@ export default function ManageRequestCard(props: ManageRequestCardProps) {
       <CardHeader className="flex flex-row justify-between items-top pb-3">
         <div className="flex flex-col items-left">
           <CardTitle className="text-xxl font-bold pb-3">
-            <p className="text-wrap text-ellipsis overflow-hidden max-w-[16rem]">
-              {reimbursement.reportName}
-            </p>
+            <p className="text-wrap text-ellipsis overflow-hidden max-w-[16rem]">{reimbursement.reportName}</p>
           </CardTitle>
           <CardDescription className="flex space-x-4 items-center text-black">
-            <div className="border border-black rounded-full py-1 px-3">
-              ${reimbursement.amount}
-            </div>
-            <div>
-              {new Date(reimbursement.transactionDate).toLocaleDateString()}
-            </div>
+            <div className="border border-black rounded-full py-1 px-3">${reimbursement.amount}</div>
+            <div>{new Date(reimbursement.transactionDate).toLocaleDateString()}</div>
           </CardDescription>
         </div>
         <div className="flex flex-col w-[9rem]">
-          <StatusDropdown
-            currentStatus={reimbursement.status as Status}
-            onChange={updateStatus}
-          />
-          <div className="text-center text-wrap text-ellipsis overflow-hidden">
-            {reimbursement.comment}
-          </div>
+          <StatusDropdown currentStatus={reimbursement.status as Status} onChange={updateStatus} />
+          <div className="text-center text-wrap text-ellipsis overflow-hidden">{reimbursement.comment}</div>
         </div>
       </CardHeader>
       <CardContent className="space-y-1">

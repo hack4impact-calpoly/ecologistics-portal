@@ -2,14 +2,7 @@
 
 import CenteredSpinner from "@/components/centered-spinner";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Organization } from "@/database/organization-schema";
 import Reimbursement from "@/database/reimbursement-schema";
 import Status from "@/lib/enum";
@@ -69,17 +62,12 @@ export const fetchUsers = async (): Promise<User[]> => {
 
 export default function AdminTable() {
   const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    [],
-  );
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [globalFilter, setGlobalFilter] = React.useState("");
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({ recipientEmail: false });
+  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({ recipientEmail: false });
   const [expanded, setExpanded] = React.useState<ExpandedState>({});
 
-  const [reimbursements, setReimbursements] = React.useState<
-    ReimbursementWithOrganization[]
-  >([]);
+  const [reimbursements, setReimbursements] = React.useState<ReimbursementWithOrganization[]>([]);
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
   const [error, setError] = React.useState<Error | null>(null);
   const [pageIndex, setPageIndex] = React.useState(0);
@@ -88,9 +76,7 @@ export default function AdminTable() {
   // First render flag to determine number of rows that can fit without overflow
   // necessary for first render only
   const firstRender = React.useRef(true);
-  const row = document
-    .getElementById("admin-table-row")
-    ?.getBoundingClientRect();
+  const row = document.getElementById("admin-table-row")?.getBoundingClientRect();
 
   React.useEffect(() => {
     fetchReimbursements()
@@ -98,14 +84,10 @@ export default function AdminTable() {
         const users = await fetchUsers();
         console.log(users);
         return data.map((reimbursement) => {
-          const user = users.find(
-            (user) => user.id === reimbursement.clerkUserId,
-          );
+          const user = users.find((user) => user.id === reimbursement.clerkUserId);
           return {
             ...reimbursement,
-            organization:
-              (user?.unsafeMetadata?.organization as Organization)?.name ||
-              "Unknown",
+            organization: (user?.unsafeMetadata?.organization as Organization)?.name || "Unknown",
           };
         });
       })
@@ -205,9 +187,7 @@ export default function AdminTable() {
 
   return (
     <>
-      <ScrollArea
-        className={`h-[calc(90vh-186px)] w-[calc(95vw-81px)] whitespace-nowrap`}
-      >
+      <ScrollArea className={`h-[calc(90vh-186px)] w-[calc(95vw-81px)] whitespace-nowrap`}>
         <div className="flex justify-between space-x-1 w-full mb-5 text-gray-400">
           <div className="flex flex-col w-[25%] min-w-[20rem]">
             <Label className="text-xs pl-1 flex-2">Search</Label>
@@ -253,32 +233,18 @@ export default function AdminTable() {
           </div>
           <div className="flex flex-col">
             <Label className="text-xs pl-1 min-w-[16rem]">Date Range</Label>
-            <DatePickerWithRange
-              className=""
-              handleChange={handleDateRangeChange}
-            />
+            <DatePickerWithRange className="" handleChange={handleDateRangeChange} />
           </div>
         </div>
-        <div
-          id="admin-table-rows-div"
-          className="flex max-h-[calc(100vh-300px)] rounded-md border"
-        >
+        <div id="admin-table-rows-div" className="flex max-h-[calc(100vh-300px)] rounded-md border">
           <Table>
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
                   {headerGroup.headers.map((header) => {
                     return (
-                      <TableHead
-                        className="text-left bg-neutral-200 text-black"
-                        key={header.id}
-                      >
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext(),
-                            )}
+                      <TableHead className="text-left bg-neutral-200 text-black" key={header.id}>
+                        {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                       </TableHead>
                     );
                   })}
@@ -301,20 +267,14 @@ export default function AdminTable() {
                         className="text-left [&_button_svg]:mx-5 [&_div]:items-left [&_div]:justify-start"
                         key={cell.id}
                       >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext(),
-                        )}
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
                       </TableCell>
                     ))}
                   </TableRow>
                 ))
               ) : (
                 <TableRow>
-                  <TableCell
-                    colSpan={columns.length}
-                    className="h-24 text-center"
-                  >
+                  <TableCell colSpan={columns.length} className="h-24 text-center">
                     No results.
                   </TableCell>
                 </TableRow>
@@ -324,11 +284,7 @@ export default function AdminTable() {
         </div>
         <ScrollBar orientation="horizontal" />
       </ScrollArea>
-      <TablePagination
-        table={table}
-        pageIndex={pageIndex}
-        setPageIndex={setPageIndex}
-      />
+      <TablePagination table={table} pageIndex={pageIndex} setPageIndex={setPageIndex} />
     </>
   );
 }

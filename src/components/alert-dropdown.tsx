@@ -18,9 +18,8 @@ export default function AlertDropdown() {
   const { isSignedIn } = useUser();
   const [hasNewUpdates, setHasNewUpdates] = useState(true); // Assume there are new updates initially
 
-  const { data, error, mutate } = useSWR(
-    isSignedIn ? `/api/alert` : null,
-    (...args) => fetch(...args).then((res) => res.json()),
+  const { data, error, mutate } = useSWR(isSignedIn ? `/api/alert` : null, (...args) =>
+    fetch(...args).then((res) => res.json()),
   );
 
   const handleDeleteAlert = async (alertId: string) => {

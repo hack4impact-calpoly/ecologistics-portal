@@ -6,9 +6,7 @@ interface SponsoredOrgListProps {
   updateCount: { [key: string]: number };
 }
 
-export const SponsoredOrgList: React.FunctionComponent<
-  SponsoredOrgListProps
-> = ({ organizations, updateCount }) => {
+export const SponsoredOrgList: React.FunctionComponent<SponsoredOrgListProps> = ({ organizations, updateCount }) => {
   return (
     <>
       <style jsx>{`

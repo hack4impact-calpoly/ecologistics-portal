@@ -35,9 +35,7 @@ async function filterUpdatedOrgs(organizations: OrganizationWithUser[]) {
       if (org.reimbursements) {
         for (const reimbursementId of org.reimbursements) {
           // Fetch reimbursement from API
-          const reimbursement = await getReimbursement(
-            reimbursementId.toString(),
-          );
+          const reimbursement = await getReimbursement(reimbursementId.toString());
           // Check if reimbursement has a pending status
           if (reimbursement && reimbursement.status === Status.Pending) {
             pending = true;
@@ -114,12 +112,8 @@ export default function Page() {
   const [updatedOrgs, setUpdatedOrgs] = useState<OrganizationWithUser[]>([]); // State for organizations with pending updates (filtered)
   const [pendingOrgs, setPendingOrgs] = useState<OrganizationWithUser[]>([]); // State for organizations pending approval
   const [allOrgs, setAllOrgs] = useState<OrganizationWithUser[]>([]); // State for all organizations (unfiltered)
-  const [allUpdatedOrgs, setAllUpdatedOrgs] = useState<OrganizationWithUser[]>(
-    [],
-  ); // State for all organizations with pending updates
-  const [allPendingOrgs, setAllPendingOrgs] = useState<OrganizationWithUser[]>(
-    [],
-  ); // State for all organizations pending approval
+  const [allUpdatedOrgs, setAllUpdatedOrgs] = useState<OrganizationWithUser[]>([]); // State for all organizations with pending updates
+  const [allPendingOrgs, setAllPendingOrgs] = useState<OrganizationWithUser[]>([]); // State for all organizations pending approval
   const [search, setSearch] = useState("");
   const [updateCount, setUpdateCount] = useState<UpdateCounts>({});
 
@@ -160,9 +154,7 @@ export default function Page() {
     <main className="p-10 w-full">
       <h1>
         {/* Page header */}
-        <div className="font-sans text-2xl mb-10 font-semibold">
-          Sponsored Organizations
-        </div>
+        <div className="font-sans text-2xl mb-10 font-semibold">Sponsored Organizations</div>
       </h1>
       <Tabs defaultValue="all">
         {/* Row of buttons */}
@@ -194,16 +186,10 @@ export default function Page() {
           <SponsoredOrgList organizations={orgs} updateCount={updateCount} />
         </TabsContent>
         <TabsContent value="updates">
-          <SponsoredOrgList
-            organizations={updatedOrgs}
-            updateCount={updateCount}
-          />
+          <SponsoredOrgList organizations={updatedOrgs} updateCount={updateCount} />
         </TabsContent>
         <TabsContent value="pending">
-          <SponsoredOrgList
-            organizations={pendingOrgs}
-            updateCount={updateCount}
-          />
+          <SponsoredOrgList organizations={pendingOrgs} updateCount={updateCount} />
         </TabsContent>
       </Tabs>
     </main>

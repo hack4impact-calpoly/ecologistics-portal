@@ -8,10 +8,7 @@ const client = new S3Client({
   },
 });
 
-export const imageUpload = async (
-  file: Blob,
-  fileName: string,
-): Promise<string> => {
+export const imageUpload = async (file: Blob, fileName: string): Promise<string> => {
   try {
     const fileBuffer = Buffer.from(await file.arrayBuffer());
     const fileKey = `${fileName}-${Date.now()}`;

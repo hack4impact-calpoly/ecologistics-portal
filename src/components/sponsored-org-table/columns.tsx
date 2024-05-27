@@ -8,8 +8,7 @@ import RequestInfoCard from "@/components/request-info-card";
 import StatusBadge from "@/components/status-badge";
 
 const ReportNameCell = ({ row }: { row: any }) => {
-  const [selectedReimbursement, setSelectedReimbursement] =
-    useState<Reimbursement | null>(null);
+  const [selectedReimbursement, setSelectedReimbursement] = useState<Reimbursement | null>(null);
 
   const handleTitleClick = () => {
     const reimbursementId = row.original._id;
@@ -59,9 +58,7 @@ export const columns: ColumnDef<Reimbursement>[] = [
   {
     accessorKey: "recipientName",
     header: "Request For",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("recipientName")}</div>
-    ),
+    cell: ({ row }) => <div className="capitalize">{row.getValue("recipientName")}</div>,
   },
   {
     accessorKey: "amount",
@@ -90,10 +87,7 @@ export const columns: ColumnDef<Reimbursement>[] = [
     filterFn: "dateFilterFn" as FilterFnOption<Reimbursement>,
     cell: ({ row }) => {
       // const date: Date = row.getValue("transactionDate");
-      const datePart = (row.getValue("transactionDate") as string)?.slice(
-        0,
-        10,
-      );
+      const datePart = (row.getValue("transactionDate") as string)?.slice(0, 10);
       const date = new Date(datePart);
       return date.toLocaleDateString();
     },

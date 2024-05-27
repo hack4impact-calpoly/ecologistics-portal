@@ -15,19 +15,12 @@ export default function Header() {
       <div className="py-1.5">
         <div className="flex justify-between items-center px-7 h-16">
           <Link href="/">
-            <Image
-              src="/images/ecologistics-logo.svg"
-              alt="Ecologistics Logo"
-              width={216}
-              height={36}
-            />
+            <Image src="/images/ecologistics-logo.svg" alt="Ecologistics Logo" width={216} height={36} />
           </Link>
           {isSignedIn && (
             <div className="z-10">
               <div className="flex space-x-4">
-                {!verifyAdmin({ publicMetadata: user.publicMetadata }) && (
-                  <AlertDropdown />
-                )}
+                {!verifyAdmin({ publicMetadata: user.publicMetadata }) && <AlertDropdown />}
                 <NewUserButton />
               </div>
               <style jsx>{`

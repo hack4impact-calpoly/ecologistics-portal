@@ -8,9 +8,7 @@ import { NextResponse } from "next/server";
 export type GetAlertResponse = Alert[];
 
 // Get all alerts by Clerk user ID
-export async function GET(): Promise<
-  NextResponse<GetAlertResponse | ErrorResponse>
-> {
+export async function GET(): Promise<NextResponse<GetAlertResponse | ErrorResponse>> {
   const user = await currentUser();
   if (!user) {
     return createErrorResponse(null, "Unauthorized", 401);

@@ -30,8 +30,7 @@ export async function GET(
   await connectDB();
   const { id } = params;
   try {
-    const reimbursement: GetReimbursementResponse =
-      await Reimbursement.findById(id).orFail();
+    const reimbursement: GetReimbursementResponse = await Reimbursement.findById(id).orFail();
     // verify that user is admin or creator of reimbursement
     if (!verifyAdmin(user) && reimbursement.clerkUserId !== user.id) {
       return createErrorResponse(null, "Unauthorized", 401);
@@ -42,10 +41,7 @@ export async function GET(
   }
 }
 
-const createAlert = (
-  body: UpdateReimbursementBody,
-  currentReimbursement: Reimbursement,
-): Promise<Alert> =>
+const createAlert = (body: UpdateReimbursementBody, currentReimbursement: Reimbursement): Promise<Alert> =>
   new Alert({
     userId: currentReimbursement.clerkUserId,
     title: currentReimbursement.reportName,
@@ -71,8 +67,7 @@ export async function PUT(
     }
 
     // verify that user is admin or creator of reimbursement
-    const currentReimbursement: Reimbursement =
-      await Reimbursement.findById(id).orFail();
+    const currentReimbursement: Reimbursement = await Reimbursement.findById(id).orFail();
     if (!verifyAdmin(user) && currentReimbursement.clerkUserId !== user.id) {
       return createErrorResponse(null, "Unauthorized", 401);
     }
@@ -85,30 +80,25 @@ export async function PUT(
       await createAlert(body, currentReimbursement);
     }
 
-    const reimbursement: UpdateReimbursementResponse =
-      await Reimbursement.findByIdAndUpdate(
-        id,
-        {
-          $set: {
-            clerkUserId: body.clerkUserId || currentReimbursement.clerkUserId,
-            reportName: body.reportName || currentReimbursement.reportName,
-            recipientName:
-              body.recipientName || currentReimbursement.recipientName,
-            recipientEmail:
-              body.recipientEmail || currentReimbursement.recipientEmail,
-            transactionDate:
-              body.transactionDate || currentReimbursement.transactionDate,
-            amount: body.amount || currentReimbursement.amount,
-            paymentMethod:
-              body.paymentMethod || currentReimbursement.paymentMethod,
-            purpose: body.purpose || currentReimbursement.purpose,
-            receiptLink: body.receiptLink || currentReimbursement.receiptLink,
-            status: body.status || currentReimbursement.status,
-            comment: body.comment || currentReimbursement.comment,
-          },
+    const reimbursement: UpdateReimbursementResponse = await Reimbursement.findByIdAndUpdate(
+      id,
+      {
+        $set: {
+          clerkUserId: body.clerkUserId || currentReimbursement.clerkUserId,
+          reportName: body.reportName || currentReimbursement.reportName,
+          recipientName: body.recipientName || currentReimbursement.recipientName,
+          recipientEmail: body.recipientEmail || currentReimbursement.recipientEmail,
+          transactionDate: body.transactionDate || currentReimbursement.transactionDate,
+          amount: body.amount || currentReimbursement.amount,
+          paymentMethod: body.paymentMethod || currentReimbursement.paymentMethod,
+          purpose: body.purpose || currentReimbursement.purpose,
+          receiptLink: body.receiptLink || currentReimbursement.receiptLink,
+          status: body.status || currentReimbursement.status,
+          comment: body.comment || currentReimbursement.comment,
         },
-        { new: true },
-      ).orFail();
+      },
+      { new: true },
+    ).orFail();
     return createSuccessResponse(reimbursement, 200);
   } catch (error) {
     return createErrorResponse(error, "Error updating reimbursement", 500);
@@ -126,8 +116,7 @@ export async function DELETE(
   await connectDB();
   const { id } = params;
   try {
-    const reimbursement: DeleteReimbursementResponse =
-      await Reimbursement.findById(id).orFail();
+    const reimbursement: DeleteReimbursementResponse = await Reimbursement.findById(id).orFail();
     // verify that user is admin or creator of reimbursement
     if (!verifyAdmin(user) && reimbursement.clerkUserId !== user.id) {
       return createErrorResponse(null, "Unauthorized", 401);

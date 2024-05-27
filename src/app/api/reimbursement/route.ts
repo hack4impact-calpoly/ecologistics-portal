@@ -14,9 +14,7 @@ export type CreateReimbursementBody = Reimbursement;
 export type CreateReimbursementResponse = Reimbursement;
 
 // Get all Reimbursements
-export async function GET(): Promise<
-  NextResponse<GetReimbursementsResponse | ErrorResponse>
-> {
+export async function GET(): Promise<NextResponse<GetReimbursementsResponse | ErrorResponse>> {
   const user = await currentUser();
   if (!user) {
     return createErrorResponse(null, "Unauthorized", 401);
@@ -25,8 +23,7 @@ export async function GET(): Promise<
   try {
     // return all reimbursements if user is admin
     if (verifyAdmin(user)) {
-      const reimbursements: GetReimbursementsResponse =
-        await Reimbursement.find();
+      const reimbursements: GetReimbursementsResponse = await Reimbursement.find();
       return createSuccessResponse(reimbursements, 200);
     }
     // return only the reimbursements of the logged in user
@@ -40,15 +37,12 @@ export async function GET(): Promise<
 }
 
 const createReportName = (user: User): string => {
-  const organizationName = (user.unsafeMetadata.organization as Organization)
-    ?.name;
+  const organizationName = (user.unsafeMetadata.organization as Organization)?.name;
   return `${organizationName || "Unknown Organization"} - ${new Date().toDateString()}`;
 };
 
 // Create a Reimbursement
-export async function POST(
-  req: NextRequest,
-): Promise<NextResponse<CreateReimbursementResponse | ErrorResponse>> {
+export async function POST(req: NextRequest): Promise<NextResponse<CreateReimbursementResponse | ErrorResponse>> {
   const user = await currentUser();
   if (!user) {
     return createErrorResponse(null, "Unauthorized", 401);
@@ -85,8 +79,7 @@ export async function POST(
     // add reimbursement id to user's organization
     const updatedOrg: Partial<Organization> = {
       reimbursements: [
-        ...((user.unsafeMetadata?.organization as Organization)
-          ?.reimbursements || []),
+        ...((user.unsafeMetadata?.organization as Organization)?.reimbursements || []),
         reimbursement.id,
       ],
     };

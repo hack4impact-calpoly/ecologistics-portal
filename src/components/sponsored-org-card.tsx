@@ -1,21 +1,10 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
 import { Button } from "./ui/button";
 import { CheckIcon, Cross2Icon } from "@radix-ui/react-icons";
 import { Organization } from "@/database/organization-schema";
 import { OrganizationWithUser } from "@/app/sponsored-organizations/page";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "./ui/tooltip";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
 
 export interface SponsoredOrgCardProps {
   organizationData: OrganizationWithUser;
@@ -59,11 +48,7 @@ const updateOrg = (orgData: OrganizationWithUser, approve: Boolean) => {
   }
 };
 
-export default function SponsoredOrgCard({
-  organizationData,
-  toApprove,
-  updates,
-}: SponsoredOrgCardProps) {
+export default function SponsoredOrgCard({ organizationData, toApprove, updates }: SponsoredOrgCardProps) {
   // console.log(organization, " Updates:" + updates);
   return (
     <Card className="w-full h-72 relative min-w-[300px] max-w-[300px] shadow-md rounded-2xl">
@@ -91,10 +76,7 @@ export default function SponsoredOrgCard({
         <div className="w-20 h-20 relative">
           <Image
             className="object-cover rounded-full"
-            src={
-              organizationData?.logo ||
-              "/images/sponsored_org_profile_picture_placeholder.png"
-            }
+            src={organizationData?.logo || "/images/sponsored_org_profile_picture_placeholder.png"}
             layout="fill"
             alt="sponsored org logo"
           />
