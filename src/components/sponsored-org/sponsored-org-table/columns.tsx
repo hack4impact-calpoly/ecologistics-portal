@@ -96,8 +96,14 @@ export const columns: ColumnDef<Reimbursement>[] = [
     accessorKey: "receiptLink",
     header: "Receipt",
     cell: ({ row }) => (
-      <div>
-        <Button className="p-0 px-4" variant={"ghost"}>
+      <div className="w-full flex items-center justify-center">
+        <Button
+          onClick={() => {
+            window.open(row.getValue("receiptLink"), "_blank");
+          }}
+          className="p-0 px-3"
+          variant={"ghost"}
+        >
           <DownloadIcon />
         </Button>
       </div>

@@ -41,6 +41,7 @@ const formSchema = z.object({
 
 export default function Page() {
   const { isLoaded, isSignedIn, user } = useUser();
+  const [loading, setLoading] = useState(false);
   const [submitDisabled, setSubmitDisabled] = useState(false);
 
   const router = useRouter();
@@ -61,6 +62,7 @@ export default function Page() {
   // submisson handler
   function onSubmit(values: z.infer<typeof formSchema>) {
     setSubmitDisabled(true);
+    setLoading(true);
     // initialize multipart form data
     const formData = new FormData();
     // append all form values to form data
@@ -78,6 +80,7 @@ export default function Page() {
           return response.json();
         }
         setSubmitDisabled(false);
+        setLoading(false);
         throw new Error("Failed to submit reimbursement");
       })
       .then(() => {
@@ -95,11 +98,12 @@ export default function Page() {
       })
       .catch((error) => {
         setSubmitDisabled(false);
+        setLoading(false);
         console.error(error);
       });
   }
 
-  if (!isLoaded) {
+  if (!isLoaded || loading) {
     return <FullscreenSpinner />;
   }
   if (!isSignedIn) {
