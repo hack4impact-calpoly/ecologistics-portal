@@ -140,7 +140,7 @@ export const columns: ColumnDef<ReimbursementWithOrganization>[] = [
     cell: ({ row }) => (
       <HoverCard>
         <HoverCardTrigger asChild>
-          <Button variant="link">
+          <Button variant="link" className="p-0">
             <StatusBadge reimbursementStatus={row.getValue("status")} />
           </Button>
         </HoverCardTrigger>
@@ -154,12 +154,12 @@ export const columns: ColumnDef<ReimbursementWithOrganization>[] = [
     accessorKey: "receiptLink",
     header: "Receipt",
     cell: ({ row }) => (
-      <div className="w-full flex items-center justify-center">
+      <div className="flex items-center justify-start">
         <Button
           onClick={() => {
             window.open(row.getValue("receiptLink"), "_blank");
           }}
-          className="p-0 px-3"
+          className="p-0 px-4"
           variant={"ghost"}
         >
           <DownloadIcon />

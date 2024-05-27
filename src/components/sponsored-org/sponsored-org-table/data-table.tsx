@@ -126,7 +126,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
   return (
     <>
       <ScrollArea className="mt-8 whitespace-nowrap">
-        <div className="flex justify-between w-full py-4">
+        <div className="flex justify-between w-full py-4 text-gray-400">
           <div className="flex">
             <DebouncedInput
               value={globalFilter ?? ""}
@@ -162,7 +162,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
                 <TableRow key={headerGroup.id}>
                   {headerGroup.headers.map((header) => {
                     return (
-                      <TableHead key={header.id}>
+                      <TableHead className="text-left bg-neutral-200 text-black" key={header.id}>
                         {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                       </TableHead>
                     );
