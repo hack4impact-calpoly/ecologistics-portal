@@ -36,8 +36,6 @@ const OrganizationCell = ({ row }: { row: any }) => {
       });
   };
   const updateStatus = (status: string) => {
-    console.log("we are attempting to update status");
-    console.log("status is now " + status);
     const reimbursementId = row.original._id;
     fetch(`/api/reimbursement/${reimbursementId}`, {
       method: "PUT",
@@ -58,7 +56,6 @@ const OrganizationCell = ({ row }: { row: any }) => {
 
   const updateComment = (comment: string) => {
     const reimbursementId = row.original._id;
-    console.log("we are attempting to update comment");
     fetch(`/api/reimbursement/${reimbursementId}`, {
       method: "PUT",
       headers: {
@@ -155,7 +152,7 @@ export const columns: ColumnDef<ReimbursementWithOrganization>[] = [
   },
   {
     accessorKey: "receiptLink",
-    header: "Documents",
+    header: "Receipt",
     cell: ({ row }) => (
       <div className="w-full flex items-center justify-center">
         <Button
