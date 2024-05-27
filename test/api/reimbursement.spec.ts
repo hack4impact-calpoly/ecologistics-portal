@@ -272,7 +272,7 @@ describe("Reimbursement API", () => {
     });
 
     it("updates the status and creates an alert", async () => {
-      const updateData = { status: Status.Paid };
+      const updateData = { status: Status.Declined };
       const reimbursementId = MOCK_REIMBURSEMENTS[0]._id.toString();
       const { req } = createMockNextRequest(updateData);
 
