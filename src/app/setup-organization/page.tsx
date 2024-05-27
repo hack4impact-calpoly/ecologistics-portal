@@ -10,6 +10,7 @@ import { Button } from "../../components/ui/button";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import CenteredSpinner from "@/components/centered-spinner";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
 const formSchema = z.object({
   name: z.string().min(1).max(50),
@@ -56,50 +57,107 @@ export default function Page() {
   };
 
   return (
-    <div>
-      <h1>Setup Organization</h1>
-      <Form data-testid="cypress-setup-form" {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 m-5">
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel data-testid="cypress-setup-name">Organization Name</FormLabel>
-                <FormControl>
-                  <Input placeholder="name" {...field} />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="description"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel data-testid="cypress-setup-description">Organization Description</FormLabel>
-                <FormControl>
-                  <Textarea placeholder="description" {...field} />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="website"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel data-testid="cypress-setup-website">Website</FormLabel>
-                <FormControl>
-                  <Input placeholder="website" {...field} onChange={autofillUrl} />
-                </FormControl>
-                <FormDescription>Enter your organization website link.</FormDescription>
-              </FormItem>
-            )}
-          />
-          <Button type="submit">Submit</Button>
-        </form>
-      </Form>
-    </div>
+    <main className="flex flex-col items-center p-10 w-full">
+      <Card className="w-1/2 min-w-96 max-w-2xl">
+        <CardHeader>
+          <CardTitle>Setup Organization</CardTitle>
+          <CardDescription>Setup your organization with Ecologistics.</CardDescription>
+        </CardHeader>
+        <Form data-testid="cypress-setup-form" {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <CardContent className="space-y-4 mt-4">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel data-testid="cypress-setup-name">Organization Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="name" {...field} />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel data-testid="cypress-setup-description">Organization Description</FormLabel>
+                    <FormControl>
+                      <Textarea placeholder="description" {...field} />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="website"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel data-testid="cypress-setup-website">Website</FormLabel>
+                    <FormControl>
+                      <Input placeholder="website" {...field} onChange={autofillUrl} />
+                    </FormControl>
+                    <FormDescription>Enter your organization website link.</FormDescription>
+                  </FormItem>
+                )}
+              />
+            </CardContent>
+            <CardFooter className="flex justify-end space-x-4 mt-4">
+              <Button className="bg-orange-500" type="submit">
+                Submit
+              </Button>
+            </CardFooter>
+          </form>
+        </Form>
+      </Card>
+    </main>
+
+    // <div>
+    //   <h1>Setup Organization</h1>
+    // <Form data-testid="cypress-setup-form" {...form}>
+    //   <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 m-5">
+    //     <FormField
+    //       control={form.control}
+    //       name="name"
+    //       render={({ field }) => (
+    //         <FormItem>
+    //           <FormLabel data-testid="cypress-setup-name">Organization Name</FormLabel>
+    //           <FormControl>
+    //             <Input placeholder="name" {...field} />
+    //           </FormControl>
+    //         </FormItem>
+    //       )}
+    //     />
+    //     <FormField
+    //       control={form.control}
+    //       name="description"
+    //       render={({ field }) => (
+    //         <FormItem>
+    //           <FormLabel data-testid="cypress-setup-description">Organization Description</FormLabel>
+    //           <FormControl>
+    //             <Textarea placeholder="description" {...field} />
+    //           </FormControl>
+    //         </FormItem>
+    //       )}
+    //     />
+    //     <FormField
+    //       control={form.control}
+    //       name="website"
+    //       render={({ field }) => (
+    //         <FormItem>
+    //           <FormLabel data-testid="cypress-setup-website">Website</FormLabel>
+    //           <FormControl>
+    //             <Input placeholder="website" {...field} onChange={autofillUrl} />
+    //           </FormControl>
+    //           <FormDescription>Enter your organization website link.</FormDescription>
+    //         </FormItem>
+    //       )}
+    //     />
+    //     <Button type="submit">Submit</Button>
+    //   </form>
+    // </Form>
+    // </div>
   );
 }
