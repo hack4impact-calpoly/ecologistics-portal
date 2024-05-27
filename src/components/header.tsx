@@ -1,8 +1,16 @@
+"use client";
+gs;
+
 import Link from "next/link";
 import Image from "next/image";
-import Alert from "./alert-dropdown";
+import AlertDropdown from "./alert-dropdown";
+import NewUserButton from "./user-button";
+import { useUser } from "@clerk/nextjs";
+import { verifyAdmin } from "@/lib/admin";
 
 export default function Header() {
+  const { user, isSignedIn } = useUser();
+
   return (
     <nav className="bg-[#EDEBDA]">
       <div className="py-1.5">
@@ -15,7 +23,27 @@ export default function Header() {
               height={36}
             />
           </Link>
-          <Alert />
+          {isSignedIn && (
+            <div className="z-10">
+              <div className="flex space-x-4">
+                {!verifyAdmin({ publicMetadata: user.publicMetadata }) && (
+                  <AlertDropdown />
+                )}
+                <NewUserButton />
+              </div>
+              <style jsx>{`
+                .badge {
+                  position: absolute;
+                  top: 0;
+                  right: 0;
+                  width: 8px;
+                  height: 8px;
+                  background-color: red;
+                  border-radius: 50%;
+                }
+              `}</style>
+            </div>
+          )}
         </div>
       </div>
     </nav>
