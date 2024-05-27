@@ -1,8 +1,8 @@
 enum Status {
-  Pending = "PENDING",
-  NeedsReview = "NEEDS_REVIEW",
-  OnHold = "ON_HOLD",
-  Declined = "DECLINED",
-  Paid = "PAID",
+  Pending = "Pending",
+  NeedsReview = "Needs Review",
+  OnHold = "On Hold",
+  Declined = "Declined",
+  Paid = "Paid",
 }
 export default Status;
