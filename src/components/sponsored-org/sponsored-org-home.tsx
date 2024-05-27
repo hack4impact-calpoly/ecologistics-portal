@@ -7,6 +7,7 @@ import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import * as Tabs from "@radix-ui/react-tabs";
 import { Button } from "@/components/ui/button";
+import FullscreenSpinner from "./fullscreen-spinner";
 
 type organizationInfo = {
   name: string;
@@ -20,7 +21,7 @@ export default function SponsoredHomePage() {
   const { isLoaded, isSignedIn, user } = useUser();
 
   if (!isLoaded) {
-    return <CenteredSpinner />;
+    return <FullscreenSpinner />;
   }
   if (!isSignedIn) {
     router.push("/sign-in");

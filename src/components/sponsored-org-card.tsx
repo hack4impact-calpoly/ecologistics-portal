@@ -85,7 +85,7 @@ export default function SponsoredOrgCard({ organizationData, toApprove, updates 
           <CardTitle className="mt-0 font-medium text-base whitespace-normal break-words">
             {organizationData?.name}
           </CardTitle>
-          {updates && updates > 0 && (
+          {!!updates && updates > 0 && (
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger>

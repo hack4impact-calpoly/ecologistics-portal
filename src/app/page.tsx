@@ -5,12 +5,13 @@ import CenteredSpinner from "@/components/centered-spinner";
 import SponsoredHomePage from "../components/sponsored-org/sponsored-org-home";
 import AdminHomePage from "../components/admin-home-page";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import FullscreenSpinner from "@/components/fullscreen-spinner";
 
 export default function Home() {
   const router = useRouter();
   const { isLoaded, isSignedIn, user } = useUser();
   if (!isLoaded) {
-    return <CenteredSpinner />;
+    return <FullscreenSpinner />;
   }
   if (!isSignedIn) {
     return router.push("/sign-in");
