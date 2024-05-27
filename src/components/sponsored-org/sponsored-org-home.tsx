@@ -7,7 +7,7 @@ import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import * as Tabs from "@radix-ui/react-tabs";
 import { Button } from "@/components/ui/button";
-import FullscreenSpinner from "./fullscreen-spinner";
+import FullscreenSpinner from "../fullscreen-spinner";
 
 type organizationInfo = {
   name: string;
