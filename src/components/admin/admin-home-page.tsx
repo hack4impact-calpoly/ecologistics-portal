@@ -25,7 +25,7 @@ export default function AdminHomePage() {
   return (
     <main className="px-14 py-12 overflow-y-auto w-full">
       <div className="flex items-center justify-between">
-        <div className="flex gap-x-6 items-center mb-4">
+        <div className="flex gap-x-6 items-center">
           <h1 className="font-bold text-2xl">Reimbursement/Payment Requests</h1>
         </div>
       </div>

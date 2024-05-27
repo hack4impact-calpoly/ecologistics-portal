@@ -151,12 +151,13 @@ export default function Page() {
   }
 
   return (
-    <main className="p-10 w-full">
-      <h1>
-        {/* Page header */}
-        <div className="font-sans text-2xl mb-10 font-semibold">Sponsored Organizations</div>
-      </h1>
-      <Tabs defaultValue="all">
+    <main className="px-14 py-12 overflow-y-auto w-full">
+      <div className="flex items-center justify-between">
+        <div className="flex gap-x-6 items-center">
+          <h1 className="font-bold text-2xl">Sponsored Organizations</h1>
+        </div>
+      </div>
+      <Tabs defaultValue="all" className="mt-10">
         {/* Row of buttons */}
         <div className="w-full flex items-center justify-between mb-10">
           {/* View All / View Updates toggles */}
