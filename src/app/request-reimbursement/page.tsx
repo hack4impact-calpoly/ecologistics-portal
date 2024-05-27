@@ -1,6 +1,7 @@
 "use client";
 
 import CenteredSpinner from "@/components/centered-spinner";
+import FullscreenSpinner from "@/components/fullscreen-spinner";
 import ImageUpload from "@/components/image-upload";
 import { W9Verification } from "@/components/sponsored-org/w9-verification";
 import { Button } from "@/components/ui/button";
@@ -99,7 +100,7 @@ export default function Page() {
   }
 
   if (!isLoaded) {
-    return <CenteredSpinner />;
+    return <FullscreenSpinner />;
   }
   if (!isSignedIn) {
     return router.push("/sign-in");

@@ -5,23 +5,6 @@ import StatusBadge from "../status-badge";
 import Status from "@/lib/enum";
 
 export default function RequestInfoCard(props: Reimbursement) {
-  const getStatus = (status: string) => {
-    switch (status) {
-      case "Paid":
-        return Status.Paid;
-      case "Pending":
-        return Status.Pending;
-      case "On Hold":
-        return Status.OnHold;
-      case "Declined":
-        return Status.Declined;
-      case "Needs Review":
-        return Status.NeedsReview;
-      default:
-        return Status.OnHold;
-    }
-  };
-
   return (
     // Entire Card
     <Card className="w-full rounded-2xl border-none">
@@ -31,7 +14,7 @@ export default function RequestInfoCard(props: Reimbursement) {
           <CardTitle className="text-xxl font-bold pb-3">
             <p className="text-wrap text-ellipsis overflow-hidden max-w-[16rem]">{props.reportName}</p>
           </CardTitle>
-          <StatusBadge reimbursementStatus={getStatus(props.status)} />
+          <StatusBadge reimbursementStatus={props.status as Status} />
         </div>
         <CardDescription className="flex space-x-4 items-center text-black">
           <div className="border border-black rounded-full py-1 px-3">${props.amount}</div>

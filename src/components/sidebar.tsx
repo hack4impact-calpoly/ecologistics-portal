@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Nav } from "./nav";
 import { HomeIcon, FileTextIcon, PinLeftIcon, PinRightIcon, DashboardIcon } from "@radix-ui/react-icons";
 import { useUser } from "@clerk/nextjs";
+import { verifyAdmin } from "@/lib/admin";
 
 const links = [
   {
@@ -16,21 +17,19 @@ const links = [
     icon: DashboardIcon,
   },
   {
-    title: "Requests",
-    route: "/reimbursements",
+    title: "Request",
+    route: "/request-reimbursement",
     icon: FileTextIcon,
   },
 ];
 
 const selectLink = (user: any) => {
-  if (user?.publicMetadata?.admin) {
-    return links.slice(0, 2);
-  } else if (user?.publicMetadata?.organization) {
-    return links.slice(0);
-  } else if (user?.publicMetadata?.organization?.approved) {
-    return links.slice(0, 1).concat(links.slice(2, 2));
+  if (verifyAdmin(user)) {
+    return [links[0], links[1]];
+  } else if (user?.unsafeMetadata?.organization?.approved) {
+    return [links[0], links[2]];
   } else {
-    return links.slice(0, 1);
+    return [links[0]];
   }
 };
 

@@ -4,17 +4,14 @@ import CenteredSpinner from "@/components/centered-spinner";
 import AdminTable from "@/components/admin/admin-table/admin-table";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
+import FullscreenSpinner from "../fullscreen-spinner";
 
 export default function AdminHomePage() {
   const router = useRouter();
   const { isLoaded, isSignedIn, user } = useUser();
 
   if (!isLoaded) {
-    return (
-      <div>
-        <CenteredSpinner />
-      </div>
-    );
+    return <FullscreenSpinner />;
   }
   if (!isSignedIn) {
     router.push("/sign-in");
