@@ -10,6 +10,12 @@ import { Button } from "./ui/button";
 import { CheckIcon, Cross2Icon } from "@radix-ui/react-icons";
 import { Organization } from "@/database/organization-schema";
 import { OrganizationWithUser } from "@/app/sponsored-organizations/page";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "./ui/tooltip";
 
 export interface SponsoredOrgCardProps {
   organizationData: OrganizationWithUser;
@@ -93,14 +99,24 @@ export default function SponsoredOrgCard({
             alt="sponsored org logo"
           />
         </div>
-        <div className="flex flex-col ml-3 ">
+        <div className="flex flex-col ml-3 justify-center">
           <CardTitle className="mt-0 font-medium text-base whitespace-normal break-words">
             {organizationData?.name}
           </CardTitle>
-          {updates! > 0 && (
-            <CardDescription className="mt-1 px-3 py-1 bg-[#335543] rounded-[20px] text-white">
-              {updates === 1 ? `${updates} Update` : `${updates} Updates`}
-            </CardDescription>
+          {updates && updates > 0 && (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  <CardDescription className="mt-1 px-3 py-1 bg-[#335543] rounded-[20px] text-white">
+                    {updates === 1 ? `${updates} Update` : `${updates} Updates`}
+                  </CardDescription>
+                </TooltipTrigger>
+                <TooltipContent>
+                  Organization has {updates} pending request
+                  {updates === 1 ? "" : "s"}.
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           )}
         </div>
       </CardHeader>
