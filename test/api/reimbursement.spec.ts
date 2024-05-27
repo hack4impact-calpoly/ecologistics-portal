@@ -11,10 +11,7 @@ import mongoose, { Query } from "mongoose";
 import { NextRequest } from "next/server";
 import { MOCK_ALERT } from "../mocks/alert-mocks";
 import { MOCK_REIMBURSEMENTS } from "../mocks/reimbursement-mocks";
-import {
-  MOCK_ADMIN_USER,
-  MOCK_SPONSORED_ORG_USER_APPROVED,
-} from "../mocks/user-mocks";
+import { MOCK_ADMIN_USER, MOCK_SPONSORED_ORG_USER_APPROVED } from "../mocks/user-mocks";
 import {
   createMockFormDataRequest,
   createMockNextRequest,
@@ -52,16 +49,10 @@ mockedImageUpload.mockResolvedValue(MOCK_REIMBURSEMENTS[0].receiptLink);
 
 jest.mock("@clerk/nextjs/server");
 const mockedClerkClient = mocked(clerkClient);
-mockedClerkClient.users.getUser.mockResolvedValue(
-  MOCK_SPONSORED_ORG_USER_APPROVED as unknown as User,
-);
-mockedClerkClient.users.updateUserMetadata.mockResolvedValue(
-  MOCK_SPONSORED_ORG_USER_APPROVED as unknown as User,
-);
+mockedClerkClient.users.getUser.mockResolvedValue(MOCK_SPONSORED_ORG_USER_APPROVED as unknown as User);
+mockedClerkClient.users.updateUserMetadata.mockResolvedValue(MOCK_SPONSORED_ORG_USER_APPROVED as unknown as User);
 const mockedCurrentUser = mocked(currentUser);
-mockedCurrentUser.mockResolvedValue(
-  MOCK_SPONSORED_ORG_USER_APPROVED as unknown as User,
-);
+mockedCurrentUser.mockResolvedValue(MOCK_SPONSORED_ORG_USER_APPROVED as unknown as User);
 
 describe("Reimbursement API", () => {
   beforeEach(() => {
@@ -72,9 +63,7 @@ describe("Reimbursement API", () => {
     it("returns a list of reimbursements for regular user", async () => {
       const response = await GET_ALL();
       const data = await response.json();
-      expect(data).toEqual(
-        formatMockReimbursementsResponse(MOCK_REIMBURSEMENTS),
-      );
+      expect(data).toEqual(formatMockReimbursementsResponse(MOCK_REIMBURSEMENTS));
       expect(response.status).toBe(200);
       expect(mockedReimbursement.find).toBeCalledWith({
         clerkUserId: "test",
@@ -82,15 +71,11 @@ describe("Reimbursement API", () => {
     });
 
     it("return a list of all reimbursements for admin user", async () => {
-      mockedCurrentUser.mockResolvedValueOnce(
-        MOCK_ADMIN_USER as unknown as User,
-      );
+      mockedCurrentUser.mockResolvedValueOnce(MOCK_ADMIN_USER as unknown as User);
 
       const response = await GET_ALL();
       const data = await response.json();
-      expect(data).toEqual(
-        formatMockReimbursementsResponse(MOCK_REIMBURSEMENTS),
-      );
+      expect(data).toEqual(formatMockReimbursementsResponse(MOCK_REIMBURSEMENTS));
       expect(response.status).toBe(200);
       expect(mockedReimbursement.find).toBeCalled();
     });
@@ -123,26 +108,20 @@ describe("Reimbursement API", () => {
         params: { id: reimbursementId },
       });
       const data = await response.json();
-      expect(data).toEqual(
-        formatMockReimbursementResponse(MOCK_REIMBURSEMENTS[0]),
-      );
+      expect(data).toEqual(formatMockReimbursementResponse(MOCK_REIMBURSEMENTS[0]));
       expect(response.status).toBe(200);
       expect(mockedReimbursement.findById).toBeCalledWith(reimbursementId);
     });
 
     it("returns a single reimbursement for admin user", async () => {
-      mockedCurrentUser.mockResolvedValueOnce(
-        MOCK_ADMIN_USER as unknown as User,
-      );
+      mockedCurrentUser.mockResolvedValueOnce(MOCK_ADMIN_USER as unknown as User);
       const reimbursementId = MOCK_REIMBURSEMENTS[0]._id.toString();
 
       const response = await GET_ID({} as unknown as NextRequest, {
         params: { id: reimbursementId },
       });
       const data = await response.json();
-      expect(data).toEqual(
-        formatMockReimbursementResponse(MOCK_REIMBURSEMENTS[0]),
-      );
+      expect(data).toEqual(formatMockReimbursementResponse(MOCK_REIMBURSEMENTS[0]));
       expect(response.status).toBe(200);
       expect(mockedReimbursement.findById).toBeCalledWith(reimbursementId);
     });
@@ -258,9 +237,7 @@ describe("Reimbursement API", () => {
         params: { id: reimbursementId },
       });
       const data = await response.json();
-      expect(data).toEqual(
-        formatMockReimbursementResponse(MOCK_REIMBURSEMENTS[0]),
-      );
+      expect(data).toEqual(formatMockReimbursementResponse(MOCK_REIMBURSEMENTS[0]));
       expect(response.status).toBe(200);
       expect(mockedReimbursement.findByIdAndUpdate).toBeCalledWith(
         reimbursementId,
@@ -280,9 +257,7 @@ describe("Reimbursement API", () => {
         params: { id: reimbursementId },
       });
       const data = await response.json();
-      expect(data).toEqual(
-        formatMockReimbursementResponse(MOCK_REIMBURSEMENTS[0]),
-      );
+      expect(data).toEqual(formatMockReimbursementResponse(MOCK_REIMBURSEMENTS[0]));
       expect(response.status).toBe(200);
       expect(mockedReimbursement.findByIdAndUpdate).toBeCalledWith(
         reimbursementId,
@@ -365,32 +340,22 @@ describe("Reimbursement API", () => {
         params: { id: reimbursementId },
       });
       const data = await response.json();
-      expect(data).toEqual(
-        formatMockReimbursementResponse(MOCK_REIMBURSEMENTS[0]),
-      );
+      expect(data).toEqual(formatMockReimbursementResponse(MOCK_REIMBURSEMENTS[0]));
       expect(response.status).toBe(200);
-      expect(mockedReimbursement.findByIdAndDelete).toBeCalledWith(
-        reimbursementId,
-      );
+      expect(mockedReimbursement.findByIdAndDelete).toBeCalledWith(reimbursementId);
     });
 
     it("deletes a reimbursement for admin user", async () => {
-      mockedCurrentUser.mockResolvedValueOnce(
-        MOCK_ADMIN_USER as unknown as User,
-      );
+      mockedCurrentUser.mockResolvedValueOnce(MOCK_ADMIN_USER as unknown as User);
       const reimbursementId = MOCK_REIMBURSEMENTS[0]._id.toString();
 
       const response = await DELETE({} as unknown as NextRequest, {
         params: { id: reimbursementId },
       });
       const data = await response.json();
-      expect(data).toEqual(
-        formatMockReimbursementResponse(MOCK_REIMBURSEMENTS[0]),
-      );
+      expect(data).toEqual(formatMockReimbursementResponse(MOCK_REIMBURSEMENTS[0]));
       expect(response.status).toBe(200);
-      expect(mockedReimbursement.findByIdAndDelete).toBeCalledWith(
-        reimbursementId,
-      );
+      expect(mockedReimbursement.findByIdAndDelete).toBeCalledWith(reimbursementId);
     });
 
     it("returns an error if unable to delete", async () => {

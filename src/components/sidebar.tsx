@@ -1,13 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { Nav } from "./nav";
-import {
-  HomeIcon,
-  FileTextIcon,
-  PinLeftIcon,
-  PinRightIcon,
-  DashboardIcon,
-} from "@radix-ui/react-icons";
+import { HomeIcon, FileTextIcon, PinLeftIcon, PinRightIcon, DashboardIcon } from "@radix-ui/react-icons";
 import { useUser } from "@clerk/nextjs";
 
 const links = [

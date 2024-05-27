@@ -11,9 +11,7 @@ jest.spyOn(Date, "now").mockReturnValue(123);
 
 jest.mock("@aws-sdk/client-s3");
 const MockedS3Client = mocked(S3Client);
-MockedS3Client.prototype.send = jest
-  .fn()
-  .mockResolvedValue({}) as unknown as any;
+MockedS3Client.prototype.send = jest.fn().mockResolvedValue({}) as unknown as any;
 const MockedPutObjectCommand = mocked(PutObjectCommand);
 
 describe("S3 Service", () => {
@@ -27,9 +25,7 @@ describe("S3 Service", () => {
       const fileName = "test.png";
 
       const response = await imageUpload(file, fileName);
-      expect(response).toBe(
-        "https://test-bucket.s3.test-region.amazonaws.com/test.png-123",
-      );
+      expect(response).toBe("https://test-bucket.s3.test-region.amazonaws.com/test.png-123");
       expect(MockedPutObjectCommand).toHaveBeenCalledWith({
         Bucket: "test-bucket",
         Key: "test.png-123",
@@ -41,9 +37,7 @@ describe("S3 Service", () => {
     it("rejects with an error if the upload fails", async () => {
       const file = new Blob(["test"], { type: "image/png" });
       const fileName = "test.png";
-      MockedS3Client.prototype.send.mockRejectedValueOnce(
-        "test-error" as unknown as never,
-      );
+      MockedS3Client.prototype.send.mockRejectedValueOnce("test-error" as unknown as never);
 
       await expect(imageUpload(file, fileName)).rejects.toBe("test-error");
     });

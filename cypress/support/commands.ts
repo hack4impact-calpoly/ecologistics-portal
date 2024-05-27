@@ -38,15 +38,12 @@
 
 Cypress.Commands.add(`signIn` as any, () => {
   cy.log(`Signing in.`);
-  cy.visit(
-    "localhost:3000/sign-in?redirect_url=http%3A%2F%2Flocalhost%3A3000%2F",
-    {
-      auth: {
-        username: "",
-        password: "",
-      },
+  cy.visit("localhost:3000/sign-in?redirect_url=http%3A%2F%2Flocalhost%3A3000%2F", {
+    auth: {
+      username: "",
+      password: "",
     },
-  );
+  });
 
   cy.window()
     .should((window) => {
@@ -74,15 +71,12 @@ export {};
 
 Cypress.Commands.add(`signInNewOrg` as any, () => {
   cy.log(`Signing in as new org.`); // logging our event
-  cy.visit(
-    "localhost:3000/sign-in?redirect_url=http%3A%2F%2Flocalhost%3A3000%2F",
-    {
-      auth: {
-        username: "",
-        password: "",
-      },
+  cy.visit("localhost:3000/sign-in?redirect_url=http%3A%2F%2Flocalhost%3A3000%2F", {
+    auth: {
+      username: "",
+      password: "",
     },
-  );
+  });
 
   cy.window()
     .should((window) => {

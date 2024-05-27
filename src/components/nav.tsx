@@ -21,9 +21,7 @@ export function Nav({ links, isCollapsed }: NavProps) {
     return path === pathname;
   };
   return (
-    <nav
-      className={`flex flex-col gap-y-4 ${isCollapsed ? "px-4" : "pl-4 w-[200px]"}`}
-    >
+    <nav className={`flex flex-col gap-y-4 ${isCollapsed ? "px-4" : "pl-4 w-[200px]"}`}>
       {links.map((link, index) => (
         <Link
           key={index}
@@ -36,11 +34,7 @@ export function Nav({ links, isCollapsed }: NavProps) {
           )}
         >
           <link.icon className="h-[25px] w-[25px]" />
-          {!isCollapsed && (
-            <span className="text-base ml-3 font-[650] text-[18px]">
-              {link.title}
-            </span>
-          )}
+          {!isCollapsed && <span className="text-base ml-3 font-[650] text-[18px]">{link.title}</span>}
         </Link>
       ))}
     </nav>

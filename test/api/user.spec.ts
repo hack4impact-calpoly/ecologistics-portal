@@ -16,12 +16,8 @@ mockedClerkClient.users.getUserList.mockResolvedValue([
   MOCK_SPONSORED_ORG_USER_APPROVED as unknown as User,
   MOCK_SPONSORED_ORG_USER_UNAPPROVED as unknown as User,
 ]);
-mockedClerkClient.users.getUser.mockResolvedValue(
-  MOCK_SPONSORED_ORG_USER_APPROVED as unknown as User,
-);
-mockedClerkClient.users.updateUserMetadata.mockResolvedValue(
-  MOCK_SPONSORED_ORG_USER_APPROVED as unknown as User,
-);
+mockedClerkClient.users.getUser.mockResolvedValue(MOCK_SPONSORED_ORG_USER_APPROVED as unknown as User);
+mockedClerkClient.users.updateUserMetadata.mockResolvedValue(MOCK_SPONSORED_ORG_USER_APPROVED as unknown as User);
 const mockedCurrentUser = mocked(currentUser);
 mockedCurrentUser.mockResolvedValue(MOCK_ADMIN_USER as unknown as User);
 
@@ -33,20 +29,13 @@ describe("User API", () => {
   describe("GET /api/user", () => {
     it("returns all users for admin user", async () => {
       mockedClerkClient.users.getUserList
-        .mockResolvedValueOnce([
-          MOCK_SPONSORED_ORG_USER_APPROVED as unknown as User,
-        ])
-        .mockResolvedValueOnce([
-          MOCK_SPONSORED_ORG_USER_UNAPPROVED as unknown as User,
-        ])
+        .mockResolvedValueOnce([MOCK_SPONSORED_ORG_USER_APPROVED as unknown as User])
+        .mockResolvedValueOnce([MOCK_SPONSORED_ORG_USER_UNAPPROVED as unknown as User])
         .mockResolvedValueOnce([]);
       const response = await GET_ALL();
       const data = await response.json();
       expect(response.status).toBe(200);
-      expect(data).toEqual([
-        MOCK_SPONSORED_ORG_USER_APPROVED,
-        MOCK_SPONSORED_ORG_USER_UNAPPROVED,
-      ]);
+      expect(data).toEqual([MOCK_SPONSORED_ORG_USER_APPROVED, MOCK_SPONSORED_ORG_USER_UNAPPROVED]);
     });
 
     it("returns an error if clerk client fails", async () => {
@@ -59,9 +48,7 @@ describe("User API", () => {
     });
 
     it("returns error if user is not admin", async () => {
-      mockedCurrentUser.mockResolvedValueOnce(
-        MOCK_SPONSORED_ORG_USER_APPROVED as unknown as User,
-      );
+      mockedCurrentUser.mockResolvedValueOnce(MOCK_SPONSORED_ORG_USER_APPROVED as unknown as User);
 
       const response = await GET_ALL();
       const data = await response.json();
@@ -104,9 +91,7 @@ describe("User API", () => {
     });
 
     it("returns error if user is not admin", async () => {
-      mockedCurrentUser.mockResolvedValueOnce(
-        MOCK_SPONSORED_ORG_USER_APPROVED as unknown as User,
-      );
+      mockedCurrentUser.mockResolvedValueOnce(MOCK_SPONSORED_ORG_USER_APPROVED as unknown as User);
 
       const response = await GET_ID({} as unknown as NextRequest, {
         params: { id: "test-id" },
@@ -135,16 +120,11 @@ describe("User API", () => {
       const data = await response.json();
       expect(response.status).toBe(200);
       expect(data).toEqual(MOCK_SPONSORED_ORG_USER_APPROVED);
-      expect(mockedClerkClient.users.updateUserMetadata).toHaveBeenCalledWith(
-        "test-id",
-        updateBody,
-      );
+      expect(mockedClerkClient.users.updateUserMetadata).toHaveBeenCalledWith("test-id", updateBody);
     });
 
     it("returns error if clerk client fails", async () => {
-      mockedClerkClient.users.updateUserMetadata.mockRejectedValueOnce(
-        "test-error",
-      );
+      mockedClerkClient.users.updateUserMetadata.mockRejectedValueOnce("test-error");
       const updateBody: UpdateUserBody = {
         unsafeMetadata: {
           organization: {
@@ -163,9 +143,7 @@ describe("User API", () => {
     });
 
     it("returns error if user is not admin", async () => {
-      mockedCurrentUser.mockResolvedValueOnce(
-        MOCK_SPONSORED_ORG_USER_APPROVED as unknown as User,
-      );
+      mockedCurrentUser.mockResolvedValueOnce(MOCK_SPONSORED_ORG_USER_APPROVED as unknown as User);
 
       const response = await PUT({} as unknown as NextRequest, {
         params: { id: "test-id" },

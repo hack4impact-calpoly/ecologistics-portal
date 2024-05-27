@@ -20,11 +20,7 @@ export const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   return itemRank.passed;
 };
 
-export const dateFilterFn = (
-  row: any,
-  columnId: string,
-  value: [Date | undefined, Date | undefined],
-) => {
+export const dateFilterFn = (row: any, columnId: string, value: [Date | undefined, Date | undefined]) => {
   const date = row.getValue(columnId);
   const [from, to] = value;
   const datePart = date.slice(0, 10);

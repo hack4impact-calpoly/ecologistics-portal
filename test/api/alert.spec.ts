@@ -26,9 +26,7 @@ mockedAlert.findByIdAndDelete.mockReturnValue({
 
 jest.mock("@clerk/nextjs/server");
 const mockedCurrentUser = mocked(currentUser);
-mockedCurrentUser.mockResolvedValue(
-  MOCK_SPONSORED_ORG_USER_APPROVED as unknown as User,
-);
+mockedCurrentUser.mockResolvedValue(MOCK_SPONSORED_ORG_USER_APPROVED as unknown as User);
 
 describe("Alert API", () => {
   beforeEach(() => {

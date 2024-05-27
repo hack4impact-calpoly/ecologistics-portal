@@ -16,13 +16,7 @@ export interface PopupProps {
   description: string;
 }
 
-export default function Popup({
-  name,
-  user,
-  email,
-  website,
-  description,
-}: PopupProps) {
+export default function Popup({ name, user, email, website, description }: PopupProps) {
   return (
     <Dialog>
       <DialogTrigger asChild>

@@ -21,21 +21,17 @@ export const createMockFormDataRequest = (body: any) => {
   return { req, res };
 };
 
-export const formatMockReimbursementResponse = (
-  reimbursement: Reimbursement,
-) => ({
+export const formatMockReimbursementResponse = (reimbursement: Reimbursement) => ({
   ...reimbursement,
   transactionDate: reimbursement.transactionDate.toISOString(), // Standardize date format
 });
 
-export const formatMockReimbursementsResponse = (
-  reimbursements: Reimbursement[],
-) => reimbursements.map(formatMockReimbursementResponse);
+export const formatMockReimbursementsResponse = (reimbursements: Reimbursement[]) =>
+  reimbursements.map(formatMockReimbursementResponse);
 
 export const formatMockAlertResponse = (alert: Alert) => ({
   ...alert,
   date: alert.date.toISOString(), // Standardize date format
 });
 
-export const formatMockAlertsResponse = (alerts: Alert[]) =>
-  alerts.map(formatMockAlertResponse);
+export const formatMockAlertsResponse = (alerts: Alert[]) => alerts.map(formatMockAlertResponse);

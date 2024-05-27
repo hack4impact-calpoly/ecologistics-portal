@@ -2,14 +2,7 @@
 
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Form,
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormDescription,
-  FormField,
-} from "@/components/ui/form";
+import { Form, FormItem, FormLabel, FormControl, FormDescription, FormField } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { Input } from "../../components/ui/input";
 import { Textarea } from "../../components/ui/textarea";
@@ -72,9 +65,7 @@ export default function Page() {
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel data-testid="cypress-setup-name">
-                  Organization Name
-                </FormLabel>
+                <FormLabel data-testid="cypress-setup-name">Organization Name</FormLabel>
                 <FormControl>
                   <Input placeholder="name" {...field} />
                 </FormControl>
@@ -86,9 +77,7 @@ export default function Page() {
             name="description"
             render={({ field }) => (
               <FormItem>
-                <FormLabel data-testid="cypress-setup-description">
-                  Organization Description
-                </FormLabel>
+                <FormLabel data-testid="cypress-setup-description">Organization Description</FormLabel>
                 <FormControl>
                   <Textarea placeholder="description" {...field} />
                 </FormControl>
@@ -100,19 +89,11 @@ export default function Page() {
             name="website"
             render={({ field }) => (
               <FormItem>
-                <FormLabel data-testid="cypress-setup-website">
-                  Website
-                </FormLabel>
+                <FormLabel data-testid="cypress-setup-website">Website</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder="website"
-                    {...field}
-                    onChange={autofillUrl}
-                  />
+                  <Input placeholder="website" {...field} onChange={autofillUrl} />
                 </FormControl>
-                <FormDescription>
-                  Enter your organization website link.
-                </FormDescription>
+                <FormDescription>Enter your organization website link.</FormDescription>
               </FormItem>
             )}
           />
