@@ -28,7 +28,20 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Run tests
+        run: npm test
+
       - name: Dry-run build
         run: npm run build
         env:
           MONGO_URI: ${{ secrets.MONGO_URI }}
+          NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+          CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY }}
+          NEXT_PUBLIC_CLERK_SIGN_IN_URL: ${{ secrets.NEXT_PUBLIC_CLERK_SIGN_IN_URL }}
+          NEXT_PUBLIC_CLERK_SIGN_UP_URL: ${{ secrets.NEXT_PUBLIC_CLERK_SIGN_UP_URL }}
+          NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL: ${{ secrets.NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL }}
+          NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL: ${{ secrets.NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL }}
+          H4I_AWS_REGION: ${{ secrets.H4I_AWS_REGION }}
+          H4I_AWS_ACCESS_KEY: ${{ secrets.H4I_AWS_ACCESS_KEY }}
+          H4I_AWS_SECRET_KEY: ${{ secrets.H4I_AWS_SECRET_KEY }}
+          H4I_AWS_S3_BUCKET: ${{ secrets.H4I_AWS_S3_BUCKET }}
