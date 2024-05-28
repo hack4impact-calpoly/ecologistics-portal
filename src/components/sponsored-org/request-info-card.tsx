@@ -26,7 +26,7 @@ export default function RequestInfoCard(props: Reimbursement) {
         <p className="text-sm pb-5 text-wrap text-ellipsis overflow-hidden">
           Request Description: {props.purpose}
           <br></br>
-          {props.comment}
+          Request Comment: {props.comment || "No Comment"}
         </p>
         <p className="text-base">
           Request For:<br></br>
