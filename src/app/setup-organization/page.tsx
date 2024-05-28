@@ -105,7 +105,7 @@ export default function Page() {
               />
             </CardContent>
             <CardFooter className="flex justify-end space-x-4 mt-4">
-              <Button className="bg-orange-500" type="submit">
+              <Button className="bg-orange-500 hover:bg-orange-500/[0.7]" type="submit">
                 Submit
               </Button>
             </CardFooter>
@@ -113,51 +113,5 @@ export default function Page() {
         </Form>
       </Card>
     </main>
-
-    // <div>
-    //   <h1>Setup Organization</h1>
-    // <Form data-testid="cypress-setup-form" {...form}>
-    //   <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 m-5">
-    //     <FormField
-    //       control={form.control}
-    //       name="name"
-    //       render={({ field }) => (
-    //         <FormItem>
-    //           <FormLabel data-testid="cypress-setup-name">Organization Name</FormLabel>
-    //           <FormControl>
-    //             <Input placeholder="name" {...field} />
-    //           </FormControl>
-    //         </FormItem>
-    //       )}
-    //     />
-    //     <FormField
-    //       control={form.control}
-    //       name="description"
-    //       render={({ field }) => (
-    //         <FormItem>
-    //           <FormLabel data-testid="cypress-setup-description">Organization Description</FormLabel>
-    //           <FormControl>
-    //             <Textarea placeholder="description" {...field} />
-    //           </FormControl>
-    //         </FormItem>
-    //       )}
-    //     />
-    //     <FormField
-    //       control={form.control}
-    //       name="website"
-    //       render={({ field }) => (
-    //         <FormItem>
-    //           <FormLabel data-testid="cypress-setup-website">Website</FormLabel>
-    //           <FormControl>
-    //             <Input placeholder="website" {...field} onChange={autofillUrl} />
-    //           </FormControl>
-    //           <FormDescription>Enter your organization website link.</FormDescription>
-    //         </FormItem>
-    //       )}
-    //     />
-    //     <Button type="submit">Submit</Button>
-    //   </form>
-    // </Form>
-    // </div>
   );
 }

@@ -20,7 +20,7 @@ export default function Popup({ name, user, email, website, description }: Popup
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="bg-orange-500">View Info</Button>
+        <Button className="bg-orange-500 hover:bg-orange-500/[0.7]">View Info</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

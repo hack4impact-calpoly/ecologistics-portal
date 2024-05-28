@@ -302,7 +302,7 @@ Thank you!`;
               </Button>
               <Dialog>
                 <DialogTrigger>
-                  <Button className="bg-orange-500" type="button" disabled={submitDisabled}>
+                  <Button className="bg-orange-500 hover:bg-orange-500/[0.7]" type="button" disabled={submitDisabled}>
                     Submit
                   </Button>
                 </DialogTrigger>
