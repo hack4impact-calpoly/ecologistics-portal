@@ -49,7 +49,7 @@ export default function SponsoredHomePage() {
         </div>
         <Button
           onClick={() => router.push("/request-reimbursement")}
-          className="bg-orange-500 hover:bg-orange-500/[0.7] text-sm place-self-end"
+          className="bg-orange-500 hover:bg-orange-600 text-sm place-self-end"
         >
           Request Reimbursement
         </Button>
