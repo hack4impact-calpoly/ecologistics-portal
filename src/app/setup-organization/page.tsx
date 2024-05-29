@@ -94,6 +94,7 @@ export default function Page() {
                     <FormControl>
                       <Textarea placeholder="Organization Description" {...field} />
                     </FormControl>
+                    {form.formState.errors.description && <p role="alert">{`Please enter organization description`}</p>}
                   </FormItem>
                 )}
               />
@@ -109,6 +110,7 @@ export default function Page() {
                       <Input placeholder="URL" {...field} onChange={autofillUrl} />
                     </FormControl>
                     <FormDescription>Enter your organization website link.</FormDescription>
+                    {form.formState.errors.website && <p role="alert">{`Please enter organization URL`}</p>}
                   </FormItem>
                 )}
               />
