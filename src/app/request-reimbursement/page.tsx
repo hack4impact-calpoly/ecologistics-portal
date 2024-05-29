@@ -158,7 +158,9 @@ Thank you!`;
                 name="recipientName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel> Recipient Name </FormLabel>
+                    <FormLabel>
+                      Recipient Name <span className="text-red-500">*</span>
+                    </FormLabel>
                     <FormControl>
                       <Input placeholder="Recipient name" {...field} />
                     </FormControl>
@@ -170,7 +172,9 @@ Thank you!`;
                 name="recipientEmail"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel> Recipient Email </FormLabel>
+                    <FormLabel>
+                      Recipient Email <span className="text-red-500">*</span>
+                    </FormLabel>
                     <FormControl>
                       <Input placeholder="Receipient email" {...field} />
                     </FormControl>
@@ -182,7 +186,9 @@ Thank you!`;
                 name="transactionDate"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="block mb-2"> Transaction Date </FormLabel>
+                    <FormLabel className="block mb-2">
+                      Transaction Date <span className="text-red-500">*</span>
+                    </FormLabel>
                     <FormControl>
                       <Popover>
                         <PopoverTrigger asChild>
@@ -218,7 +224,9 @@ Thank you!`;
                 name="amount"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel> Transaction Amount </FormLabel>
+                    <FormLabel>
+                      Transaction Amount <span className="text-red-500">*</span>
+                    </FormLabel>
                     <FormControl>
                       <Input type="number" placeholder="Amount ($)" {...field} />
                     </FormControl>
@@ -230,7 +238,9 @@ Thank you!`;
                 name="purpose"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel> Transaction Purpose </FormLabel>
+                    <FormLabel>
+                      Transaction Purpose <span className="text-red-500">*</span>
+                    </FormLabel>
                     <FormControl>
                       <Input placeholder="Purpose" {...field} />
                     </FormControl>
@@ -242,7 +252,9 @@ Thank you!`;
                 name="paymentMethod"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel> Payment Method </FormLabel>
+                    <FormLabel>
+                      Payment Method <span className="text-red-500">*</span>
+                    </FormLabel>
                     <br />
                     <FormControl>
                       <DropdownMenu>
@@ -288,7 +300,9 @@ Thank you!`;
                 name="file" // where did this come from?
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel> Receipt Upload </FormLabel>
+                    <FormLabel>
+                      Receipt Upload <span className="text-red-500">*</span>
+                    </FormLabel>
                     <FormControl>
                       <ImageUpload handleChange={field.onChange}></ImageUpload>
                     </FormControl>

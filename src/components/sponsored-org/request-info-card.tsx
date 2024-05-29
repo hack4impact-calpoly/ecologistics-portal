@@ -86,7 +86,6 @@ export default function RequestInfoCard(props: Reimbursement & { id: string }) {
                 </Button>
                 <Button
                   type="submit"
-                  form="request-reimbursement-form"
                   className="w-[30%] bg-red-400 bg-opacity-80 text-red-800 hover:bg-red-400"
                   onClick={() => {
                     deleteReimbursement(props.id);

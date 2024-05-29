@@ -71,7 +71,9 @@ export default function Page() {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel data-testid="cypress-setup-name">Organization Name</FormLabel>
+                    <FormLabel data-testid="cypress-setup-name">
+                      Organization Name <span className="text-red-500">*</span>
+                    </FormLabel>
                     <FormControl>
                       <Input placeholder="name" {...field} />
                     </FormControl>
@@ -83,7 +85,9 @@ export default function Page() {
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel data-testid="cypress-setup-description">Organization Description</FormLabel>
+                    <FormLabel data-testid="cypress-setup-description">
+                      Organization Description <span className="text-red-500">*</span>
+                    </FormLabel>
                     <FormControl>
                       <Textarea placeholder="description" {...field} />
                     </FormControl>
@@ -95,7 +99,9 @@ export default function Page() {
                 name="website"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel data-testid="cypress-setup-website">Website</FormLabel>
+                    <FormLabel data-testid="cypress-setup-website">
+                      Website <span className="text-red-500">*</span>
+                    </FormLabel>
                     <FormControl>
                       <Input placeholder="website" {...field} onChange={autofillUrl} />
                     </FormControl>
