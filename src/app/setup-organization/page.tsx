@@ -75,7 +75,7 @@ export default function Page() {
                       Organization Name <span className="text-red-500">*</span>
                     </FormLabel>
                     <FormControl>
-                      <Input placeholder="name" {...field} />
+                      <Input placeholder="Full Organization Name" {...field} />
                     </FormControl>
                   </FormItem>
                 )}
@@ -89,7 +89,7 @@ export default function Page() {
                       Organization Description <span className="text-red-500">*</span>
                     </FormLabel>
                     <FormControl>
-                      <Textarea placeholder="description" {...field} />
+                      <Textarea placeholder="Organization Description" {...field} />
                     </FormControl>
                   </FormItem>
                 )}
@@ -103,7 +103,7 @@ export default function Page() {
                       Website <span className="text-red-500">*</span>
                     </FormLabel>
                     <FormControl>
-                      <Input placeholder="website" {...field} onChange={autofillUrl} />
+                      <Input placeholder="URL" {...field} onChange={autofillUrl} />
                     </FormControl>
                     <FormDescription>Enter your organization website link.</FormDescription>
                   </FormItem>

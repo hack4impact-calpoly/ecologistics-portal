@@ -162,7 +162,7 @@ Thank you!`;
                       Recipient Name <span className="text-red-500">*</span>
                     </FormLabel>
                     <FormControl>
-                      <Input placeholder="Recipient name" {...field} />
+                      <Input placeholder="Full Recipient Name" {...field} />
                     </FormControl>
                   </FormItem>
                 )}
@@ -176,7 +176,7 @@ Thank you!`;
                       Recipient Email <span className="text-red-500">*</span>
                     </FormLabel>
                     <FormControl>
-                      <Input placeholder="Receipient email" {...field} />
+                      <Input placeholder="Receipient Email" {...field} />
                     </FormControl>
                   </FormItem>
                 )}
@@ -242,7 +242,7 @@ Thank you!`;
                       Transaction Purpose <span className="text-red-500">*</span>
                     </FormLabel>
                     <FormControl>
-                      <Input placeholder="Purpose" {...field} />
+                      <Input placeholder="Detailed Purpose of Transaction" {...field} />
                     </FormControl>
                   </FormItem>
                 )}
@@ -290,7 +290,7 @@ Thank you!`;
                   <FormItem>
                     <FormLabel> Comment </FormLabel>
                     <FormControl>
-                      <Input placeholder="Comment (optional)" {...field} />
+                      <Input placeholder="Additional Comment (Optional)" {...field} />
                     </FormControl>
                   </FormItem>
                 )}
