@@ -85,6 +85,7 @@ export default function ManageRequestCard(props: ManageRequestCardProps) {
                 </Button>
               </DialogTrigger>
               <DialogContent className="w-[100%]">
+                <div className="font-bold">Change Comment</div>
                 <Textarea
                   placeholder="Write Comment"
                   value={comment}
