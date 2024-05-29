@@ -117,7 +117,11 @@ export default function Page() {
               />
             </CardContent>
             <CardFooter className="flex justify-end space-x-4 mt-4">
-              <Button className="bg-orange-500 hover:bg-orange-600" type="submit">
+              <Button
+                className="bg-orange-500 hover:bg-orange-600"
+                type="submit"
+                disabled={form.formState.isSubmitting || !form.formState.isValid}
+              >
                 Submit
               </Button>
             </CardFooter>
