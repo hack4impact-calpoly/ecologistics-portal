@@ -11,11 +11,12 @@ import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import CenteredSpinner from "@/components/centered-spinner";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Value } from "@radix-ui/react-select";
 
 const formSchema = z.object({
   name: z.string().min(1).max(50),
-  description: z.string().max(1000),
-  website: z.string().url(),
+  description: z.string().min(1).max(1000),
+  website: z.string().url("Invalid URL"),
 });
 
 export default function Page() {
@@ -68,7 +69,7 @@ export default function Page() {
             <CardContent className="space-y-4 mt-4">
               <FormField
                 control={form.control}
-                name="name"
+                {...form.register("name", { required: { value: true, message: `Please enter organization name` } })}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel data-testid="cypress-setup-name">
@@ -77,12 +78,14 @@ export default function Page() {
                     <FormControl>
                       <Input placeholder="Full Organization Name" {...field} />
                     </FormControl>
+                    {form.formState.errors.name && <p role="alert">{`Please enter organization name`}</p>}
                   </FormItem>
                 )}
               />
               <FormField
                 control={form.control}
-                name="description"
+                {...form.register("description")}
+                rules={{ required: "Please enter organization description" }}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel data-testid="cypress-setup-description">
@@ -96,7 +99,7 @@ export default function Page() {
               />
               <FormField
                 control={form.control}
-                name="website"
+                {...form.register("website", { required: "Please enter organization website" })}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel data-testid="cypress-setup-website">
