@@ -62,7 +62,6 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
     }
     const handleWindowResize = () => {
       if (row) {
-        console.log(row.height);
         setPageSize(
           Math.floor((window.innerHeight - 380) / row.height) <= 0
             ? 3
@@ -98,18 +97,6 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
   });
 
   const pageCount = table.getPageCount();
-
-  const renderPagination = () => {
-    let pages = [];
-    for (let i = 0; i < pageCount; i++) {
-      pages.push(
-        <PaginationItem key={i}>
-          <PaginationLink onClick={() => setPageIndex(i)}>{i + 1}</PaginationLink>
-        </PaginationItem>,
-      );
-    }
-    return pages;
-  };
 
   const handleDateRangeChange = (range?: DateRange) => {
     if (range) {

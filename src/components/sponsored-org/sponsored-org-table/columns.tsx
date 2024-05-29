@@ -41,7 +41,7 @@ const ReportNameCell = ({ row }: { row: any }) => {
       <DialogContent className="min-w-[700px]">
         <div>
           {selectedReimbursement ? (
-            <RequestInfoCard {...selectedReimbursement} id={row.original._id} />
+            <RequestInfoCard {...selectedReimbursement} id={row.original.id} />
           ) : (
             <p>Loading reimbursement information...</p>
           )}
