@@ -1,21 +1,23 @@
 "use client";
 
-import { z } from "zod";
+import FullscreenSpinner from "@/components/fullscreen-spinner";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { useUser } from "@clerk/nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, FormItem, FormLabel, FormControl, FormDescription, FormField } from "@/components/ui/form";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import { Textarea } from "../../components/ui/textarea";
-import { Button } from "../../components/ui/button";
-import { useUser } from "@clerk/nextjs";
-import { useRouter } from "next/navigation";
-import CenteredSpinner from "@/components/centered-spinner";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Value } from "@radix-ui/react-select";
 
 const formSchema = z.object({
-  name: z.string().min(1).max(50),
-  description: z.string().min(1).max(1000),
+  name: z.string().min(1, "Organization name is required").max(50, "Organization name must be less than 50 characters"),
+  description: z
+    .string()
+    .min(1, "Organization description is required")
+    .max(1000, "Organization description must be less than 1000 characters"),
   website: z.string().url("Invalid URL"),
 });
 
@@ -31,7 +33,7 @@ export default function Page() {
   });
   const { isLoaded, isSignedIn, user } = useUser();
   if (!isLoaded) {
-    return <CenteredSpinner />;
+    return <FullscreenSpinner />;
   }
   if (!isSignedIn) {
     return router.push("/sign-in");
@@ -69,7 +71,7 @@ export default function Page() {
             <CardContent className="space-y-4 mt-4">
               <FormField
                 control={form.control}
-                {...form.register("name", { required: { value: true, message: `Please enter organization name` } })}
+                name="name"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel data-testid="cypress-setup-name">
@@ -78,14 +80,13 @@ export default function Page() {
                     <FormControl>
                       <Input placeholder="Full Organization Name" {...field} />
                     </FormControl>
-                    {form.formState.errors.name && <p role="alert">{`Please enter organization name`}</p>}
+                    <FormMessage />
                   </FormItem>
                 )}
               />
               <FormField
                 control={form.control}
-                {...form.register("description")}
-                rules={{ required: "Please enter organization description" }}
+                name="description"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel data-testid="cypress-setup-description">
@@ -94,13 +95,13 @@ export default function Page() {
                     <FormControl>
                       <Textarea placeholder="Organization Description" {...field} />
                     </FormControl>
-                    {form.formState.errors.description && <p role="alert">{`Please enter organization description`}</p>}
+                    <FormMessage />
                   </FormItem>
                 )}
               />
               <FormField
                 control={form.control}
-                {...form.register("website", { required: "Please enter organization website" })}
+                name="website"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel data-testid="cypress-setup-website">
@@ -110,13 +111,17 @@ export default function Page() {
                       <Input placeholder="URL" {...field} onChange={autofillUrl} />
                     </FormControl>
                     <FormDescription>Enter your organization website link.</FormDescription>
-                    {form.formState.errors.website && <p role="alert">{`Please enter organization URL`}</p>}
+                    <FormMessage />
                   </FormItem>
                 )}
               />
             </CardContent>
             <CardFooter className="flex justify-end space-x-4 mt-4">
-              <Button className="bg-orange-500 hover:bg-orange-600" type="submit">
+              <Button
+                className="bg-orange-500 hover:bg-orange-600"
+                type="submit"
+                disabled={form.formState.isSubmitting || !form.formState.isValid}
+              >
                 Submit
               </Button>
             </CardFooter>

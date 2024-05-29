@@ -87,8 +87,8 @@ export default function RequestInfoCard(props: Reimbursement & { id: string }) {
                 <Button
                   type="submit"
                   className="w-[30%] bg-red-400 bg-opacity-80 text-red-800 hover:bg-red-400"
-                  onClick={() => {
-                    deleteReimbursement(props.id);
+                  onClick={async () => {
+                    await deleteReimbursement(props.id);
                     window.location.reload();
                   }}
                 >

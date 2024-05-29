@@ -15,7 +15,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
@@ -29,20 +29,28 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 const formSchema = z.object({
-  recipientName: z.string().min(1).max(50),
-  recipientEmail: z.string().min(1).max(50),
+  recipientName: z
+    .string()
+    .min(1, "Recipient Name is required")
+    .max(50, "Recipient Name must be less than 50 characters"),
+  recipientEmail: z
+    .string()
+    .min(1, "Recipient Email is required")
+    .max(50, "Recipient Email must be less than 50 characters"),
   transactionDate: z.date(),
   amount: z.union([z.number(), z.string().transform((value) => parseFloat(value))]),
-  paymentMethod: z.string().min(1).max(100),
-  purpose: z.string().max(1000),
-  file: z.any(),
+  paymentMethod: z
+    .string()
+    .min(1, "Payment Method is required")
+    .max(100, "Payment Method must be less than 100 characters"),
+  purpose: z.string().min(1, "Purpose is required").max(1000, "Purpose must be less than 1000 characters"),
+  file: z.any().refine((value) => value instanceof File, "Receipt is required"),
   comment: z.string(),
 });
 
 export default function Page() {
   const { isLoaded, isSignedIn, user } = useUser();
   const [loading, setLoading] = useState(false);
-  const [submitDisabled, setSubmitDisabled] = useState(false);
 
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
@@ -61,7 +69,6 @@ export default function Page() {
 
   // submisson handler
   function onSubmit(values: z.infer<typeof formSchema>) {
-    setSubmitDisabled(true);
     setLoading(true);
     // initialize multipart form data
     const formData = new FormData();
@@ -79,7 +86,6 @@ export default function Page() {
         if (response.ok) {
           return response.json();
         }
-        setSubmitDisabled(false);
         setLoading(false);
         throw new Error("Failed to submit reimbursement");
       })
@@ -97,7 +103,6 @@ export default function Page() {
         router.push("/");
       })
       .catch((error) => {
-        setSubmitDisabled(false);
         setLoading(false);
         console.error(error);
       });
@@ -164,6 +169,7 @@ Thank you!`;
                     <FormControl>
                       <Input placeholder="Full Recipient Name" {...field} />
                     </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -178,6 +184,7 @@ Thank you!`;
                     <FormControl>
                       <Input placeholder="Receipient Email" {...field} />
                     </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -244,6 +251,7 @@ Thank you!`;
                     <FormControl>
                       <Input placeholder="Detailed Purpose of Transaction" {...field} />
                     </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -275,11 +283,28 @@ Thank you!`;
                       </DropdownMenu>
                     </FormControl>
                     {field.value && (
-                      <FormMessage className="text-sm text-muted-foreground">
+                      <FormDescription>
                         Please submit your account information in the comment field. If the information is sensitive,
                         please send it via email instead.
-                      </FormMessage>
+                      </FormDescription>
                     )}
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="file" // where did this come from?
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Receipt Upload <span className="text-red-500">*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <ImageUpload handleChange={field.onChange}></ImageUpload>
+                    </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -295,32 +320,22 @@ Thank you!`;
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="file" // where did this come from?
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      Receipt Upload <span className="text-red-500">*</span>
-                    </FormLabel>
-                    <FormControl>
-                      <ImageUpload handleChange={field.onChange}></ImageUpload>
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
             </CardContent>
             <CardFooter className="flex justify-end space-x-4 mt-4">
               <Button variant="secondary" type="button" onClick={() => router.push("/")}>
                 Cancel
               </Button>
               <Dialog>
-                <DialogTrigger>
-                  <Button className="bg-orange-500 hover:bg-orange-600" type="button" disabled={submitDisabled}>
+                <DialogTrigger disabled={form.formState.isSubmitting || !form.formState.isValid}>
+                  <Button
+                    className="bg-orange-500 hover:bg-orange-600"
+                    type="button"
+                    disabled={form.formState.isSubmitting || !form.formState.isValid}
+                  >
                     Submit
                   </Button>
                 </DialogTrigger>
-                <W9Verification submitDisabled={submitDisabled} constructEmail={constructEmail} />
+                <W9Verification submitDisabled={form.formState.isSubmitting} constructEmail={constructEmail} />
               </Dialog>
             </CardFooter>
           </form>
