@@ -64,7 +64,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
     handleWindowResize();
     window.addEventListener("resize", handleWindowResize);
     return () => window.removeEventListener("resize", handleWindowResize);
-  }, []);
+  }, [data]);
 
   const table = useReactTable({
     data,

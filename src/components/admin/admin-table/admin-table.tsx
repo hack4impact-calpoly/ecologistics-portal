@@ -104,15 +104,18 @@ export default function AdminTable() {
       .then((reimbursements) => {
         setReimbursements(reimbursements);
         setIsLoading(false);
-        handleWindowResize();
       })
       .catch((err) => {
         setError(err);
         setIsLoading(false);
       });
+  }, []);
+
+  React.useEffect(() => {
+    handleWindowResize();
     window.addEventListener("resize", handleWindowResize);
     return () => window.removeEventListener("resize", handleWindowResize);
-  }, []);
+  }, [reimbursements]);
 
   const table = useReactTable({
     data: reimbursements,
