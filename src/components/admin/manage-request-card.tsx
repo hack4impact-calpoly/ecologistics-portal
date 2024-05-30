@@ -34,16 +34,15 @@ export default function ManageRequestCard(props: ManageRequestCardProps) {
       <CardHeader className="flex flex-row justify-between items-top pb-3">
         <div className="flex flex-col items-left">
           <CardTitle className="text-xxl font-bold pb-3">
-            <p className="text-wrap text-ellipsis overflow-hidden max-w-[16rem]">{reimbursement.reportName}</p>
+            <div className="text-wrap text-ellipsis overflow-hidden max-w-[16rem]">{reimbursement.reportName}</div>
           </CardTitle>
-          <CardDescription className="flex space-x-4 items-center text-black">
+          <div className="w-[12rem] text-sm text-muted-foreground flex space-x-4 items-center text-black">
             <div className="border border-black rounded-full py-1 px-3">${reimbursement.amount}</div>
             <div>{new Date(reimbursement.transactionDate).toLocaleDateString()}</div>
-          </CardDescription>
+          </div>
         </div>
         <div className="flex flex-col w-[9rem]">
           <StatusDropdown currentStatus={reimbursement.status as Status} onChange={updateStatus} />
-          <div className="text-center text-wrap text-ellipsis overflow-hidden">{reimbursement.comment}</div>
         </div>
       </CardHeader>
       <CardContent className="space-y-1">
@@ -73,44 +72,50 @@ export default function ManageRequestCard(props: ManageRequestCardProps) {
             }}
           />
         </div>
-        <div className="flex justify-end">
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button className="mt-4 border-black h-7 px-2" variant="outline">
-                <Pencil1Icon className="w-4 h-4 mr-2" />
-                Edit
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="w-[100%]">
-              <Textarea
-                placeholder="Write Comment"
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-                className="w-full border border-gray-100 rounded-md p-2"
-              />
-              <DialogPrimitive.Close className="space-x-4 flex justify-end">
-                <Button
-                  type="submit"
-                  className="border-black h-7 px-2"
-                  onClick={() => {
-                    updateComment(comment);
-                    setSavedComment(comment);
-                  }}
-                >
-                  <p className="text-sm">Save</p>
+        <div className="flex items-center justify-between">
+          <div className="w-[20rem] text-wrap text-ellipsis overflow-hidden">
+            Request Comment: {reimbursement.comment || "No Comment"}
+          </div>
+          <div className="flex items-center">
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button className="my-2 ml-2 border-black h-7 px-2" variant="outline">
+                  <Pencil1Icon className="w-4 h-4 mr-2" />
+                  Edit
                 </Button>
-                <Button
-                  variant="outline"
-                  className="border-black h-7 px-2"
-                  onClick={() => {
-                    setComment(savedComment);
-                  }}
-                >
-                  <p className="text-sm">Cancel</p>
-                </Button>
-              </DialogPrimitive.Close>
-            </DialogContent>
-          </Dialog>
+              </DialogTrigger>
+              <DialogContent className="w-[100%]">
+                <div className="font-bold ">Edit Comment</div>
+                <Textarea
+                  placeholder="Write Comment"
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
+                  className="w-full border border-gray-100 rounded-md p-2"
+                />
+                <DialogPrimitive.Close className="space-x-4 flex justify-end">
+                  <Button
+                    type="submit"
+                    className="border-black h-7 px-2"
+                    onClick={() => {
+                      updateComment(comment);
+                      setSavedComment(comment);
+                    }}
+                  >
+                    <p className="text-sm">Save</p>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="border-black h-7 px-2"
+                    onClick={() => {
+                      setComment(savedComment);
+                    }}
+                  >
+                    <p className="text-sm">Cancel</p>
+                  </Button>
+                </DialogPrimitive.Close>
+              </DialogContent>
+            </Dialog>
+          </div>
         </div>
       </CardContent>
     </Card>

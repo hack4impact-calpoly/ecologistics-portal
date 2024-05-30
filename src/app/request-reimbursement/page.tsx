@@ -15,7 +15,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
@@ -29,20 +29,28 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 const formSchema = z.object({
-  recipientName: z.string().min(1).max(50),
-  recipientEmail: z.string().min(1).max(50),
+  recipientName: z
+    .string()
+    .min(1, "Recipient Name is required")
+    .max(50, "Recipient Name must be less than 50 characters"),
+  recipientEmail: z
+    .string()
+    .min(1, "Recipient Email is required")
+    .max(50, "Recipient Email must be less than 50 characters"),
   transactionDate: z.date(),
   amount: z.union([z.number(), z.string().transform((value) => parseFloat(value))]),
-  paymentMethod: z.string().min(1).max(100),
-  purpose: z.string().max(1000),
-  file: z.any(),
+  paymentMethod: z
+    .string()
+    .min(1, "Payment Method is required")
+    .max(100, "Payment Method must be less than 100 characters"),
+  purpose: z.string().min(1, "Purpose is required").max(1000, "Purpose must be less than 1000 characters"),
+  file: z.any().refine((value) => value instanceof File, "Receipt is required"),
   comment: z.string(),
 });
 
 export default function Page() {
   const { isLoaded, isSignedIn, user } = useUser();
   const [loading, setLoading] = useState(false);
-  const [submitDisabled, setSubmitDisabled] = useState(false);
 
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
@@ -61,7 +69,6 @@ export default function Page() {
 
   // submisson handler
   function onSubmit(values: z.infer<typeof formSchema>) {
-    setSubmitDisabled(true);
     setLoading(true);
     // initialize multipart form data
     const formData = new FormData();
@@ -79,7 +86,6 @@ export default function Page() {
         if (response.ok) {
           return response.json();
         }
-        setSubmitDisabled(false);
         setLoading(false);
         throw new Error("Failed to submit reimbursement");
       })
@@ -97,7 +103,6 @@ export default function Page() {
         router.push("/");
       })
       .catch((error) => {
-        setSubmitDisabled(false);
         setLoading(false);
         console.error(error);
       });
@@ -158,10 +163,13 @@ Thank you!`;
                 name="recipientName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel> Recipient Name </FormLabel>
+                    <FormLabel>
+                      Recipient Name <span className="text-red-500">*</span>
+                    </FormLabel>
                     <FormControl>
-                      <Input placeholder="Recipient name" {...field} />
+                      <Input placeholder="Full Recipient Name" {...field} />
                     </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -170,10 +178,13 @@ Thank you!`;
                 name="recipientEmail"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel> Recipient Email </FormLabel>
+                    <FormLabel>
+                      Recipient Email <span className="text-red-500">*</span>
+                    </FormLabel>
                     <FormControl>
-                      <Input placeholder="Receipient email" {...field} />
+                      <Input placeholder="Receipient Email" {...field} />
                     </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -182,7 +193,9 @@ Thank you!`;
                 name="transactionDate"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="block mb-2"> Transaction Date </FormLabel>
+                    <FormLabel className="block mb-2">
+                      Transaction Date <span className="text-red-500">*</span>
+                    </FormLabel>
                     <FormControl>
                       <Popover>
                         <PopoverTrigger asChild>
@@ -218,7 +231,9 @@ Thank you!`;
                 name="amount"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel> Transaction Amount </FormLabel>
+                    <FormLabel>
+                      Transaction Amount <span className="text-red-500">*</span>
+                    </FormLabel>
                     <FormControl>
                       <Input type="number" placeholder="Amount ($)" {...field} />
                     </FormControl>
@@ -230,10 +245,13 @@ Thank you!`;
                 name="purpose"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel> Transaction Purpose </FormLabel>
+                    <FormLabel>
+                      Transaction Purpose <span className="text-red-500">*</span>
+                    </FormLabel>
                     <FormControl>
-                      <Input placeholder="Purpose" {...field} />
+                      <Input placeholder="Detailed Purpose of Transaction" {...field} />
                     </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -242,7 +260,9 @@ Thank you!`;
                 name="paymentMethod"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel> Payment Method </FormLabel>
+                    <FormLabel>
+                      Payment Method <span className="text-red-500">*</span>
+                    </FormLabel>
                     <br />
                     <FormControl>
                       <DropdownMenu>
@@ -263,11 +283,28 @@ Thank you!`;
                       </DropdownMenu>
                     </FormControl>
                     {field.value && (
-                      <FormMessage className="text-sm text-muted-foreground">
+                      <FormDescription>
                         Please submit your account information in the comment field. If the information is sensitive,
                         please send it via email instead.
-                      </FormMessage>
+                      </FormDescription>
                     )}
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="file" // where did this come from?
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Receipt Upload <span className="text-red-500">*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <ImageUpload handleChange={field.onChange}></ImageUpload>
+                    </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -278,19 +315,7 @@ Thank you!`;
                   <FormItem>
                     <FormLabel> Comment </FormLabel>
                     <FormControl>
-                      <Input placeholder="Comment (optional)" {...field} />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="file" // where did this come from?
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel> Receipt Upload </FormLabel>
-                    <FormControl>
-                      <ImageUpload handleChange={field.onChange}></ImageUpload>
+                      <Input placeholder="Additional Comment (Optional)" {...field} />
                     </FormControl>
                   </FormItem>
                 )}
@@ -301,12 +326,16 @@ Thank you!`;
                 Cancel
               </Button>
               <Dialog>
-                <DialogTrigger>
-                  <Button className="bg-orange-500" type="button" disabled={submitDisabled}>
+                <DialogTrigger disabled={form.formState.isSubmitting || !form.formState.isValid}>
+                  <Button
+                    className="bg-orange-500 hover:bg-orange-600"
+                    type="button"
+                    disabled={form.formState.isSubmitting || !form.formState.isValid}
+                  >
                     Submit
                   </Button>
                 </DialogTrigger>
-                <W9Verification submitDisabled={submitDisabled} constructEmail={constructEmail} />
+                <W9Verification submitDisabled={form.formState.isSubmitting} constructEmail={constructEmail} />
               </Dialog>
             </CardFooter>
           </form>

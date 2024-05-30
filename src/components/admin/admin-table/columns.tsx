@@ -81,13 +81,11 @@ const OrganizationCell = ({ row }: { row: any }) => {
       </DialogTrigger>
       <DialogContent>
         {selectedReimbursement ? (
-          <>
-            <ManageRequestCard
-              reimbursement={selectedReimbursement}
-              updateComment={updateComment}
-              updateStatus={updateStatus}
-            />
-          </>
+          <ManageRequestCard
+            reimbursement={selectedReimbursement}
+            updateComment={updateComment}
+            updateStatus={updateStatus}
+          />
         ) : (
           <p>Loading reimbursement information...</p>
         )}

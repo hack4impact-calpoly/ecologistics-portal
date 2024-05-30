@@ -1,21 +1,24 @@
 "use client";
 
-import { z } from "zod";
+import FullscreenSpinner from "@/components/fullscreen-spinner";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { useUser } from "@clerk/nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, FormItem, FormLabel, FormControl, FormDescription, FormField } from "@/components/ui/form";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import { Textarea } from "../../components/ui/textarea";
-import { Button } from "../../components/ui/button";
-import { useUser } from "@clerk/nextjs";
-import { useRouter } from "next/navigation";
-import CenteredSpinner from "@/components/centered-spinner";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
 const formSchema = z.object({
-  name: z.string().min(1).max(50),
-  description: z.string().max(1000),
-  website: z.string().url(),
+  name: z.string().min(1, "Organization name is required").max(50, "Organization name must be less than 50 characters"),
+  description: z
+    .string()
+    .min(1, "Organization description is required")
+    .max(1000, "Organization description must be less than 1000 characters"),
+  website: z.string().url("Invalid URL"),
 });
 
 export default function Page() {
@@ -30,7 +33,7 @@ export default function Page() {
   });
   const { isLoaded, isSignedIn, user } = useUser();
   if (!isLoaded) {
-    return <CenteredSpinner />;
+    return <FullscreenSpinner />;
   }
   if (!isSignedIn) {
     return router.push("/sign-in");
@@ -71,10 +74,13 @@ export default function Page() {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel data-testid="cypress-setup-name">Organization Name</FormLabel>
+                    <FormLabel data-testid="cypress-setup-name">
+                      Organization Name <span className="text-red-500">*</span>
+                    </FormLabel>
                     <FormControl>
-                      <Input placeholder="name" {...field} />
+                      <Input placeholder="Full Organization Name" {...field} />
                     </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -83,10 +89,13 @@ export default function Page() {
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel data-testid="cypress-setup-description">Organization Description</FormLabel>
+                    <FormLabel data-testid="cypress-setup-description">
+                      Organization Description <span className="text-red-500">*</span>
+                    </FormLabel>
                     <FormControl>
-                      <Textarea placeholder="description" {...field} />
+                      <Textarea placeholder="Organization Description" {...field} />
                     </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -95,17 +104,24 @@ export default function Page() {
                 name="website"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel data-testid="cypress-setup-website">Website</FormLabel>
+                    <FormLabel data-testid="cypress-setup-website">
+                      Website <span className="text-red-500">*</span>
+                    </FormLabel>
                     <FormControl>
-                      <Input placeholder="website" {...field} onChange={autofillUrl} />
+                      <Input placeholder="URL" {...field} onChange={autofillUrl} />
                     </FormControl>
                     <FormDescription>Enter your organization website link.</FormDescription>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
             </CardContent>
             <CardFooter className="flex justify-end space-x-4 mt-4">
-              <Button className="bg-orange-500" type="submit">
+              <Button
+                className="bg-orange-500 hover:bg-orange-600"
+                type="submit"
+                disabled={form.formState.isSubmitting || !form.formState.isValid}
+              >
                 Submit
               </Button>
             </CardFooter>
@@ -113,51 +129,5 @@ export default function Page() {
         </Form>
       </Card>
     </main>
-
-    // <div>
-    //   <h1>Setup Organization</h1>
-    // <Form data-testid="cypress-setup-form" {...form}>
-    //   <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 m-5">
-    //     <FormField
-    //       control={form.control}
-    //       name="name"
-    //       render={({ field }) => (
-    //         <FormItem>
-    //           <FormLabel data-testid="cypress-setup-name">Organization Name</FormLabel>
-    //           <FormControl>
-    //             <Input placeholder="name" {...field} />
-    //           </FormControl>
-    //         </FormItem>
-    //       )}
-    //     />
-    //     <FormField
-    //       control={form.control}
-    //       name="description"
-    //       render={({ field }) => (
-    //         <FormItem>
-    //           <FormLabel data-testid="cypress-setup-description">Organization Description</FormLabel>
-    //           <FormControl>
-    //             <Textarea placeholder="description" {...field} />
-    //           </FormControl>
-    //         </FormItem>
-    //       )}
-    //     />
-    //     <FormField
-    //       control={form.control}
-    //       name="website"
-    //       render={({ field }) => (
-    //         <FormItem>
-    //           <FormLabel data-testid="cypress-setup-website">Website</FormLabel>
-    //           <FormControl>
-    //             <Input placeholder="website" {...field} onChange={autofillUrl} />
-    //           </FormControl>
-    //           <FormDescription>Enter your organization website link.</FormDescription>
-    //         </FormItem>
-    //       )}
-    //     />
-    //     <Button type="submit">Submit</Button>
-    //   </form>
-    // </Form>
-    // </div>
   );
 }
