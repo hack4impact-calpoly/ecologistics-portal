@@ -1,11 +1,11 @@
-import type { Metadata } from "next";
-import "@/styles/globals.css";
-import { Inter as FontSans } from "next/font/google";
-import { cn } from "@/lib/utils";
 import Header from "@/components/header";
-import Footer from "@/components/footer";
-import { ClerkProvider } from "@clerk/nextjs";
 import Sidebar from "@/components/sidebar";
+import { cn } from "@/lib/utils";
+import "@/styles/globals.css";
+import { ClerkProvider } from "@clerk/nextjs";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import type { Metadata } from "next";
+import { Inter as FontSans } from "next/font/google";
 
 export const fontSans = FontSans({
   subsets: ["latin"],
@@ -16,6 +16,7 @@ export const fontSans = FontSans({
 export const metadata: Metadata = {
   title: "Ecologistics",
   description: "Ecologistics Web Portal",
+  icons: ["./images/ecologistics-icon.png"],
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -29,7 +30,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <Sidebar />
             {children}
           </div>
-          {/* <Footer /> */}
+          <SpeedInsights />
         </body>
       </ClerkProvider>
     </html>
