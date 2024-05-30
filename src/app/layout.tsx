@@ -16,6 +16,7 @@ export const fontSans = FontSans({
 export const metadata: Metadata = {
   title: "Ecologistics",
   description: "Ecologistics Web Portal",
+  icons: ["./images/ecologistics-icon.png"],
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
