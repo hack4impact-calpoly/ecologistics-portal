@@ -47,31 +47,24 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
   const [globalFilter, setGlobalFilter] = useState("");
 
   const [pageIndex, setPageIndex] = React.useState(0);
-  const [pageSize, setPageSize] = React.useState(6);
-  const firstRender = React.useRef(true);
-  const row = document.getElementById("sponsored-org-table-row")?.getBoundingClientRect();
+  const [pageSize, setPageSize] = React.useState(3);
+
+  const handleWindowResize = () => {
+    const row = document.getElementById("sponsored-org-table-row")?.getBoundingClientRect();
+    if (row) {
+      setPageSize(
+        Math.floor((window.innerHeight - 440) / row.height) <= 0
+          ? 3
+          : Math.floor((window.innerHeight - 440) / row.height),
+      );
+    }
+  };
 
   React.useEffect(() => {
-    if (firstRender.current && row) {
-      setPageSize(
-        Math.floor((window.innerHeight - 380) / row.height) <= 0
-          ? 3
-          : Math.floor((window.innerHeight - 380) / row.height),
-      );
-      firstRender.current = false;
-    }
-    const handleWindowResize = () => {
-      if (row) {
-        setPageSize(
-          Math.floor((window.innerHeight - 380) / row.height) <= 0
-            ? 3
-            : Math.floor((window.innerHeight - 380) / row.height),
-        );
-      }
-    };
+    handleWindowResize();
     window.addEventListener("resize", handleWindowResize);
     return () => window.removeEventListener("resize", handleWindowResize);
-  }, [row, firstRender]);
+  }, []);
 
   const table = useReactTable({
     data,

@@ -72,12 +72,21 @@ export default function AdminTable() {
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
   const [error, setError] = React.useState<Error | null>(null);
   const [pageIndex, setPageIndex] = React.useState(0);
-  const [pageSize, setPageSize] = React.useState(10);
+  const [pageSize, setPageSize] = React.useState(3);
 
-  // First render flag to determine number of rows that can fit without overflow
-  // necessary for first render only
-  const firstRender = React.useRef(true);
-  const row = document.getElementById("admin-table-row")?.getBoundingClientRect();
+  // Determine number of rows that can fit without overflow
+  const handleWindowResize = () => {
+    // First render flag to determine number of rows that can fit without overflow
+    // necessary for first render only
+    const row = document.getElementById("admin-table-row")?.getBoundingClientRect();
+    if (row) {
+      setPageSize(
+        Math.floor((window.innerHeight - 420) / row.height) <= 0
+          ? 3
+          : Math.floor((window.innerHeight - 420) / row.height),
+      );
+    }
+  };
 
   React.useEffect(() => {
     fetchReimbursements()
@@ -95,11 +104,14 @@ export default function AdminTable() {
       .then((reimbursements) => {
         setReimbursements(reimbursements);
         setIsLoading(false);
+        handleWindowResize();
       })
       .catch((err) => {
         setError(err);
         setIsLoading(false);
       });
+    window.addEventListener("resize", handleWindowResize);
+    return () => window.removeEventListener("resize", handleWindowResize);
   }, []);
 
   const table = useReactTable({
@@ -133,30 +145,6 @@ export default function AdminTable() {
       fuzzy: fuzzyFilter,
     },
   });
-
-  // Determine number of rows that can fit without overflow
-
-  React.useEffect(() => {
-    if (firstRender.current && row) {
-      setPageSize(
-        Math.floor((window.innerHeight - 348) / row.height) <= 0
-          ? 3
-          : Math.floor((window.innerHeight - 348) / row.height),
-      );
-      firstRender.current = false;
-    }
-    const handleWindowResize = () => {
-      if (row) {
-        setPageSize(
-          Math.floor((window.innerHeight - 348) / row.height) <= 0
-            ? 3
-            : Math.floor((window.innerHeight - 348) / row.height),
-        );
-      }
-    };
-    window.addEventListener("resize", handleWindowResize);
-    return () => window.removeEventListener("resize", handleWindowResize);
-  }, [row, firstRender]);
 
   const getUniqueValues = (data: any[], type: string) => {
     let values = new Set();
