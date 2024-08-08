@@ -2,7 +2,7 @@
 
 [![ci](https://github.com/hack4impact-calpoly/ecologistics-portal/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/hack4impact-calpoly/ecologistics-portal/actions/workflows/ci.yml)
 
-A web portal for Ecologistics SLO
+A web portal to process reimbursements and bills in support of local nonprofits for Ecologistics SLO.
 
 ## Table of Contents
 
